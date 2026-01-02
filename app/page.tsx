@@ -3,8 +3,6 @@ import HeroSection from '@/components/shadcn-studio/blocks/hero-section-29/hero-
 import type { Navigation } from '@/components/shadcn-studio/blocks/hero-navigation-02';
 import Features from '@/components/shadcn-studio/blocks/features-section-06/features-section-06';
 
-import Marquee from '@/components/ui/marquee';
-
 const navigationData: Navigation[] = [
   {
     title: 'What We Do',
