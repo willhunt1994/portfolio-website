@@ -1,12 +1,13 @@
 import Header from '@/components/shadcn-studio/blocks/hero-section-29/header';
 import HeroSection from '@/components/shadcn-studio/blocks/hero-section-29/hero-section-29';
+import HeroSectionImage from '@/components/shadcn-studio/blocks/hero-section-29/hero-section-image';
 import type { Navigation } from '@/components/shadcn-studio/blocks/hero-navigation-02';
 import Features from '@/components/shadcn-studio/blocks/features-section-06/features-section-06';
 
 const navigationData: Navigation[] = [
   {
     title: 'What We Do',
-    href: '#'
+    href: '/what-we-do'
   },
   {
     title: 'Our Work',
@@ -16,34 +17,40 @@ const navigationData: Navigation[] = [
 
 const featuresData = [
   {
-    title: 'Monitor Your Metrics Effortlessly and Accurately.',
+    title: 'Content #1',
     subtitle: 'Create dashboards with shadcn/studio that provide real-time insights.',
     image: 'https://cdn.shadcnstudio.com/ss-assets/blocks/marketing/features/image-2.png',
-    imageAlt: 'Monitor Your Metrics Effortlessly and Accurately',
+    imageAlt: 'Content #1',
     cursorText: 'Case Study 1',
-    href: '/gallery',
-    description:
-      'Create dynamic dashboards with shadcn/studio for real-time insights and metrics. Widgets and live feeds keep your data up-to-date.'
+    href: '/case-study-1',
+    description: 'explain something here'
   },
   {
-    title: 'Visualize Your Data with Clarity Precision.',
+    title: 'Content #2',
     subtitle: 'shadcn/studio provides customizable charts and graphs for clearer data representation.',
     image: 'https://cdn.shadcnstudio.com/ss-assets/blocks/marketing/features/image-4.png',
-    imageAlt: 'Visualize Your Data with Clarity Precision',
+    imageAlt: 'Content #2',
     cursorText: 'Case Study 2',
-    href: '/gallery',
-    description:
-      'shadcn/studio offers customizable charts and graphs for clear data analysis. Interactive views include bar, pie, and line options.'
+    href: '/case-study-2',
+    description: 'explain something here'
   },
   {
-    title: 'Boost Productivity & Streamline Tasks Efficiently.',
+    title: 'Content #3',
     subtitle: "Manage workflows effortlessly with shadcn/studio's intuitive UI components.",
     image: 'https://cdn.shadcnstudio.com/ss-assets/blocks/marketing/features/image-3.png',
-    imageAlt: 'Boost Productivity & Streamline Tasks Efficiently',
+    imageAlt: 'Content #3',
     cursorText: 'Case Study 3',
-    href: '/gallery',
-    description:
-      "Manage workflows easily with shadcn/studio's intuitive UI. Streamlined design automates tasks and boosts productivity."
+    href: '/case-study-3',
+    description: 'explain something here'
+  },
+  {
+    title: 'Content #4',
+    subtitle: 'Connect teams with shadcn/studio collaboration tools and real-time updates.',
+    image: 'https://cdn.shadcnstudio.com/ss-assets/blocks/marketing/features/image-2.png',
+    imageAlt: 'Content #4',
+    cursorText: 'Case Study 4',
+    href: '/case-study-4',
+    description: 'explain something here'
   }
 ];
 
@@ -57,99 +64,8 @@ export default function Home() {
       <main className='flex flex-1 flex-col'>
         <HeroSection />
         <Features featuresData={featuresData} />
-        <HeroSection />
+        <HeroSectionImage />
       </main>
-
-      {/* Skills Section */}
-      <section className="py-20 px-6">
-        <div className="max-w-6xl mx-auto">
-          <h2 className="text-4xl md:text-5xl font-bold text-black dark:text-white mb-12">
-            Skills
-          </h2>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-            {[
-              "Next.js",
-              "React",
-              "TypeScript",
-              "Tailwind CSS",
-              "Node.js",
-              "Express",
-              "Prisma",
-              "PostgreSQL",
-            ].map((skill) => (
-              <div
-                key={skill}
-                className="p-6 bg-zinc-50 dark:bg-zinc-900 rounded-lg border border-zinc-200 dark:border-zinc-800 text-center hover:border-zinc-400 dark:hover:border-zinc-600 transition-colors"
-              >
-                <span className="text-black dark:text-white font-medium">
-                  {skill}
-                </span>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Projects Section */}
-      <section id="projects" className="py-20 px-6 bg-zinc-50 dark:bg-zinc-950">
-        <div className="max-w-6xl mx-auto">
-          <h2 className="text-4xl md:text-5xl font-bold text-black dark:text-white mb-12">
-            Featured Projects
-          </h2>
-          <div className="grid md:grid-cols-2 gap-8">
-            {[
-              {
-                title: "Project One",
-                description: "A modern web application built with Next.js and TypeScript, featuring real-time updates and a beautiful UI.",
-                tech: ["Next.js", "TypeScript", "Tailwind CSS"],
-              },
-              {
-                title: "Project Two",
-                description: "Full-stack application with authentication, database integration, and API endpoints.",
-                tech: ["React", "Node.js", "PostgreSQL"],
-              },
-              {
-                title: "Project Three",
-                description: "E-commerce platform with payment integration and admin dashboard.",
-                tech: ["Next.js", "Stripe", "Prisma"],
-              },
-              {
-                title: "Project Four",
-                description: "Portfolio website with CMS integration and dynamic content management.",
-                tech: ["Next.js", "Headless CMS", "TypeScript"],
-              },
-            ].map((project, index) => (
-              <div
-                key={index}
-                className="p-8 bg-white dark:bg-black rounded-lg border border-zinc-200 dark:border-zinc-800 hover:border-zinc-400 dark:hover:border-zinc-600 transition-all hover:shadow-lg"
-              >
-                <h3 className="text-2xl font-bold text-black dark:text-white mb-3">
-                  {project.title}
-                </h3>
-                <p className="text-zinc-600 dark:text-zinc-400 mb-4 leading-relaxed">
-                  {project.description}
-                </p>
-                <div className="flex flex-wrap gap-2 mb-4">
-                  {project.tech.map((tech) => (
-                    <span
-                      key={tech}
-                      className="px-3 py-1 text-sm bg-zinc-100 dark:bg-zinc-900 text-zinc-700 dark:text-zinc-300 rounded-full"
-                    >
-                      {tech}
-                    </span>
-                  ))}
-                </div>
-                <a
-                  href="#"
-                  className="text-blue-600 dark:text-blue-400 hover:underline font-medium"
-                >
-                  View Project →
-                </a>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
 
       {/* Contact Section */}
       <section id="contact" className="py-20 px-6">
@@ -204,7 +120,7 @@ export default function Home() {
       {/* Footer */}
       <footer className="py-8 px-6 border-t border-zinc-200 dark:border-zinc-800">
         <div className="max-w-6xl mx-auto text-center text-zinc-600 dark:text-zinc-400">
-          <p>© {new Date().getFullYear()} Your Name. All rights reserved.</p>
+          <p>© {new Date().getFullYear()} Ethos. All rights reserved.</p>
         </div>
       </footer>
     </div>
