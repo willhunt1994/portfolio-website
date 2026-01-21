@@ -14,6 +14,7 @@ export default function HeroSectionImage({ className = '' }: HeroSectionImagePro
           fill
           className="object-cover"
           priority
+          unoptimized
         />
       </div>
       <div className="relative z-10 pt-0 pl-4 sm:pl-6 lg:pl-8">

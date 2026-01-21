@@ -3,6 +3,7 @@ import type { Navigation } from '@/components/shadcn-studio/blocks/hero-navigati
 import Gallery from '@/components/shadcn-studio/blocks/gallery-component-04/gallery-component-04';
 import Testimonial from '@/components/shadcn-studio/blocks/testimonial-component/testimonial-component';
 import RichText from '@/components/shadcn-studio/blocks/rich-text-component/rich-text-component';
+import PixiesetGallery from '@/components/shadcn-studio/blocks/pixieset-gallery/pixieset-gallery';
 
 const navigationData: Navigation[] = [
   {
@@ -100,14 +101,33 @@ const GalleryImageRow5 = [
   }
 ];
 
+interface CaseStudyPageProps {
+  params: Promise<{
+    slug: string;
+  }>;
+}
 
-export default function CaseStudy1() {
+export default async function CaseStudyPage({ params }: CaseStudyPageProps) {
+  const { slug } = await params;
+  
+  // Check if this is the Spring 2026 Inspo page
+  const isSpringInspo = slug === 'spring-2026-inspo';
+  
+  // Pixieset gallery URL
+  const pixiesetGalleryUrl = isSpringInspo 
+    ? 'https://ethos48.pixieset.com/winterlookbook/'
+    : undefined;
+  
   return (
     <div className='flex min-h-screen flex-col relative'>
       <Header navigationData={navigationData} />
       
       <main className='flex flex-1 flex-col pt-32'>
         <RichText />
+        {/* Temporarily hidden - Pixieset gallery */}
+        {/* {isSpringInspo && pixiesetGalleryUrl && (
+          <PixiesetGallery galleryUrl={pixiesetGalleryUrl} />
+        )} */}
         <Gallery galleryImage={GalleryImageRow1And2} />
         <Testimonial />
         <Gallery galleryImage={GalleryImageRow3And4} />
@@ -123,4 +143,3 @@ export default function CaseStudy1() {
     </div>
   );
 }
-

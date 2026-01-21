@@ -4,7 +4,6 @@ import HeroVideo from '@/components/shadcn-studio/blocks/what-we-do-section/hero
 import ProcessSteps from '@/components/shadcn-studio/blocks/what-we-do-section/process-steps';
 import Testimonial from '@/components/shadcn-studio/blocks/testimonial-component/testimonial-component';
 import CustomizationMethods from '@/components/shadcn-studio/blocks/what-we-do-section/customization-methods';
-import CustomSocksSection from '@/components/shadcn-studio/blocks/what-we-do-section/custom-socks-section';
 import RichText from '@/components/shadcn-studio/blocks/rich-text-component/rich-text-component';
 import Link from 'next/link';
 
@@ -15,7 +14,7 @@ const navigationData: Navigation[] = [
   },
   {
     title: 'Our Work',
-    href: '#'
+    href: '/our-work'
   }
 ];
 
@@ -24,16 +23,14 @@ export default function WhatWeDo() {
     <div className='flex min-h-screen flex-col relative'>
       <Header navigationData={navigationData} />
       
-      <main className='flex flex-1 flex-col pt-32'>
+      <main className='flex flex-1 flex-col pt-20'>
         {/* Breadcrumb */}
-        <div className="px-6 py-4 bg-white dark:bg-black">
+        <div className="px-6 pt-0 pb-4 bg-white dark:bg-black">
           <div className="max-w-7xl mx-auto">
             <nav className="text-sm text-zinc-600 dark:text-zinc-400">
               <Link href="/" className="hover:text-black dark:hover:text-white">Home</Link>
               {' > '}
-              <Link href="/our-work" className="hover:text-black dark:hover:text-white">Our Work</Link>
-              {' > '}
-              <span className="text-black dark:text-white">Solos Photos</span>
+              <span className="text-black dark:text-white">What We Do</span>
             </nav>
           </div>
         </div>
@@ -71,14 +68,12 @@ export default function WhatWeDo() {
         {/* Customization Methods */}
         <CustomizationMethods />
 
-        {/* Custom Socks Section */}
-        <CustomSocksSection />
-
         {/* Ready To Make Some Merch Section */}
         <RichText 
           heading="Ready To Make Some Merch?"
           subheading="Hit the link below to get started."
           buttonText="Get Started"
+          buttonHref="https://ethos-b2b.clickoapps.com/login"
         />
       </main>
     </div>

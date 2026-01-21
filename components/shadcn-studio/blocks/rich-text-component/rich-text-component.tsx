@@ -14,22 +14,24 @@ export default function RichText({
   buttonHref = '#'
 }: RichTextProps) {
   return (
-    <section className="pt-20 pb-20 px-6 bg-white dark:bg-black">
+    <section className="pt-20 pb-20 px-6 dark:bg-black" style={{ backgroundColor: '#fcfcfc' }}>
       <div className="max-w-4xl mx-auto text-center">
         <h1 className="text-4xl md:text-5xl font-bold text-black dark:text-white mb-6">
           {heading}
         </h1>
         {subheading && (
-          <p className="text-xl md:text-2xl text-zinc-600 dark:text-zinc-400 mb-8">
+          <p className="text-xl md:text-2xl text-zinc-600 dark:text-zinc-400 mb-0">
             {subheading}
           </p>
         )}
-        <Link
-          href={buttonHref}
-          className="inline-block bg-black dark:bg-white text-white dark:text-black px-6 py-3 rounded-md text-base font-medium hover:bg-zinc-800 dark:hover:bg-zinc-200 transition-colors"
-        >
-          {buttonText}
-        </Link>
+        {buttonText && buttonText !== '' && (
+          <Link
+            href={buttonHref}
+            className="inline-block bg-black dark:bg-white text-white dark:text-black px-6 py-3 rounded-md text-base font-medium hover:bg-zinc-800 dark:hover:bg-zinc-200 transition-colors mt-8"
+          >
+            {buttonText}
+          </Link>
+        )}
       </div>
     </section>
   );

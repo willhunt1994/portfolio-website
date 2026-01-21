@@ -11,7 +11,7 @@ const navigationData: Navigation[] = [
   },
   {
     title: 'Our Work',
-    href: '#'
+    href: '/our-work'
   }
 ];
 
@@ -117,6 +117,7 @@ export default function CaseStudy3() {
           heading="Ready To Get Started?"
           subheading=""
           buttonText="Get Started"
+          buttonHref="https://ethos-b2b.clickoapps.com/login"
         />
       </main>
     </div>

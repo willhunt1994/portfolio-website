@@ -12,7 +12,7 @@ export default function HeroVideo() {
             Hit the link below to get started.
           </p>
           <Link
-            href="#"
+            href="https://ethos-b2b.clickoapps.com/login"
             className="inline-block bg-black dark:bg-white text-white dark:text-black px-6 py-3 rounded-md text-base font-medium hover:bg-zinc-800 dark:hover:bg-zinc-200 transition-colors"
           >
             Get Started

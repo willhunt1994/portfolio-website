@@ -8,6 +8,7 @@ export default function HeroSection() {
           muted
           playsInline
           className="w-full h-full object-cover opacity-60"
+          preload="auto"
         >
           <source src="https://cdn.shopify.com/videos/c/o/v/434be4680b3943cf910c961e5f598218.mov" type="video/quicktime" />
           <source src="https://cdn.shopify.com/videos/c/o/v/434be4680b3943cf910c961e5f598218.mov" type="video/mp4" />
@@ -23,7 +24,7 @@ export default function HeroSection() {
           </p>
           <div className="flex flex-wrap gap-4 justify-center">
             <a
-              href="#"
+              href="https://ethos-b2b.clickoapps.com/login"
               className="px-6 py-3 bg-black dark:bg-white text-white dark:text-black rounded-full font-medium hover:bg-zinc-800 dark:hover:bg-zinc-200 transition-colors"
             >
               Get Started

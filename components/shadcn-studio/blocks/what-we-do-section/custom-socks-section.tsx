@@ -9,7 +9,7 @@ export default function CustomSocksSection() {
             CUSTOM SOCKS
           </h2>
           <Link
-            href="#"
+            href="https://ethos-b2b.clickoapps.com/login"
             className="inline-block bg-white dark:bg-black text-black dark:text-white px-6 py-3 rounded-md text-base font-medium hover:bg-zinc-100 dark:hover:bg-zinc-900 transition-colors border border-black dark:border-white"
           >
             Get Started

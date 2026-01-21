@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { useState } from 'react';
+import { usePathname, useRouter } from 'next/navigation';
 import type { Navigation } from '@/components/shadcn-studio/blocks/hero-navigation-02';
 
 interface HeaderProps {
@@ -12,6 +13,17 @@ interface HeaderProps {
 export default function Header({ navigationData }: HeaderProps) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
+  const pathname = usePathname();
+  const router = useRouter();
+
+  const handleLinkClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
+    e.preventDefault();
+    if (pathname === href) {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    } else {
+      router.push(href);
+    }
+  };
 
   return (
     <header className="fixed top-0 w-full z-50 bg-transparent">
@@ -99,7 +111,12 @@ export default function Header({ navigationData }: HeaderProps) {
                   ) : (
                     <Link
                       href={item.href || '#'}
-                      className="text-zinc-600 dark:text-zinc-400 hover:text-black dark:hover:text-white px-4 py-2 text-sm font-medium transition-colors rounded-full hover:bg-zinc-100 dark:hover:bg-zinc-900"
+                      onClick={(e) => handleLinkClick(e, item.href || '#')}
+                      className={`text-sm font-medium transition-all duration-200 rounded-full px-4 py-2 ${
+                        pathname === item.href
+                          ? 'text-black dark:text-white underline'
+                          : 'text-zinc-600 dark:text-zinc-400 hover:text-black dark:hover:text-white'
+                      }`}
                     >
                       {item.title}
                     </Link>
@@ -112,7 +129,7 @@ export default function Header({ navigationData }: HeaderProps) {
           {/* Get Started Button - Right Side */}
           <div className="hidden md:block">
             <Link
-              href="#"
+              href="https://ethos-b2b.clickoapps.com/login"
               className="bg-black text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-zinc-800 transition-colors"
             >
               Get Started
@@ -166,8 +183,15 @@ export default function Header({ navigationData }: HeaderProps) {
                 ) : (
                   <Link
                     href={item.href || '#'}
-                    className="text-zinc-600 dark:text-zinc-400 hover:text-black dark:hover:text-white block px-3 py-2 text-base font-medium"
-                    onClick={() => setMobileMenuOpen(false)}
+                    className={`block px-3 py-2 text-base font-medium transition-all duration-200 rounded-md ${
+                      pathname === item.href
+                        ? 'bg-zinc-100 dark:bg-zinc-800 text-black dark:text-white underline'
+                        : 'text-zinc-600 dark:text-zinc-400 hover:text-black dark:hover:text-white'
+                    }`}
+                    onClick={(e) => {
+                      handleLinkClick(e, item.href || '#');
+                      setMobileMenuOpen(false);
+                    }}
                   >
                     {item.title}
                   </Link>
@@ -175,7 +199,7 @@ export default function Header({ navigationData }: HeaderProps) {
               </div>
             ))}
             <Link
-              href="#"
+              href="https://ethos-b2b.clickoapps.com/login"
               className="bg-black text-white inline-block px-4 py-2 rounded-md text-base font-medium mt-2 ml-3"
               onClick={() => setMobileMenuOpen(false)}
             >

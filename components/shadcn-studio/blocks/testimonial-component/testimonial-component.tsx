@@ -82,7 +82,7 @@ export default function Testimonial({
   const currentTestimonial = testimonialArray[currentIndex];
 
   return (
-    <section className="py-8 px-6 bg-white dark:bg-black">
+    <section className="py-8 px-6 dark:bg-black" style={{ backgroundColor: '#fcfcfc' }}>
       <div className="max-w-7xl mx-auto">
         <div
           ref={carouselRef}
