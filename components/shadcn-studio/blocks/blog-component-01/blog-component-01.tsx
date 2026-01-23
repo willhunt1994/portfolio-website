@@ -48,29 +48,64 @@ export default function Blog({ blogCards, itemsPerPage = 12 }: BlogProps) {
   return (
     <section className="py-20 px-[10px] bg-white dark:bg-black">
       <div className="max-w-7xl mx-auto">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 items-stretch">
           {currentCards.map((card, index) => (
             <Link
               key={startIndex + index}
               href={card.blogLink}
-              className="group block"
+              className="group block h-full"
             >
-              <div className="relative overflow-hidden rounded-lg bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 transition-all hover:border-zinc-400 dark:hover:border-zinc-600">
-                <div className="aspect-[4/5] relative">
+              <div className="relative overflow-hidden rounded-lg bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 transition-all hover:border-zinc-400 dark:hover:border-zinc-600 h-full flex flex-col">
+                <div className="aspect-[4/5] relative flex-shrink-0">
                   <Image
                     src={card.img}
                     alt={card.alt}
                     fill
                     className="object-cover transition-transform duration-300 group-hover:scale-105"
                   />
+                  {/* Tags overlay on top right of image */}
+                  {card.tags && card.tags.length > 0 && (
+                    <div className="absolute top-3 right-3 flex flex-wrap gap-2 justify-end">
+                      {card.tags.map((tag, tagIndex) => (
+                        <span
+                          key={tagIndex}
+                          className="px-2 py-1 bg-black/20 dark:bg-white/20 text-white text-[8px] font-medium rounded"
+                        >
+                          {tag}
+                        </span>
+                      ))}
+                    </div>
+                  )}
                 </div>
-                <div className="p-6">
-                  <h3 className="text-xl font-bold text-black dark:text-white mb-2 group-hover:text-zinc-600 dark:group-hover:text-zinc-400 transition-colors">
+                <div className="p-6 flex flex-col flex-grow">
+                  <h3 className="text-xl font-bold text-black dark:text-white mb-1 group-hover:text-zinc-600 dark:group-hover:text-zinc-400 transition-colors">
                     {card.title}
                   </h3>
-                  <p className="text-zinc-600 dark:text-zinc-400 text-sm leading-relaxed">
+                  <p className="text-zinc-600 dark:text-zinc-400 text-sm leading-relaxed mb-[0.48rem] flex-grow">
                     {card.description}
                   </p>
+                  <div className="text-black/50 dark:text-white/50 text-[12px] inline-flex items-center gap-1 group/view-link relative mt-auto">
+                    <span className="relative">
+                      View
+                      <span className="absolute bottom-0 left-0 w-0 h-px bg-current transition-all duration-300 group-hover/view-link:w-full"></span>
+                    </span>
+                    <svg 
+                      width="10" 
+                      height="10" 
+                      viewBox="0 0 12 12" 
+                      fill="none" 
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="inline-block"
+                    >
+                      <path 
+                        d="M1 6H11M11 6L6 1M11 6L6 11" 
+                        stroke="currentColor" 
+                        strokeWidth="1.5" 
+                        strokeLinecap="round" 
+                        strokeLinejoin="round"
+                      />
+                    </svg>
+                  </div>
                 </div>
               </div>
             </Link>

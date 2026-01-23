@@ -4,7 +4,9 @@ import HeroVideo from '@/components/shadcn-studio/blocks/what-we-do-section/hero
 import ProcessSteps from '@/components/shadcn-studio/blocks/what-we-do-section/process-steps';
 import Testimonial from '@/components/shadcn-studio/blocks/testimonial-component/testimonial-component';
 import CustomizationMethods from '@/components/shadcn-studio/blocks/what-we-do-section/customization-methods';
+import ImageTextSection from '@/components/shadcn-studio/blocks/image-text-section/image-text-section';
 import RichText from '@/components/shadcn-studio/blocks/rich-text-component/rich-text-component';
+import CorporateFranchiseSection from '@/components/shadcn-studio/blocks/what-we-do-section/corporate-franchise-section';
 import Link from 'next/link';
 
 const navigationData: Navigation[] = [
@@ -68,6 +70,15 @@ export default function WhatWeDo() {
         {/* Customization Methods */}
         <CustomizationMethods />
 
+        {/* Custom Dashboard & App Section */}
+        <ImageTextSection
+          imageUrl="https://cdn.shadcnstudio.com/ss-assets/blocks/marketing/blog/image-2.png"
+          imageAlt="Custom Dashboard and App"
+          heading="Your Custom Dashboard & App"
+          text="When you sign up, you gain access to our powerful custom dashboard and mobile app. Manage your orders, track production progress, view real-time inventory, and collaborate with our team—all from one intuitive platform. Our technology makes it easy to stay connected and in control of your custom merchandise projects."
+          imagePosition="right"
+        />
+
         {/* Ready To Make Some Merch Section */}
         <RichText 
           heading="Ready To Make Some Merch?"
@@ -75,6 +86,9 @@ export default function WhatWeDo() {
           buttonText="Get Started"
           buttonHref="https://ethos-b2b.clickoapps.com/login"
         />
+
+        {/* Corporate & Franchise Teams Section */}
+        <CorporateFranchiseSection />
       </main>
     </div>
   );

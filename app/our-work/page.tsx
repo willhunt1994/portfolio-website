@@ -27,12 +27,20 @@ function generateSlug(title: string): string {
 
 const blogCardsData = [
   {
-    img: 'https://cdn.shadcnstudio.com/ss-assets/blocks/marketing/blog/image-1.png',
-    alt: 'Modern house',
+    img: 'https://drive.google.com/uc?export=view&id=1VnNs7Z0w363VEmfe3pKaC_iUWifQeDN5',
+    alt: 'Script Gallery',
+    title: 'Script',
+    description:
+      'Designed as a uniform for slower days, studio mornings, and everything in between.',
+    tags: ['Merch We Made']
+  },
+  {
+    img: 'https://drive.google.com/uc?export=view&id=1S5zI7MUI2HpabdoiMgMfgYdQnafSxb6B',
+    alt: 'Spring 2026 Inspo',
     title: 'Spring 2026 Inspo',
     description:
-      'Experience the charm of this lovely and cozy apartment, featuring warm decor and inviting spaces, perfect for relaxation and comfort, ideal for your next getaway.',
-    tags: ['Case Study']
+      'Soft pastel inspo for the Spring 2026 season.',
+    tags: ['Inspo']
   },
   {
     img: 'https://cdn.shadcnstudio.com/ss-assets/blocks/marketing/blog/image-2.png',
@@ -239,7 +247,21 @@ export default function OurWork() {
     <div className='flex min-h-screen flex-col relative'>
       <Header navigationData={navigationData} />
       
-      <main className='flex flex-1 flex-col pt-20'>
+      <main className='flex flex-1 flex-col pt-20 relative'>
+        {/* Fade overlay - opaque behind logo, fades out */}
+        <div 
+          className="fixed top-0 left-0 right-0 h-32 pointer-events-none z-30"
+          style={{
+            background: 'linear-gradient(to bottom, rgba(255, 255, 255, 1) 0%, rgba(255, 255, 255, 0.9) 30%, rgba(255, 255, 255, 0.7) 50%, rgba(255, 255, 255, 0.4) 70%, rgba(255, 255, 255, 0) 100%)'
+          }}
+        />
+        <div 
+          className="fixed top-0 left-0 right-0 h-32 pointer-events-none z-30 dark:block hidden"
+          style={{
+            background: 'linear-gradient(to bottom, rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 0.9) 30%, rgba(0, 0, 0, 0.7) 50%, rgba(0, 0, 0, 0.4) 70%, rgba(0, 0, 0, 0) 100%)'
+          }}
+        />
+        
         {/* Breadcrumb */}
         <div className="px-[10px] pt-0 pb-4 bg-white dark:bg-black">
           <div className="max-w-7xl mx-auto">
@@ -258,7 +280,7 @@ export default function OurWork() {
         />
 
         <Suspense fallback={<div className="py-20 px-[10px] text-center">Loading...</div>}>
-          <TagFilter allTags={allTags} />
+          <TagFilter allTags={allTags} blogCards={blogCards} />
           <Blog blogCards={blogCards} />
         </Suspense>
       </main>

@@ -3,6 +3,7 @@ import HeroSection from '@/components/shadcn-studio/blocks/hero-section-29/hero-
 import HeroSectionImage from '@/components/shadcn-studio/blocks/hero-section-29/hero-section-image';
 import type { Navigation } from '@/components/shadcn-studio/blocks/hero-navigation-02';
 import Features from '@/components/shadcn-studio/blocks/features-section-06/features-section-06';
+import ImageTextSection from '@/components/shadcn-studio/blocks/image-text-section/image-text-section';
 
 const navigationData: Navigation[] = [
   {
@@ -63,6 +64,13 @@ export default function Home() {
       {/* Main Content */}
       <main className='flex flex-1 flex-col'>
         <HeroSection />
+        <ImageTextSection
+          imageUrl="https://cdn.shadcnstudio.com/ss-assets/blocks/marketing/blog/image-2.png"
+          imageAlt="Custom Dashboard and App"
+          heading="Your Custom Dashboard & App"
+          text="When you sign up, you gain access to our powerful custom dashboard and mobile app. Manage your orders, track production progress, view real-time inventory, and collaborate with our team—all from one intuitive platform. Our technology makes it easy to stay connected and in control of your custom merchandise projects."
+          imagePosition="right"
+        />
         <Features featuresData={featuresData} />
         <HeroSectionImage />
       </main>

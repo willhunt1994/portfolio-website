@@ -13,7 +13,7 @@ export default function MegaFooter() {
               <a href="/our-work" className="hover:text-zinc-300 transition-colors">
                 Our Work
               </a>
-              <a href="#" className="hover:text-zinc-300 transition-colors">
+              <a href="/contact" className="hover:text-zinc-300 transition-colors">
                 Contact
               </a>
               <a 
