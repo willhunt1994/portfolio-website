@@ -4,10 +4,22 @@ interface CustomizationMethod {
   title: string;
   explanation: string;
   image?: string;
+  video?: string; // Google Drive video URL
 }
 
 interface CustomizationMethodsProps {
   methods?: CustomizationMethod[];
+}
+
+// Helper function to convert Google Drive video URL to iframe embed URL
+function getVideoEmbedUrl(url: string): string {
+  // Extract file ID from Google Drive URL
+  const match = url.match(/\/file\/d\/([a-zA-Z0-9_-]+)/);
+  if (match && match[1]) {
+    // Use Google Drive's preview endpoint
+    return `https://drive.google.com/file/d/${match[1]}/preview`;
+  }
+  return url;
 }
 
 export default function CustomizationMethods({
@@ -37,8 +49,30 @@ export default function CustomizationMethods({
                 href={`/what-we-do/${methodSlug}`}
                 className="bg-white dark:bg-black rounded-lg border border-zinc-200 dark:border-zinc-800 overflow-hidden hover:border-zinc-400 dark:hover:border-zinc-600 transition-colors"
               >
-                <div className="aspect-square bg-white dark:bg-zinc-900 flex items-center justify-center">
-                  {method.image ? (
+                <div className="aspect-square bg-white dark:bg-zinc-900 flex items-center justify-center relative overflow-hidden">
+                  {method.video ? (
+                    <div className="absolute inset-0 w-full h-full">
+                      <iframe
+                        src={getVideoEmbedUrl(method.video)}
+                        className="w-full h-full border-0"
+                        allow="autoplay; encrypted-media; fullscreen"
+                        allowFullScreen
+                        title={method.title}
+                        style={{
+                          transform: 'scale(1.1)',
+                          transformOrigin: 'center center'
+                        }}
+                      />
+                      {/* Overlay to hide Google Drive UI elements */}
+                      <div 
+                        className="absolute inset-0 pointer-events-none"
+                        style={{
+                          background: 'transparent',
+                          zIndex: 1
+                        }}
+                      />
+                    </div>
+                  ) : method.image ? (
                     <img src={method.image} alt={method.title} className="w-full h-full object-cover" />
                   ) : (
                     <div className="w-full h-full bg-zinc-100 dark:bg-zinc-800"></div>

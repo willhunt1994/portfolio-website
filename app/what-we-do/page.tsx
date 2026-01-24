@@ -68,7 +68,22 @@ export default function WhatWeDo() {
         />
 
         {/* Customization Methods */}
-        <CustomizationMethods />
+        <CustomizationMethods 
+          methods={[
+            { title: 'DTF', explanation: 'Explanation' },
+            { title: 'EMBROIDERY', explanation: 'Explanation' },
+            { title: 'PATCHES', explanation: 'Explanation' },
+            { 
+              title: 'PUFF PRINT', 
+              explanation: 'Explanation',
+              image: '/puff-print-image.png'
+            },
+            { title: 'TOWELS', explanation: 'Explanation' },
+            { title: 'BOTTLES', explanation: 'Explanation' },
+            { title: 'HAIR CLIPS', explanation: 'Explanation' },
+            { title: 'SOCKS', explanation: 'Explanation' }
+          ]}
+        />
 
         {/* Custom Dashboard & App Section */}
         <ImageTextSection
