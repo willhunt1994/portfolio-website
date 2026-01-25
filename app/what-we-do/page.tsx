@@ -1,6 +1,5 @@
 import Header from '@/components/shadcn-studio/blocks/hero-section-29/header';
 import type { Navigation } from '@/components/shadcn-studio/blocks/hero-navigation-02';
-import HeroVideo from '@/components/shadcn-studio/blocks/what-we-do-section/hero-video';
 import ProcessSteps from '@/components/shadcn-studio/blocks/what-we-do-section/process-steps';
 import Testimonial from '@/components/shadcn-studio/blocks/testimonial-component/testimonial-component';
 import CustomizationMethods from '@/components/shadcn-studio/blocks/what-we-do-section/customization-methods';
@@ -36,9 +35,6 @@ export default function WhatWeDo() {
             </nav>
           </div>
         </div>
-
-        {/* Hero Video Section */}
-        <HeroVideo />
 
         {/* What We Do Process Steps */}
         <ProcessSteps />

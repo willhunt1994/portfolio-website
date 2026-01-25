@@ -1,7 +1,6 @@
 'use client';
 
 import { useState } from 'react';
-import Image from 'next/image';
 
 interface Hotspot {
   id: string;
@@ -35,25 +34,51 @@ export default function ImageWithHotspots({
   // If images array is provided, use two-column layout
   const useTwoColumn = images && images.length > 0;
 
-  // Render a single image with hotspots
-  const renderImageWithHotspots = (
-    imageData: ImageData,
-    imageIndex: number
-  ) => {
+  // Debug logging
+  if (useTwoColumn) {
+    console.log('ImageWithHotspots: Rendering two-column layout with', images?.length, 'images');
+    images?.forEach((img, idx) => {
+      console.log(`Image ${idx + 1}:`, img.url);
+    });
+  }
+
+  // Single image component with error handling
+  function SingleImageWithHotspots({ 
+    imageData, 
+    imageIndex,
+    activeHotspot,
+    setActiveHotspot 
+  }: { 
+    imageData: ImageData; 
+    imageIndex: number;
+    activeHotspot: string | null;
+    setActiveHotspot: (id: string | null) => void;
+  }) {
+    const [imageError, setImageError] = useState(false);
     const imageHotspots = imageData.hotspots || [];
     const hotspotPrefix = `image-${imageIndex}-`;
 
     return (
-      <div
-        key={imageIndex}
-        className="relative w-full aspect-[16/9] overflow-hidden rounded-[2px]"
-      >
-        <Image
-          src={imageData.url}
-          alt={imageData.alt}
-          fill
-          className="object-cover"
-        />
+      <div className="relative w-full overflow-hidden rounded-[2px] bg-zinc-100 dark:bg-zinc-800 min-h-[200px]">
+        {imageError ? (
+          <div className="p-4 text-center text-zinc-500">
+            <p>Failed to load image</p>
+            <p className="text-xs mt-2 break-all">{imageData.url}</p>
+          </div>
+        ) : (
+          <img
+            src={imageData.url}
+            alt={imageData.alt}
+            className="w-full h-auto block"
+            onError={() => {
+              console.error('Image failed to load:', imageData.url);
+              setImageError(true);
+            }}
+            onLoad={() => {
+              console.log('Image loaded successfully:', imageData.url);
+            }}
+          />
+        )}
 
         {/* Hotspots */}
         {imageHotspots.map((hotspot) => {
@@ -95,22 +120,51 @@ export default function ImageWithHotspots({
         })}
       </div>
     );
+  }
+
+  // Render a single image with hotspots (backward compatible)
+  const renderImageWithHotspots = (
+    imageData: ImageData,
+    imageIndex: number
+  ) => {
+    return (
+      <SingleImageWithHotspots
+        key={imageIndex}
+        imageData={imageData}
+        imageIndex={imageIndex}
+        activeHotspot={activeHotspot}
+        setActiveHotspot={setActiveHotspot}
+      />
+    );
   };
+
+  if (!useTwoColumn && !imageUrl) {
+    return (
+      <section className="py-1 px-[10px] bg-white dark:bg-black">
+        <div className="text-red-500 p-4">No images provided to ImageWithHotspots</div>
+      </section>
+    );
+  }
 
   return (
     <section className="py-1 px-[10px] bg-white dark:bg-black">
       <div className="w-full max-w-none mx-auto relative">
         {useTwoColumn ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
-            {images!.map((imageData, index) =>
-              renderImageWithHotspots(imageData, index)
-            )}
-          </div>
+          <>
+            {/* Debug info - remove after testing */}
+            <div className="text-xs text-gray-400 mb-2">
+              Rendering {images?.length} images in two-column layout
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+              {images!.map((imageData, index) =>
+                renderImageWithHotspots(imageData, index)
+              )}
+            </div>
+          </>
         ) : (
           // Single image layout (backward compatible)
-          imageUrl &&
           renderImageWithHotspots(
-            { url: imageUrl, alt: imageAlt || '', hotspots },
+            { url: imageUrl!, alt: imageAlt || '', hotspots },
             0
           )
         )}

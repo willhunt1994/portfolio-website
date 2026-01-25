@@ -31,7 +31,7 @@ export async function fetchPinterestBoardImages(boardUrl: string): Promise<Array
     const seenUrls = new Set<string>();
     
     // Pattern 1: Extract from JSON-LD structured data
-    const jsonLdMatches = html.matchAll(/<script[^>]*type=["']application\/ld\+json["'][^>]*>(.*?)<\/script>/gis);
+    const jsonLdMatches = html.matchAll(/<script[^>]*type=["']application\/ld\+json["'][^>]*>([\s\S]*?)<\/script>/gi);
     for (const match of jsonLdMatches) {
       try {
         const jsonData = JSON.parse(match[1]);
@@ -77,7 +77,7 @@ export async function fetchPinterestBoardImages(boardUrl: string): Promise<Array
     }
     
     // Pattern 2: Extract from Pinterest's initial state JSON
-    const initialStateMatch = html.match(/window\.__initialData__\s*=\s*({.*?});/s);
+    const initialStateMatch = html.match(/window\.__initialData__\s*=\s*({[\s\S]*?});/);
     if (initialStateMatch) {
       try {
         const initialState = JSON.parse(initialStateMatch[1]);

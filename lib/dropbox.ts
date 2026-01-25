@@ -222,7 +222,7 @@ export async function fetchDropboxImages(folderPathOrUrl: string): Promise<Array
       cursor = data.cursor;
     }
 
-    console.log(`Successfully fetched ${images.length} images from Dropbox folder: ${folderPath}`);
+    console.log(`Successfully fetched ${images.length} images from Dropbox folder: ${folderPathOrUrl}`);
     return images;
   } catch (error) {
     console.error('Error fetching Dropbox images:', error);

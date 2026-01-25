@@ -1,4 +1,14 @@
+'use client';
+
+import { useState } from 'react';
 import Image from 'next/image';
+
+interface Hotspot {
+  x: number; // Percentage from left (0-100)
+  y: number; // Percentage from top (0-100)
+  title: string;
+  description: string;
+}
 
 interface ImageTextSectionProps {
   imageUrl: string;
@@ -6,6 +16,7 @@ interface ImageTextSectionProps {
   heading?: string;
   text?: string;
   imagePosition?: 'left' | 'right';
+  hotspots?: Hotspot[];
 }
 
 export default function ImageTextSection({
@@ -14,19 +25,24 @@ export default function ImageTextSection({
   heading,
   text,
   imagePosition = 'left',
+  hotspots = [],
 }: ImageTextSectionProps) {
+  const [activeHotspot, setActiveHotspot] = useState<string | null>(null);
+
   return (
-    <section className="py-20 px-[10px] bg-white dark:bg-black w-full">
+    <section className="pt-8 pb-20 px-[10px] bg-white dark:bg-black w-full">
       <div className="max-w-7xl mx-auto">
         <div className={`grid md:grid-cols-2 gap-12 items-center ${imagePosition === 'right' ? 'md:flex-row-reverse' : ''}`}>
           {/* Image */}
-          <div className={`relative aspect-[4/3] overflow-hidden rounded-lg ${imagePosition === 'right' ? 'md:order-2' : ''}`}>
-            <Image
-              src={imageUrl}
-              alt={imageAlt}
-              fill
-              className="object-cover"
-            />
+          <div className={`relative aspect-[4/3] ${imagePosition === 'right' ? 'md:order-2' : ''}`}>
+            <div className="relative w-full h-full overflow-hidden rounded-lg">
+              <Image
+                src={imageUrl}
+                alt={imageAlt}
+                fill
+                className="object-cover"
+              />
+            </div>
           </div>
 
           {/* Text Content */}
