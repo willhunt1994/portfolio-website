@@ -2,8 +2,6 @@
 
 import { useState } from 'react';
 import { MessageSquareMoreIcon, MessagesSquareIcon, MapPinIcon, PhoneIcon } from 'lucide-react';
-import Header from '@/components/shadcn-studio/blocks/hero-section-29/header';
-import type { Navigation } from '@/components/shadcn-studio/blocks/hero-navigation-02';
 import ContactUs from '@/components/shadcn-studio/blocks/contact-us-page-04/contact-us-page-04';
 import Link from 'next/link';
 
@@ -15,6 +13,10 @@ const navigationData: Navigation[] = [
   {
     title: 'Our Work',
     href: '/our-work'
+  },
+  {
+    title: 'Catalog',
+    href: '/catalog'
   }
 ];
 
@@ -89,8 +91,6 @@ export default function ContactUsPage() {
 
   return (
     <div className='flex min-h-screen flex-col relative'>
-      <Header navigationData={navigationData} />
-      
       <main className='flex flex-1 flex-col pt-20'>
         {/* Breadcrumb */}
         <div className="px-6 pt-0 pb-4 bg-white dark:bg-black">

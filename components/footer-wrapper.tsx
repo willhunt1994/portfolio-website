@@ -6,10 +6,10 @@ import MegaFooter from '@/components/shadcn-studio/blocks/mega-footer-02/mega-fo
 export default function FooterWrapper() {
   const pathname = usePathname();
   const isDashboard = pathname?.startsWith('/dashboard');
-  const isReceiving = pathname?.startsWith('/receiving');
+  const isOrders = pathname?.startsWith('/orders');
   const isMockupSubmissions = pathname?.startsWith('/mockup-submissions');
 
-  if (isDashboard || isReceiving || isMockupSubmissions) {
+  if (isDashboard || isOrders || isMockupSubmissions) {
     return null;
   }
 

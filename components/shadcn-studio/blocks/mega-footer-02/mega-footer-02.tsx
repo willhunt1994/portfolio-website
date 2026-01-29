@@ -3,7 +3,7 @@ export default function MegaFooter() {
   
   return (
     <footer className="bg-black border-t border-zinc-800">
-      <div className="max-w-7xl mx-auto px-[10px] py-6">
+      <div className="w-full max-w-none mx-auto px-4 py-6 sm:px-6 lg:px-8">
         <div className="flex flex-col">
           <div className="flex flex-wrap justify-between items-center w-full mb-1">
             <div className="flex flex-wrap gap-6 items-center text-sm text-white">
@@ -13,8 +13,8 @@ export default function MegaFooter() {
               <a href="/our-work" className="hover:text-zinc-300 transition-colors">
                 Our Work
               </a>
-              <a href="/contact" className="hover:text-zinc-300 transition-colors">
-                Contact
+              <a href="/catalog" className="hover:text-zinc-300 transition-colors">
+                Catalog
               </a>
               <a 
                 href="https://www.instagram.com/ethos_co" 

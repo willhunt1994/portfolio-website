@@ -1009,7 +1009,7 @@ const DashboardPage = () => {
             <div className="px-4 pt-4">
               <div className="flex items-center justify-between mb-4">
                 <Image
-                  src="https://cdn.shopify.com/s/files/1/0609/4752/9901/files/Ethos_Logo_-_Black.png?v=1767327560"
+                  src="https://cdn.shopify.com/s/files/1/0609/4752/9901/files/Ethos_Logo-05.jpg?v=1769654967"
                   alt="Ethos"
                   width={100}
                   height={40}

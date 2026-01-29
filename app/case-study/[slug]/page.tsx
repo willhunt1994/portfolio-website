@@ -1,8 +1,6 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import Header from '@/components/shadcn-studio/blocks/hero-section-29/header';
-import type { Navigation } from '@/components/shadcn-studio/blocks/hero-navigation-02';
 import Gallery from '@/components/shadcn-studio/blocks/gallery-component-04/gallery-component-04';
 import RichText from '@/components/shadcn-studio/blocks/rich-text-component/rich-text-component';
 import ProductShowcase from '@/components/shadcn-studio/blocks/product-showcase/product-showcase';
@@ -17,6 +15,10 @@ const navigationData: Navigation[] = [
   {
     title: 'Our Work',
     href: '/our-work'
+  },
+  {
+    title: 'Catalog',
+    href: '/catalog'
   }
 ];
 
@@ -200,8 +202,6 @@ export default function CaseStudyPage({ params }: CaseStudyPageProps) {
   
   return (
     <div className='flex min-h-screen flex-col relative'>
-      <Header navigationData={navigationData} />
-      
       <main className='flex flex-1 flex-col'>
         {slug === 'script' ? (
           <CollectionHero

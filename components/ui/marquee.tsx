@@ -1,53 +1,58 @@
-'use client';
-
+import * as React from 'react';
 import { cn } from '@/lib/utils';
 
-interface MarqueeProps {
+interface MarqueeProps extends React.ComponentPropsWithoutRef<'div'> {
+  children: React.ReactNode;
   className?: string;
-  reverse?: boolean;
-  pauseOnHover?: boolean;
-  children?: React.ReactNode;
-  vertical?: boolean;
-  repeat?: number;
   duration?: number;
+  delay?: number;
   gap?: number;
-  [key: string]: any;
+  pauseOnHover?: boolean;
+  repeat?: number;
+  reverse?: boolean;
+  vertical?: boolean;
 }
 
-export default function Marquee({
-  className,
-  reverse,
-  pauseOnHover = false,
-  children,
-  vertical = false,
-  repeat = 4,
-  duration = 40,
-  gap = 1,
-  ...props
-}: MarqueeProps) {
+function Marquee(props: MarqueeProps) {
+  const {
+    children,
+    className,
+    duration = 40,
+    delay = 0,
+    gap = 1,
+    pauseOnHover = false,
+    repeat = 4,
+    reverse = false,
+    vertical = false,
+    ...rest
+  } = props;
+
   return (
     <div
-      {...props}
-      style={{
-        '--duration': `${duration}s`,
-        '--gap': `${gap}rem`,
-      } as React.CSSProperties}
+      style={
+        {
+          '--marquee-duration': `${duration}s`,
+          '--marquee-delay': `${delay}s`,
+          '--marquee-gap': `${gap}rem`,
+        } as React.CSSProperties
+      }
       className={cn(
-        'group flex overflow-hidden p-2 [gap:var(--gap)]',
+        'group flex gap-[var(--marquee-gap)] overflow-hidden p-3',
         {
           'flex-row': !vertical,
           'flex-col': vertical,
         },
         className
       )}
+      {...rest}
     >
       {Array(repeat)
         .fill(0)
         .map((_, i) => (
           <div
             key={i}
-            className={cn('flex shrink-0 justify-around [gap:var(--gap)]', {
-              'animate-marquee flex-row': !vertical,
+            className={cn('flex shrink-0 justify-around gap-[var(--marquee-gap)] [animation-delay:var(--marquee-delay)]', {
+              'animate-marquee-horizontal flex-row': !vertical,
               'animate-marquee-vertical flex-col': vertical,
               'group-hover:[animation-play-state:paused]': pauseOnHover,
               '[animation-direction:reverse]': reverse,
@@ -60,3 +65,4 @@ export default function Marquee({
   );
 }
 
+export { Marquee, type MarqueeProps };

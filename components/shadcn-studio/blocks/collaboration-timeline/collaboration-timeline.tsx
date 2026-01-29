@@ -1,4 +1,5 @@
 import Image from 'next/image';
+import { ArrowDown } from 'lucide-react';
 
 interface TimelineEvent {
   title: string;
@@ -77,87 +78,91 @@ export default function CollaborationTimeline({
   ]
 }: CollaborationTimelineProps) {
   return (
-    <section className="py-20 px-6 bg-white dark:bg-black">
-      <div className="max-w-7xl mx-auto">
-        <h2 className="text-4xl md:text-5xl font-bold text-black dark:text-white mb-4 text-center">
+    <section className="py-12 px-4 bg-white dark:bg-black">
+      <div className="max-w-5xl mx-auto">
+        <h2 className="text-2xl md:text-3xl font-bold text-black dark:text-white mb-2 text-center">
           Our Collaboration Process
         </h2>
-        <p className="text-lg text-zinc-600 dark:text-zinc-400 mb-16 text-center max-w-3xl mx-auto">
+        <p className="text-sm md:text-base text-zinc-600 dark:text-zinc-400 mb-10 text-center max-w-2xl mx-auto">
           Every collaboration receives meticulous attention at every stage. Here's how we ensure exceptional results through our detailed process.
         </p>
         
         <div className="relative">
-          {/* Vertical timeline line */}
-          <div className="absolute left-8 md:left-1/2 top-0 bottom-0 w-0.5 bg-zinc-200 dark:bg-zinc-800 transform md:-translate-x-1/2"></div>
-          
-          <div className="space-y-12">
+          <div className="space-y-6">
             {events.map((event, index) => {
               const isEven = index % 2 === 0;
               const contentOnLeft = isEven;
+              const isLast = index === events.length - 1;
               
               return (
-                <div
-                  key={index}
-                  className="relative flex flex-col md:flex-row items-start md:items-center gap-6"
-                >
-                  {/* Timeline dot */}
-                  <div className="absolute left-8 md:left-1/2 w-4 h-4 bg-black dark:bg-white rounded-full border-4 border-white dark:border-black transform md:-translate-x-1/2 z-10"></div>
-                  
-                  {/* Image on opposite side of content */}
-                  {event.image && (
+                <div key={index}>
+                  <div className="relative flex flex-col md:flex-row items-start md:items-center gap-4">
+                    {/* Timeline dot */}
+                    <div className="absolute left-4 md:left-1/2 w-3 h-3 bg-black dark:bg-white rounded-full border-2 border-white dark:border-black transform md:-translate-x-1/2 z-10"></div>
+                    
+                    {/* Image on opposite side of content */}
+                    {event.image && (
+                      <div
+                        className={`w-full md:w-1/2 pl-12 md:pl-0 ${
+                          contentOnLeft ? 'md:order-2 md:pl-6' : 'md:order-1 md:pr-6'
+                        }`}
+                      >
+                        <div className="relative w-full aspect-video rounded-md overflow-hidden border border-zinc-200 dark:border-zinc-800">
+                          <Image
+                            src={event.image}
+                            alt={event.imageAlt || event.title}
+                            fill
+                            className="object-cover"
+                          />
+                        </div>
+                      </div>
+                    )}
+                    
+                    {/* Content */}
                     <div
-                      className={`w-full md:w-1/2 pl-16 md:pl-0 ${
-                        contentOnLeft ? 'md:order-2 md:pl-8' : 'md:order-1 md:pr-8'
+                      className={`w-full md:w-1/2 pl-12 md:pl-0 ${
+                        contentOnLeft ? 'md:order-1 md:pr-6 md:text-right' : 'md:order-2 md:ml-auto md:pl-6'
                       }`}
                     >
-                      <div className="relative w-full aspect-video rounded-lg overflow-hidden border border-zinc-200 dark:border-zinc-800">
-                        <Image
-                          src={event.image}
-                          alt={event.imageAlt || event.title}
-                          fill
-                          className="object-cover"
-                        />
+                      <div className="bg-zinc-50 dark:bg-zinc-900 rounded-md p-4 border border-zinc-200 dark:border-zinc-800">
+                        <h3 className="text-base md:text-lg font-bold text-black dark:text-white mb-1.5">
+                          {event.title}
+                        </h3>
+                        <p className="text-xs md:text-sm text-zinc-600 dark:text-zinc-400 mb-3">
+                          {event.description}
+                        </p>
+                        {event.details && event.details.length > 0 && (
+                          <ul className={`space-y-1 ${contentOnLeft ? 'md:text-right' : ''}`}>
+                            {event.details.map((detail, detailIndex) => (
+                              <li
+                                key={detailIndex}
+                                className="text-xs text-zinc-500 dark:text-zinc-500 flex items-center gap-1.5"
+                              >
+                                {contentOnLeft ? (
+                                  <>
+                                    <span className="md:order-2">{detail}</span>
+                                    <span className="md:order-1 text-black dark:text-white">•</span>
+                                  </>
+                                ) : (
+                                  <>
+                                    <span className="text-black dark:text-white">•</span>
+                                    <span>{detail}</span>
+                                  </>
+                                )}
+                              </li>
+                            ))}
+                          </ul>
+                        )}
                       </div>
                     </div>
-                  )}
-                  
-                  {/* Content */}
-                  <div
-                    className={`w-full md:w-1/2 pl-16 md:pl-0 ${
-                      contentOnLeft ? 'md:order-1 md:pr-8 md:text-right' : 'md:order-2 md:ml-auto md:pl-8'
-                    }`}
-                  >
-                    <div className="bg-zinc-50 dark:bg-zinc-900 rounded-lg p-6 border border-zinc-200 dark:border-zinc-800">
-                      <h3 className="text-xl font-bold text-black dark:text-white mb-2">
-                        {event.title}
-                      </h3>
-                      <p className="text-zinc-600 dark:text-zinc-400 mb-4">
-                        {event.description}
-                      </p>
-                      {event.details && event.details.length > 0 && (
-                        <ul className={`space-y-2 ${contentOnLeft ? 'md:text-right' : ''}`}>
-                          {event.details.map((detail, detailIndex) => (
-                            <li
-                              key={detailIndex}
-                              className="text-sm text-zinc-500 dark:text-zinc-500 flex items-center gap-2"
-                            >
-                              {contentOnLeft ? (
-                                <>
-                                  <span className="md:order-2">{detail}</span>
-                                  <span className="md:order-1 text-black dark:text-white">•</span>
-                                </>
-                              ) : (
-                                <>
-                                  <span className="text-black dark:text-white">•</span>
-                                  <span>{detail}</span>
-                                </>
-                              )}
-                            </li>
-                          ))}
-                        </ul>
-                      )}
-                    </div>
                   </div>
+                  
+                  {/* Arrow connecting to next step */}
+                  {!isLast && (
+                    <div className="flex justify-center my-2">
+                      <ArrowDown className="w-4 h-4 text-zinc-400 dark:text-zinc-600" />
+                    </div>
+                  )}
                 </div>
               );
             })}

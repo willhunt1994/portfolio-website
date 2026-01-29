@@ -3,6 +3,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
+import { cn } from '@/lib/utils';
 
 interface BlogCard {
   img: string;
@@ -16,9 +17,11 @@ interface BlogCard {
 interface BlogProps {
   blogCards: BlogCard[];
   itemsPerPage?: number;
+  /** When true, section uses full desktop page width (no max-width) */
+  fullWidth?: boolean;
 }
 
-export default function Blog({ blogCards, itemsPerPage = 12 }: BlogProps) {
+export default function Blog({ blogCards, itemsPerPage = 12, fullWidth = false }: BlogProps) {
   const searchParams = useSearchParams();
   const currentPage = parseInt(searchParams.get('page') || '1', 10);
   const selectedTags = searchParams.get('tags')?.split(',').filter(Boolean) || [];
@@ -46,16 +49,16 @@ export default function Blog({ blogCards, itemsPerPage = 12 }: BlogProps) {
   };
 
   return (
-    <section className="py-20 px-[10px] bg-white dark:bg-black">
-      <div className="max-w-7xl mx-auto">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 items-stretch">
+    <section className="pt-8 pb-20 px-[10px] bg-white dark:bg-black">
+      <div className={cn('mx-auto', fullWidth ? 'w-full max-w-none px-4 sm:px-6 lg:px-8' : 'max-w-7xl')}>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 items-stretch">
           {currentCards.map((card, index) => (
             <Link
               key={startIndex + index}
               href={card.blogLink}
               className="group block h-full"
             >
-              <div className="relative overflow-hidden rounded-lg bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 transition-all hover:border-zinc-400 dark:hover:border-zinc-600 h-full flex flex-col">
+              <div className="relative overflow-hidden rounded-[2px] bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 transition-all hover:border-zinc-400 dark:hover:border-zinc-600 h-full flex flex-col">
                 <div className="aspect-[4/5] relative flex-shrink-0">
                   <Image
                     src={card.img}

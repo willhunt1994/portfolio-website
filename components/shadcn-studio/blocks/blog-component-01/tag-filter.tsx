@@ -44,7 +44,7 @@ export default function TagFilter({ allTags, blogCards }: TagFilterProps) {
   return (
     <div className="sticky top-16 z-40 py-6 px-[10px] bg-white dark:bg-black border-b border-zinc-200 dark:border-zinc-800">
       <div className="max-w-7xl mx-auto">
-        <div className="flex flex-wrap gap-3">
+        <div className="flex flex-wrap gap-1.5">
           {allTags.map((tag) => {
             const isSelected = selectedTags.includes(tag);
             const count = getTagCount(tag);
@@ -52,7 +52,7 @@ export default function TagFilter({ allTags, blogCards }: TagFilterProps) {
               <button
                 key={tag}
                 onClick={() => toggleTag(tag)}
-                className={`flex items-center gap-2 px-4 py-2 rounded-md transition-colors text-sm font-medium ${
+                className={`flex items-center gap-2 px-4 py-2 rounded-[2px] transition-colors text-sm font-medium ${
                   isSelected
                     ? 'bg-black dark:bg-white text-white dark:text-black'
                     : 'bg-zinc-100 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300 hover:bg-zinc-200 dark:hover:bg-zinc-700'

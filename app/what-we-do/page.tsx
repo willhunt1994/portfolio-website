@@ -1,67 +1,51 @@
-import Header from '@/components/shadcn-studio/blocks/hero-section-29/header';
-import type { Navigation } from '@/components/shadcn-studio/blocks/hero-navigation-02';
-import ProcessSteps from '@/components/shadcn-studio/blocks/what-we-do-section/process-steps';
-import Testimonial from '@/components/shadcn-studio/blocks/testimonial-component/testimonial-component';
 import CustomizationMethods from '@/components/shadcn-studio/blocks/what-we-do-section/customization-methods';
 import ImageTextSection from '@/components/shadcn-studio/blocks/image-text-section/image-text-section';
 import RichText from '@/components/shadcn-studio/blocks/rich-text-component/rich-text-component';
 import CorporateFranchiseSection from '@/components/shadcn-studio/blocks/what-we-do-section/corporate-franchise-section';
-import Link from 'next/link';
+import BentoGrid, { type BentoItem } from '@/components/shadcn-studio/blocks/bento-grid-19/bento-grid-19';
 
-const navigationData: Navigation[] = [
+// Customize your bento grid items here - combined into one grid
+const bentoItems: BentoItem[] = [
+  // First row - 2 wide boxes with 4:5 aspect ratio
   {
-    title: 'What We Do',
-    href: '/what-we-do'
+    id: 'row1-col1',
+    title: 'Be Right Back',
+    description: 'Get some inspo from our latest collection',
+    span: { col: 2, row: 1 },
+    image: 'https://cdn.shopify.com/s/files/1/0609/4752/9901/files/BF5A8725.jpg?v=1769622587',
+    imageAlt: 'Bento grid image 1',
+    className: 'aspect-[4/5]',
+    textPosition: 'bottom-left',
+    buttonText: 'View More',
+    buttonHref: '/our-work',
   },
   {
-    title: 'Our Work',
-    href: '/our-work'
-  }
+    id: 'row1-col2',
+    title: 'Catalog',
+    description: 'All the things we can customize',
+    span: { col: 2, row: 1 },
+    image: 'https://cdn.shopify.com/s/files/1/0609/4752/9901/files/Hat_FlatlaysArtboard_1.jpg?v=1769623556',
+    imageAlt: 'Bento grid image 2',
+    className: 'aspect-[4/5]',
+    textColor: 'black',
+    textPosition: 'top-left',
+    buttonText: 'View Catalog',
+    buttonHref: '/catalog',
+  },
 ];
 
 export default function WhatWeDo() {
   return (
     <div className='flex min-h-screen flex-col relative'>
-      <Header navigationData={navigationData} />
-      
-      <main className='flex flex-1 flex-col pt-20'>
-        {/* Breadcrumb */}
-        <div className="px-6 pt-0 pb-4 bg-white dark:bg-black">
-          <div className="max-w-7xl mx-auto">
-            <nav className="text-sm text-zinc-600 dark:text-zinc-400">
-              <Link href="/" className="hover:text-black dark:hover:text-white">Home</Link>
-              {' > '}
-              <span className="text-black dark:text-white">What We Do</span>
-            </nav>
+      <main className='flex flex-1 flex-col'>
+        <div className="container mx-auto px-4 pt-24 pb-8 md:pt-28 md:pb-12">
+          <div className="mb-2">
+            <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">What We Do</h1>
+            <p className="text-lg text-gray-600">In short, we create custom goods to elevate retail spaces</p>
           </div>
         </div>
-
-        {/* What We Do Process Steps */}
-        <ProcessSteps />
-
-        {/* Testimonial Section */}
-        <Testimonial 
-          testimonials={[
-            {
-              clientName: 'Client Name',
-              clientPosition: 'Position At Company',
-              testimonialTitle: 'Testimonial Title',
-              testimonialText: 'Full testimonial'
-            },
-            {
-              clientName: 'Client Name 2',
-              clientPosition: 'Position At Company 2',
-              testimonialTitle: 'Testimonial Title 2',
-              testimonialText: 'Full testimonial 2'
-            },
-            {
-              clientName: 'Client Name 3',
-              clientPosition: 'Position At Company 3',
-              testimonialTitle: 'Testimonial Title 3',
-              testimonialText: 'Full testimonial 3'
-            }
-          ]}
-        />
+        {/* Bento Grid - First row only */}
+        <BentoGrid items={bentoItems} className="pt-4" />
 
         {/* Customization Methods */}
         <CustomizationMethods 

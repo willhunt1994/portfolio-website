@@ -8,11 +8,11 @@ import {
   SearchIcon,
   FilterIcon,
   LoaderIcon,
-  ChevronDownIcon,
+  ArrowUpDownIcon,
   ChevronRightIcon,
-  DownloadIcon,
+  ChevronDownIcon,
   UploadIcon,
-  PencilIcon,
+  SendIcon,
 } from 'lucide-react'
 
 import { Input } from '@/components/ui/input'
@@ -29,7 +29,7 @@ interface Product {
   minimums: string;
   pricing: string;
   internalStatus: 'Pending' | 'Approved By Client - Prep For Upload' | 'Prepped - Create Draft Product' | 'Drafted - Add Customization' | 'Customization Added - Final Check' | 'Checked - Send To Client' | 'Sent To Client' | 'Removed';
-  externalStatus: 'Pending' | 'Approved' | 'Revisions Requested' | 'Awaiting Response' | 'Rejected';
+  externalStatus: 'Approved' | 'Revisions Requested' | 'Awaiting Customer Response' | 'Rejected';
   mockupImage?: string;
   notes?: string;
 }
@@ -46,7 +46,10 @@ interface MockupSubmission {
   status: 'open' | 'closed';
   submittedDate: Date;
   deadline?: Date;
+  closedDate?: Date;
   companyName: string;
+  socialMedia?: string;
+  website?: string;
   productCount: number;
   customerName: string;
   customerEmail: string;
@@ -73,7 +76,6 @@ const generateSubmissionNumber = (): string => {
   return `SUB#${num}`;
 };
 
-
 const generateStatus = (): 'open' | 'closed' => {
   return Math.random() > 0.5 ? 'open' : 'closed';
 };
@@ -93,7 +95,32 @@ const generateCompanyName = (): string => {
 };
 
 const generateProductCount = (): number => {
-  return Math.floor(Math.random() * 50) + 1; // 1-50 products
+  return 3; // Fixed to 3 products for sample data
+};
+
+const generateSocialMedia = (): string => {
+  const platforms = [
+    '@company_instagram',
+    '@company_twitter',
+    '@company_facebook',
+    'linkedin.com/company/company-name',
+    'instagram.com/company',
+    'facebook.com/company',
+    'twitter.com/company'
+  ];
+  return platforms[Math.floor(Math.random() * platforms.length)];
+};
+
+const generateWebsite = (): string => {
+  const domains = [
+    'www.company.com',
+    'company.com',
+    'www.company.io',
+    'company.io',
+    'www.company.co',
+    'company.co'
+  ];
+  return domains[Math.floor(Math.random() * domains.length)];
 };
 
 const generateCustomerName = (): string => {
@@ -142,10 +169,9 @@ const generateProduct = (index: number): Product => {
     'Removed'
   ];
   const externalStatuses: Product['externalStatus'][] = [
-    'Pending',
     'Approved',
     'Revisions Requested',
-    'Awaiting Response',
+    'Awaiting Customer Response',
     'Rejected'
   ];
   
@@ -205,19 +231,35 @@ const generateDeadline = (): Date => {
 
 type StatusFilter = 'open' | 'closed';
 
+type SortOption = 'newest' | 'oldest' | 'company-az';
+
 const MockupSubmissionsPage = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedSubmission, setSelectedSubmission] = useState<string | null>(null);
   const [statusFilters, setStatusFilters] = useState<Set<StatusFilter>>(new Set());
+  const [sortOption, setSortOption] = useState<SortOption>('newest');
   const [submissions, setSubmissions] = useState<MockupSubmission[]>([]);
   const [ordersLoaded, setOrdersLoaded] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [sortDropdownOpen, setSortDropdownOpen] = useState(false);
   const [expandedProducts, setExpandedProducts] = useState<Set<string>>(new Set());
   const [productNotes, setProductNotes] = useState<Record<string, string>>({});
+  const [productMinimums, setProductMinimums] = useState<Record<string, string>>({});
+  const [productPricing, setProductPricing] = useState<Record<string, string>>({});
+  const [productMockups, setProductMockups] = useState<Record<string, File | null>>({});
+  const [productStatusFilters, setProductStatusFilters] = useState<Set<Product['externalStatus']>>(new Set());
+  const [productFilterDropdownOpen, setProductFilterDropdownOpen] = useState(false);
+  const [transitioningProductId, setTransitioningProductId] = useState<string | null>(null);
+  const [expandingProductId, setExpandingProductId] = useState<string | null>(null);
+  const [selectedProducts, setSelectedProducts] = useState<Set<string>>(new Set());
   const filterButtonRef = useRef<HTMLButtonElement>(null);
+  const productFilterButtonRef = useRef<HTMLButtonElement>(null);
+  const productFilterDropdownRef = useRef<HTMLDivElement>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const sortDropdownRef = useRef<HTMLDivElement>(null);
+  const sortButtonRef = useRef<HTMLButtonElement>(null);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
 
   // Generate initial submissions
@@ -230,14 +272,26 @@ const MockupSubmissionsPage = () => {
       const submittedDate = generateSubmittedDate();
       const customerName = generateCustomerName();
       const productCount = generateProductCount();
+      const status = generateStatus();
+      
+      // Generate closed date if status is closed (random date after submission date)
+      let closedDate: Date | undefined;
+      if (status === 'closed') {
+        closedDate = new Date(submittedDate);
+        const daysAfter = Math.floor(Math.random() * 30) + 1; // 1-30 days after submission
+        closedDate.setDate(closedDate.getDate() + daysAfter);
+      }
       
       initialSubmissions.push({
         id: uniqueId,
         submissionNumber: generateSubmissionNumber(),
-        status: generateStatus(),
+        status,
         submittedDate,
         deadline: Math.random() > 0.3 ? generateDeadline() : undefined,
+        closedDate,
         companyName: generateCompanyName(),
+        socialMedia: generateSocialMedia(),
+        website: generateWebsite(),
         productCount,
         customerName,
         customerEmail: generateCustomerEmail(customerName),
@@ -263,6 +317,14 @@ const MockupSubmissionsPage = () => {
       ) {
         setDropdownOpen(false);
       }
+      if (
+        productFilterDropdownRef.current &&
+        productFilterButtonRef.current &&
+        !productFilterDropdownRef.current.contains(event.target as Node) &&
+        !productFilterButtonRef.current.contains(event.target as Node)
+      ) {
+        setProductFilterDropdownOpen(false);
+      }
     };
 
     document.addEventListener('mousedown', handleClickOutside);
@@ -283,14 +345,27 @@ const MockupSubmissionsPage = () => {
           const submittedDate = generateSubmittedDate();
           const customerName = generateCustomerName();
           const productCount = generateProductCount();
+          const status = generateStatus();
           
+          // Generate closed date if status is closed (random date after submission date)
+          let closedDate: Date | undefined;
+          if (status === 'closed') {
+            closedDate = new Date(submittedDate);
+            const daysAfter = Math.floor(Math.random() * 30) + 1; // 1-30 days after submission
+            closedDate.setDate(closedDate.getDate() + daysAfter);
+          }
+          
+          const companyName = generateCompanyName();
           newSubmissions.push({
             id: uniqueId,
             submissionNumber: generateSubmissionNumber(),
-            status: generateStatus(),
+            status,
             submittedDate,
             deadline: Math.random() > 0.3 ? generateDeadline() : undefined,
-            companyName: generateCompanyName(),
+            closedDate,
+            companyName,
+            socialMedia: generateSocialMedia(),
+            website: generateWebsite(),
             productCount,
             customerName,
             customerEmail: generateCustomerEmail(customerName),
@@ -341,23 +416,29 @@ const MockupSubmissionsPage = () => {
 
   const filteredSubmissions = useMemo(() => {
     const searchLower = searchQuery.toLowerCase().trim();
-    return submissions.filter(submission => {
+    const filtered = submissions.filter(submission => {
       const matchesSearch = searchLower === '' || 
         submission.submissionNumber.toLowerCase().includes(searchLower);
       const matchesStatus = statusFilters.size === 0 || statusFilters.has(submission.status);
       return matchesSearch && matchesStatus;
     });
-  }, [submissions, searchQuery, statusFilters]);
+    
+    // Apply sorting based on selected option
+    const sorted = [...filtered].sort((a, b) => {
+      if (sortOption === 'newest') {
+        return b.submittedDate.getTime() - a.submittedDate.getTime();
+      } else if (sortOption === 'oldest') {
+        return a.submittedDate.getTime() - b.submittedDate.getTime();
+      } else if (sortOption === 'company-az') {
+        return a.companyName.localeCompare(b.companyName);
+      }
+      return 0;
+    });
+    
+    return sorted;
+  }, [submissions, searchQuery, statusFilters, sortOption]);
 
   const filterCount = statusFilters.size;
-
-  const formatDate = (date: Date): string => {
-    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-    const day = date.getDate();
-    const month = months[date.getMonth()];
-    const year = date.getFullYear();
-    return `${month} ${day}${day === 1 || day === 21 || day === 31 ? 'st' : day === 2 || day === 22 ? 'nd' : day === 3 || day === 23 ? 'rd' : 'th'}, ${year}`;
-  };
 
   const formatDeadline = (date: Date): string => {
     const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
@@ -373,17 +454,6 @@ const MockupSubmissionsPage = () => {
     return `${month}/${day}/${year}`;
   };
 
-  const formatHistoryDate = (date: Date): string => {
-    const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
-    const month = months[date.getMonth()];
-    const day = date.getDate();
-    const year = date.getFullYear();
-    const hours = date.getHours() % 12 || 12;
-    const minutes = date.getMinutes().toString().padStart(2, '0');
-    const ampm = date.getHours() >= 12 ? 'pm' : 'am';
-    return `${month} ${day}${day === 1 || day === 21 || day === 31 ? 'st' : day === 2 || day === 22 ? 'nd' : day === 3 || day === 23 ? 'rd' : 'th'} ${year} @ ${hours}:${minutes}${ampm} PST`;
-  };
-
   const toggleProductExpansion = (productId: string) => {
     setExpandedProducts(prev => {
       const newSet = new Set(prev);
@@ -396,6 +466,172 @@ const MockupSubmissionsPage = () => {
     });
   };
 
+  const handleSaveProductChanges = (productId: string) => {
+    // Save all changes for this product
+    // In a real app, this would make an API call to save the data
+    // For now, we'll just update the local state and show a transition
+    
+    // Here you would typically:
+    // - Save notes: productNotes[productId]
+    // - Save minimums: productMinimums[productId]
+    // - Save pricing: productPricing[productId]
+    // - Upload mockup PDF: productMockups[productId]
+    
+    if (!selectedSubmissionData) return;
+    
+    // Get filtered products (respecting status filters)
+    const filteredProducts = selectedSubmissionData.products.filter((product) => {
+      if (productStatusFilters.size === 0) return true;
+      return productStatusFilters.has(product.externalStatus);
+    });
+    
+    // Find the current product index in filtered list
+    const currentIndex = filteredProducts.findIndex(p => p.id === productId);
+    
+    // Find the next product
+    const nextProduct = filteredProducts[currentIndex + 1];
+    
+    if (nextProduct) {
+      // Close current product and animate to next
+      setTransitioningProductId(productId);
+      setExpandingProductId(nextProduct.id);
+      
+      setTimeout(() => {
+        setExpandedProducts(prev => {
+          const newSet = new Set(prev);
+          newSet.delete(productId);
+          newSet.add(nextProduct.id);
+          return newSet;
+        });
+        
+        setTimeout(() => {
+          setTransitioningProductId(null);
+          setExpandingProductId(null);
+          
+          // Scroll to the next product
+          setTimeout(() => {
+            const nextProductElement = document.getElementById(`product-${nextProduct.id}`);
+            if (nextProductElement) {
+              nextProductElement.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            }
+          }, 50);
+        }, 50);
+      }, 300);
+    } else {
+      // No more products, just close current one
+      setTransitioningProductId(productId);
+      setTimeout(() => {
+        setExpandedProducts(prev => {
+          const newSet = new Set(prev);
+          newSet.delete(productId);
+          return newSet;
+        });
+        setTransitioningProductId(null);
+      }, 300);
+    }
+  };
+
+  const getStatusColor = (status: string): string => {
+    if (status === 'Approved') return 'bg-green-100 text-green-700 border-green-200';
+    if (status === 'Revisions Requested') return 'bg-yellow-100 text-yellow-700 border-yellow-200';
+    if (status === 'Awaiting Customer Response') return 'bg-blue-100 text-blue-700 border-blue-200';
+    if (status === 'Rejected') return 'bg-red-100 text-red-700 border-red-200';
+    return 'bg-gray-100 text-gray-700 border-gray-200';
+  };
+
+  const toggleProductStatusFilter = useCallback((status: Product['externalStatus']) => {
+    setProductStatusFilters(prev => {
+      const newFilters = new Set(prev);
+      if (newFilters.has(status)) {
+        newFilters.delete(status);
+      } else {
+        newFilters.add(status);
+      }
+      return newFilters;
+    });
+  }, []);
+
+  const clearProductStatusFilters = useCallback(() => {
+    setProductStatusFilters(new Set());
+  }, []);
+
+  const handleProductSelection = useCallback((productId: string, checked: boolean) => {
+    setSelectedProducts(prev => {
+      const newSet = new Set(prev);
+      if (checked) {
+        newSet.add(productId);
+      } else {
+        newSet.delete(productId);
+      }
+      return newSet;
+    });
+  }, []);
+
+  const handleDuplicateProducts = useCallback(() => {
+    if (!selectedSubmissionData || selectedProducts.size === 0) return;
+
+    setSubmissions(prev => {
+      return prev.map(submission => {
+        if (submission.id !== selectedSubmissionData.id) return submission;
+
+        // Get all selected product IDs in order
+        const filteredProducts = submission.products.filter((product) => {
+          if (productStatusFilters.size === 0) return true;
+          return productStatusFilters.has(product.externalStatus);
+        });
+
+        const selectedProductIds = filteredProducts
+          .filter(p => selectedProducts.has(p.id))
+          .map(p => p.id);
+
+        if (selectedProductIds.length === 0) return submission;
+
+        // Start with a copy of all products
+        let newProducts = [...submission.products];
+
+        // Process selected products in reverse order to avoid index shifting issues
+        const selectedIndices = selectedProductIds
+          .map(id => newProducts.findIndex(p => p.id === id))
+          .filter(idx => idx !== -1)
+          .sort((a, b) => b - a); // Sort descending
+
+        selectedIndices.forEach(originalIndex => {
+          const originalProduct = newProducts[originalIndex];
+          
+          // Create duplicate with new ID
+          const duplicate: Product = {
+            ...originalProduct,
+            id: `product-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+          };
+          
+          // Insert duplicate right after the original
+          newProducts.splice(originalIndex + 1, 0, duplicate);
+        });
+
+        // Renumber all products
+        const renumberedProducts = newProducts.map((p, idx) => {
+          const productNameMatch = p.name.match(/^\d+\.\s*(.+)$/);
+          const baseName = productNameMatch ? productNameMatch[1] : p.name;
+          return {
+            ...p,
+            name: `${idx + 1}. ${baseName}`
+          };
+        });
+
+        return {
+          ...submission,
+          products: renumberedProducts,
+          productCount: renumberedProducts.length
+        };
+      });
+    });
+
+    // Clear selection after duplication
+    setSelectedProducts(new Set());
+  }, [selectedSubmission, selectedProducts, productStatusFilters]);
+
+  const selectedSubmissionData = selectedSubmission ? filteredSubmissions.find(s => s.id === selectedSubmission) : null;
+
   return (
     <div className='flex h-dvh w-full overflow-hidden'>
       <SidebarProvider defaultOpen={true}>
@@ -405,7 +641,7 @@ const MockupSubmissionsPage = () => {
             <div className="px-4 pt-4">
               <div className="flex items-center justify-between mb-4">
                 <Image
-                  src="https://cdn.shopify.com/s/files/1/0609/4752/9901/files/Ethos_Logo_-_Black.png?v=1767327560"
+                  src="https://cdn.shopify.com/s/files/1/0609/4752/9901/files/Ethos_Logo-05.jpg?v=1769654967"
                   alt="Ethos"
                   width={100}
                   height={40}
@@ -502,9 +738,64 @@ const MockupSubmissionsPage = () => {
               </div>
             </div>
 
-            {/* Submission List Header */}
-            <div className="px-4 pt-0 pb-0">
-              <h2 className="font-semibold text-sm">Submission Number</h2>
+            {/* Submission List Header with Sort */}
+            <div className="px-4 pt-0 pb-2">
+              <div className="flex items-center justify-between">
+                <h2 className="font-semibold text-sm">Submission Number</h2>
+                <div className="relative">
+                  <button
+                    ref={sortButtonRef}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setSortDropdownOpen(!sortDropdownOpen);
+                    }}
+                    className="flex items-center gap-1 px-2 py-1 text-xs text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded transition-colors"
+                  >
+                    <ArrowUpDownIcon className="size-3" />
+                    <span>Sort</span>
+                  </button>
+                  {sortDropdownOpen && (
+                    <div
+                      ref={sortDropdownRef}
+                      className="absolute right-0 top-full mt-1 z-50 w-48 overflow-hidden rounded-md border bg-popover p-1 text-popover-foreground shadow-md"
+                    >
+                      <div
+                        onClick={() => {
+                          setSortOption('newest');
+                          setSortDropdownOpen(false);
+                        }}
+                        className={`relative flex cursor-pointer select-none items-center rounded-sm px-2 py-1.5 text-xs outline-none transition-colors ${
+                          sortOption === 'newest' ? 'bg-accent text-accent-foreground' : 'hover:bg-accent'
+                        }`}
+                      >
+                        Newest to Oldest
+                      </div>
+                      <div
+                        onClick={() => {
+                          setSortOption('oldest');
+                          setSortDropdownOpen(false);
+                        }}
+                        className={`relative flex cursor-pointer select-none items-center rounded-sm px-2 py-1.5 text-xs outline-none transition-colors ${
+                          sortOption === 'oldest' ? 'bg-accent text-accent-foreground' : 'hover:bg-accent'
+                        }`}
+                      >
+                        Oldest to Newest
+                      </div>
+                      <div
+                        onClick={() => {
+                          setSortOption('company-az');
+                          setSortDropdownOpen(false);
+                        }}
+                        className={`relative flex cursor-pointer select-none items-center rounded-sm px-2 py-1.5 text-xs outline-none transition-colors ${
+                          sortOption === 'company-az' ? 'bg-accent text-accent-foreground' : 'hover:bg-accent'
+                        }`}
+                      >
+                        Company Name (A-Z)
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </div>
             </div>
 
             {/* Scrollable Submission List */}
@@ -521,7 +812,11 @@ const MockupSubmissionsPage = () => {
                   return (
                     <div
                       key={submission.id}
-                      onClick={() => setSelectedSubmission(submission.id)}
+                      onClick={() => {
+                        setSelectedSubmission(submission.id);
+                        setTransitioningProductId(null);
+                        setExpandingProductId(null);
+                      }}
                       className={`px-4 py-3 border-b cursor-pointer hover:bg-accent transition-colors ${
                         selectedSubmission === submission.id ? 'bg-accent' : ''
                       }`}
@@ -543,6 +838,7 @@ const MockupSubmissionsPage = () => {
                             {submission.status === 'open' ? 'Open' : 'Closed'}
                           </span>
                         </div>
+                        <div className="text-xs text-gray-500">{formatSubmissionDate(submission.submittedDate)}</div>
                         <div className="flex flex-col gap-0.5">
                           <div className="text-xs text-gray-600">{submission.companyName}</div>
                           <div className="text-xs text-gray-500">{submission.productCount} product{submission.productCount !== 1 ? 's' : ''}</div>
@@ -562,215 +858,442 @@ const MockupSubmissionsPage = () => {
         </Sidebar>
         <div className='flex flex-1 flex-col overflow-hidden'>
           <main className='size-full flex-1 flex flex-col overflow-y-auto'>
-            {selectedSubmission ? (() => {
-              const submission = filteredSubmissions.find(s => s.id === selectedSubmission);
-              if (!submission) return null;
-
-              const getStatusColor = (status: string, type: 'internal' | 'external') => {
-                if (type === 'internal') {
-                  if (status === 'Pending') return 'bg-blue-100 text-gray-900 border-blue-200';
-                  if (status === 'Approved By Client - Prep For Upload') return 'bg-green-100 text-gray-900 border-green-200';
-                  if (status === 'Prepped - Create Draft Product') return 'bg-yellow-100 text-gray-900 border-yellow-200';
-                  if (status === 'Drafted - Add Customization') return 'bg-blue-100 text-gray-900 border-blue-200';
-                  if (status === 'Customization Added - Final Check') return 'bg-pink-100 text-gray-900 border-pink-200';
-                  if (status === 'Checked - Send To Client') return 'bg-blue-100 text-gray-900 border-blue-200';
-                  if (status === 'Sent To Client') return 'bg-cyan-100 text-gray-900 border-cyan-200';
-                  if (status === 'Removed') return 'bg-orange-100 text-gray-900 border-orange-200';
-                  return 'bg-gray-100 text-gray-900 border-gray-200';
-                } else {
-                  if (status === 'Pending') return 'bg-blue-100 text-gray-900 border-blue-200';
-                  if (status === 'Approved') return 'bg-green-100 text-gray-900 border-green-200';
-                  if (status === 'Revisions Requested') return 'bg-yellow-100 text-gray-900 border-yellow-200';
-                  if (status === 'Awaiting Response') return 'bg-blue-100 text-gray-900 border-blue-200';
-                  if (status === 'Rejected') return 'bg-orange-100 text-gray-900 border-orange-200';
-                  return 'bg-gray-100 text-gray-900 border-gray-200';
-                }
-              };
-
-              return (
-                <div className="flex flex-col flex-1 min-h-0">
-                  {/* Global Header */}
-                  <div className="px-6 pt-6 pb-4 border-b flex items-center justify-between">
-                    <h1 className="text-xl font-semibold text-gray-900">
-                      Mockups - Submission {submission.submissionNumber}
-                    </h1>
-                    <div className="flex items-center gap-3">
-                      <Button className="bg-gray-600 text-white hover:bg-gray-700">
-                        Send To Customer
-                      </Button>
-                      <Button className={`${submission.status === 'open' ? 'bg-blue-600' : 'bg-gray-600'} text-white hover:opacity-90`}>
-                        {submission.status === 'open' ? 'Open' : 'Closed'}
-                      </Button>
-                    </div>
-                  </div>
-
-                  <div className="flex-1 overflow-y-auto px-6 py-6">
-                    {/* Submission and Customer Details */}
-                    <div className="mb-8">
-                      <div className="flex items-start justify-between mb-4">
+            {selectedSubmissionData ? (
+              <div className="flex flex-col flex-1 min-h-0">
+                {/* Header Section */}
+                <div className="px-6 pt-6 pb-4 border-b">
+                  <div className="flex items-start justify-between mb-4">
+                    <div className="flex-1">
+                      <div className="flex items-start gap-8 flex-wrap">
                         <div>
-                          <h2 className="text-3xl font-bold text-gray-900 mb-2">{submission.submissionNumber}</h2>
-                          <p className="text-sm text-gray-600">Submission Date: {formatSubmissionDate(submission.submittedDate)}</p>
+                          <h2 className="text-2xl font-bold text-gray-900 mb-1">{selectedSubmissionData.submissionNumber}</h2>
+                          <p className="text-sm text-gray-600">Submitted: {formatSubmissionDate(selectedSubmissionData.submittedDate)}</p>
+                          {selectedSubmissionData.deadline && (
+                            <p className="text-sm text-gray-600">Due: {formatDeadline(selectedSubmissionData.deadline)}</p>
+                          )}
+                          {selectedSubmissionData.status === 'closed' && selectedSubmissionData.closedDate && (
+                            <p className="text-sm text-gray-600">Closed: {formatSubmissionDate(selectedSubmissionData.closedDate)}</p>
+                          )}
                         </div>
-                        <div className="text-right">
-                          <p className="text-sm text-gray-900"><span className="font-medium">Name:</span> {submission.customerName}</p>
-                          <p className="text-sm text-gray-900"><span className="font-medium">Email:</span> {submission.customerEmail}</p>
-                          <p className="text-sm text-gray-900"><span className="font-medium">Phone Number:</span> {submission.customerPhone}</p>
-                        </div>
                       </div>
                     </div>
-
-                    {/* Artwork and Notes */}
-                    <div className="mb-8">
-                      <div className="flex items-center justify-between mb-4">
-                        <h3 className="text-lg font-semibold text-gray-900">Artwork</h3>
-                        <Button className="bg-purple-600 text-white hover:bg-purple-700">
-                          <DownloadIcon className="size-4 mr-2" />
-                          Download Artwork
-                        </Button>
-                      </div>
-                      <div className="flex gap-2 mb-4">
-                        {submission.artworkImages.map((img, idx) => (
-                          <div key={idx} className="w-24 h-24 bg-gray-200 rounded overflow-hidden">
-                            <Image src={img} alt={`Artwork ${idx + 1}`} width={96} height={96} className="w-full h-full object-cover" />
-                          </div>
-                        ))}
-                      </div>
-                      <div>
-                        <p className="text-sm font-medium text-gray-900 mb-1">Notes:</p>
-                        <p className="text-sm text-gray-600">{submission.notes}</p>
-                      </div>
-                    </div>
-
-                    {/* Product Actions */}
-                    <div className="mb-4 flex items-center justify-between">
-                      <div className="flex items-center gap-3">
-                        <Button variant="outline" className="border-gray-300">
-                          Bulk Actions
-                        </Button>
-                        <Button variant="outline" className="border-gray-300">
-                          Download PDF
-                        </Button>
-                        <Button className="bg-purple-600 text-white hover:bg-purple-700">
-                          <UploadIcon className="size-4 mr-2" />
-                          Upload Mockups
-                        </Button>
-                      </div>
-                      <Button variant="outline" className="border-gray-300">
-                        <FilterIcon className="size-4 mr-2" />
-                        Filter Results
-                      </Button>
-                    </div>
-
-                    {/* Product Table */}
-                    <div className="border border-gray-200 rounded-lg overflow-hidden mb-8">
-                      <table className="w-full">
-                        <thead className="bg-gray-50 border-b border-gray-200">
-                          <tr>
-                            <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700">Product Name</th>
-                            <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700">Minimums</th>
-                            <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700">Pricing</th>
-                            <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700">Internal Product Status</th>
-                            <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700">External Product Status</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {submission.products.map((product) => {
-                            const isExpanded = expandedProducts.has(product.id);
-                            return (
-                              <React.Fragment key={product.id}>
-                                <tr className="border-b border-gray-200 hover:bg-gray-50 cursor-pointer" onClick={() => toggleProductExpansion(product.id)}>
-                                  <td className="px-4 py-3">
-                                    <div className="flex items-center gap-2">
-                                      {isExpanded ? (
-                                        <ChevronDownIcon className="size-4 text-gray-400" />
-                                      ) : (
-                                        <ChevronRightIcon className="size-4 text-gray-400" />
-                                      )}
-                                      <span className="text-sm text-gray-900">{product.name}</span>
-                                    </div>
-                                  </td>
-                                  <td className="px-4 py-3">
-                                    <div className="flex items-center gap-2">
-                                      <span className="text-sm text-gray-900">{product.minimums}</span>
-                                      <PencilIcon className="size-3 text-gray-400 cursor-pointer hover:text-gray-600" />
-                                    </div>
-                                  </td>
-                                  <td className="px-4 py-3">
-                                    <div className="flex items-center gap-2">
-                                      <span className="text-sm text-gray-900">{product.pricing}</span>
-                                      <PencilIcon className="size-3 text-gray-400 cursor-pointer hover:text-gray-600" />
-                                    </div>
-                                  </td>
-                                  <td className="px-4 py-3">
-                                    <span className={`px-2 py-1 rounded-full text-xs font-medium border ${getStatusColor(product.internalStatus, 'internal')}`}>
-                                      {product.internalStatus}
-                                    </span>
-                                  </td>
-                                  <td className="px-4 py-3">
-                                    <span className={`px-2 py-1 rounded-full text-xs font-medium border ${getStatusColor(product.externalStatus, 'external')}`}>
-                                      {product.externalStatus}
-                                    </span>
-                                  </td>
-                                </tr>
-                                {isExpanded && (
-                                  <tr className="bg-gray-50">
-                                    <td colSpan={5} className="px-4 py-6">
-                                      <div className="grid grid-cols-3 gap-6">
-                                        <div className="w-full h-96 bg-gray-200 rounded overflow-hidden">
-                                          {product.mockupImage ? (
-                                            <Image src={product.mockupImage} alt={product.name} width={400} height={600} className="w-full h-full object-cover" />
-                                          ) : (
-                                            <div className="w-full h-full flex items-center justify-center text-gray-400">
-                                              No image
-                                            </div>
-                                          )}
-                                        </div>
-                                        <div className="w-full h-96 bg-gray-100 rounded flex items-center justify-center border-2 border-dashed border-gray-300">
-                                          <div className="text-center">
-                                            <UploadIcon className="size-8 text-gray-400 mx-auto mb-2" />
-                                            <p className="text-sm text-gray-600">Upload Mockups</p>
-                                          </div>
-                                        </div>
-                                        <div className="flex flex-col">
-                                          <label className="text-sm font-medium text-gray-900 mb-2">Notes</label>
-                                          <textarea
-                                            className="flex-1 border border-gray-300 rounded p-3 text-sm resize-none"
-                                            placeholder="Add notes..."
-                                            value={productNotes[product.id] || product.notes || ''}
-                                            onChange={(e) => setProductNotes(prev => ({ ...prev, [product.id]: e.target.value }))}
-                                          />
-                                          <Button className="mt-3 bg-blue-600 text-white hover:bg-blue-700 w-full">
-                                            Save Changes
-                                          </Button>
-                                        </div>
-                                      </div>
-                                    </td>
-                                  </tr>
-                                )}
-                              </React.Fragment>
-                            );
-                          })}
-                        </tbody>
-                      </table>
-                    </div>
-
-                    {/* History Section */}
                     <div>
-                      <h3 className="text-lg font-semibold text-gray-900 mb-4">History</h3>
-                      <div className="space-y-3">
-                        {submission.history.map((item) => (
-                          <div key={item.id} className="flex items-center justify-between py-2 border-b border-gray-200 last:border-0">
-                            <p className="text-sm text-gray-900">{item.action}</p>
-                            <p className="text-sm text-gray-500">{formatHistoryDate(item.date)}</p>
-                          </div>
-                        ))}
-                      </div>
+                      <span className={`px-3 py-1.5 rounded-full text-sm font-medium border ${
+                        selectedSubmissionData.status === 'open' 
+                          ? 'bg-green-50 text-green-600 border-green-100' 
+                          : 'bg-red-50 text-red-600 border-red-100'
+                      }`}>
+                        {selectedSubmissionData.status === 'open' ? 'Open' : 'Closed'}
+                      </span>
                     </div>
                   </div>
                 </div>
-              );
-            })() : (
+
+                {/* Customer Info Section */}
+                <div className="px-6 py-6">
+                  <h3 className="text-lg font-semibold text-gray-900 mb-4">Customer Information</h3>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <p className="text-sm text-gray-900 mb-1">
+                        <span className="font-medium">Company:</span> {selectedSubmissionData.companyName}
+                      </p>
+                    </div>
+                    <div>
+                      <p className="text-sm text-gray-900 mb-1">
+                        <span className="font-medium">Name:</span> {selectedSubmissionData.customerName}
+                      </p>
+                    </div>
+                    <div>
+                      <p className="text-sm text-gray-900 mb-1">
+                        <span className="font-medium">Email:</span> {selectedSubmissionData.customerEmail}
+                      </p>
+                    </div>
+                    <div>
+                      <p className="text-sm text-gray-900 mb-1">
+                        <span className="font-medium">Phone Number:</span> {selectedSubmissionData.customerPhone}
+                      </p>
+                    </div>
+                    {selectedSubmissionData.website && (
+                      <div>
+                        <p className="text-sm text-gray-900 mb-1">
+                          <span className="font-medium">Website:</span> {selectedSubmissionData.website}
+                        </p>
+                      </div>
+                    )}
+                    {selectedSubmissionData.socialMedia && (
+                      <div>
+                        <p className="text-sm text-gray-900 mb-1">
+                          <span className="font-medium">Social Media:</span> {selectedSubmissionData.socialMedia}
+                        </p>
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+                {/* Products Section */}
+                <div className="px-6 py-6 border-t">
+                  <div className="flex items-center justify-between mb-4">
+                    <h3 className="text-lg font-semibold text-gray-900">Products</h3>
+                    <div className="flex items-center gap-2">
+                      {selectedProducts.size > 0 && (
+                        <button
+                          className="flex items-center gap-2 px-3 py-2 text-sm border border-gray-300 rounded-md hover:bg-gray-50 transition-colors bg-blue-50 border-blue-200 text-blue-700 hover:bg-blue-100"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleDuplicateProducts();
+                          }}
+                        >
+                          <span>Duplicate ({selectedProducts.size})</span>
+                        </button>
+                      )}
+                      <button
+                        className="flex items-center gap-2 px-3 py-2 text-sm border border-gray-300 rounded-md hover:bg-gray-50 transition-colors"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          // Handle upload mockups
+                        }}
+                      >
+                        <UploadIcon className="size-4" />
+                        <span>Upload Mockups</span>
+                      </button>
+                      <button
+                        className="flex items-center gap-2 px-3 py-2 text-sm border border-gray-300 rounded-md hover:bg-gray-50 transition-colors"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          // Handle send to customer
+                        }}
+                      >
+                        <SendIcon className="size-4" />
+                        <span>Send to Customer</span>
+                      </button>
+                      <div className="relative">
+                        <button
+                          ref={productFilterButtonRef}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setProductFilterDropdownOpen(!productFilterDropdownOpen);
+                          }}
+                          className="relative flex items-center gap-2 px-3 py-2 text-sm border border-gray-300 rounded-md hover:bg-gray-50 transition-colors"
+                        >
+                          <FilterIcon className="size-4" />
+                          <span>Filter</span>
+                          {productStatusFilters.size > 0 && (
+                            <span className="flex size-5 items-center justify-center rounded-full bg-primary text-[10px] text-primary-foreground font-medium">
+                              {productStatusFilters.size}
+                            </span>
+                          )}
+                        </button>
+                      {productFilterDropdownOpen && (
+                        <div
+                          ref={productFilterDropdownRef}
+                          className="absolute right-0 top-full mt-1 z-50 w-64 overflow-hidden rounded-md border bg-popover p-1 text-popover-foreground shadow-md"
+                        >
+                          <div className="px-2 py-1.5 text-xs font-semibold text-muted-foreground">
+                            Status
+                          </div>
+                          <div className="flex flex-col gap-1 px-2 pb-2">
+                            {(['Approved', 'Revisions Requested', 'Awaiting Customer Response', 'Rejected'] as Product['externalStatus'][]).map((status) => {
+                              const baseColor = getStatusColor(status);
+                              return (
+                                <div
+                                  key={status}
+                                  onClick={() => toggleProductStatusFilter(status)}
+                                  className={`relative flex cursor-pointer select-none items-center rounded-sm px-2 py-1.5 text-xs outline-none transition-colors border ${baseColor} ${
+                                    productStatusFilters.has(status)
+                                      ? 'ring-2 ring-gray-400 ring-offset-1'
+                                      : ''
+                                  }`}
+                                >
+                                  {status}
+                                </div>
+                              );
+                            })}
+                          </div>
+                          {productStatusFilters.size > 0 && (
+                            <>
+                              <div className="-mx-1 my-1 h-px bg-muted" />
+                              <div
+                                onClick={clearProductStatusFilters}
+                                className="relative flex cursor-pointer select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-colors hover:bg-accent text-muted-foreground hover:text-foreground"
+                              >
+                                Clear all filters
+                              </div>
+                            </>
+                          )}
+                        </div>
+                      )}
+                      </div>
+                    </div>
+                  </div>
+                  <div className="space-y-0 border border-gray-200 rounded-lg overflow-hidden">
+                    {selectedSubmissionData.products
+                      .filter((product) => {
+                        if (productStatusFilters.size === 0) return true;
+                        return productStatusFilters.has(product.externalStatus);
+                      })
+                      .map((product, index) => {
+                      const isExpanded = expandedProducts.has(product.id);
+                      return (
+                        <React.Fragment key={product.id}>
+                          {/* Product Row */}
+                          <div 
+                            id={`product-${product.id}`}
+                            className={`flex items-center gap-3 px-4 py-3 border-b border-gray-200 hover:bg-gray-50 cursor-pointer transition-all duration-300 last:border-b-0 ${
+                              transitioningProductId === product.id ? 'opacity-0 -translate-x-4' : 'opacity-100 translate-x-0'
+                            }`}
+                            onClick={() => toggleProductExpansion(product.id)}
+                          >
+                            {/* Checkbox */}
+                            <input
+                              type="checkbox"
+                              className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                              checked={selectedProducts.has(product.id)}
+                              onChange={(e) => {
+                                e.stopPropagation();
+                                handleProductSelection(product.id, e.target.checked);
+                              }}
+                              onClick={(e) => e.stopPropagation()}
+                            />
+                            
+                            {/* Chevron Icon */}
+                            <div className="flex-shrink-0">
+                              {isExpanded ? (
+                                <ChevronDownIcon className="size-4 text-gray-400" />
+                              ) : (
+                                <ChevronRightIcon className="size-4 text-gray-400" />
+                              )}
+                            </div>
+                            
+                            {/* Product Name */}
+                            <div className="flex-1 min-w-0">
+                              <span className="text-sm text-gray-900">{product.name}</span>
+                            </div>
+                            
+                            {/* Status Badge */}
+                            <div className="flex-shrink-0">
+                              <span className={`px-2 py-1 rounded-full text-xs font-medium border ${getStatusColor(product.externalStatus)}`}>
+                                {product.externalStatus}
+                              </span>
+                            </div>
+                          </div>
+                          
+                          {/* Expanded Content */}
+                          {isExpanded && (
+                            <div className={`bg-gray-50 border-b border-gray-200 last:border-b-0 transition-all duration-300 ${
+                              transitioningProductId === product.id 
+                                ? 'opacity-0 -translate-x-4' 
+                                : expandingProductId === product.id
+                                ? 'opacity-0 translate-x-4 animate-in slide-in-from-right'
+                                : 'opacity-100 translate-x-0'
+                            }`}>
+                              <div className="px-4 py-6">
+                                {/* From the Customer Section */}
+                                <div className="mb-4">
+                                  <div className="flex items-center justify-between mb-3">
+                                    <h4 className="text-sm font-semibold text-gray-900">From the customer</h4>
+                                    <div>
+                                      <span className="text-sm font-medium text-gray-700">Reference Image: </span>
+                                      {product.mockupImage ? (
+                                        <a
+                                          href={product.mockupImage}
+                                          target="_blank"
+                                          rel="noopener noreferrer"
+                                          className="text-sm italic text-blue-600 hover:text-blue-800 hover:underline"
+                                          onClick={(e) => e.stopPropagation()}
+                                        >
+                                          view reference image
+                                        </a>
+                                      ) : (
+                                        <span className="text-sm italic text-gray-400">No reference image</span>
+                                      )}
+                                    </div>
+                                  </div>
+                                  <div className="w-full">
+                                    <span className="text-sm font-medium text-gray-700 block mb-2">Product Specific Notes from customer:</span>
+                                    <div className="w-full border border-gray-300 rounded p-2 bg-gray-50">
+                                      <p className="text-sm text-gray-700 whitespace-pre-wrap">
+                                        {product.notes || <span className="text-gray-400 italic">No notes from customer</span>}
+                                      </p>
+                                    </div>
+                                  </div>
+                                </div>
+                                
+                                {/* Dividing Line */}
+                                <div className="border-t border-gray-200 mb-4"></div>
+                                
+                                {/* Upload Mockups - Full Width */}
+                                <div className="mb-4">
+                                  <label className="text-sm font-medium text-gray-900 mb-2 block">Upload Mockups</label>
+                                  <div className="w-full min-h-[200px] bg-gray-100 rounded border-2 border-dashed border-gray-300">
+                                    {productMockups[product.id] ? (
+                                      <div className="p-6">
+                                        <div className="flex items-center justify-between mb-4">
+                                          <div className="flex items-center gap-3">
+                                            <div className="w-10 h-10 bg-red-100 rounded flex items-center justify-center">
+                                              <span className="text-red-600 font-semibold text-sm">PDF</span>
+                                            </div>
+                                            <div>
+                                              <p className="text-sm font-medium text-gray-900">{productMockups[product.id]?.name}</p>
+                                              <p className="text-xs text-gray-500">
+                                                {(productMockups[product.id]?.size! / 1024 / 1024).toFixed(2)} MB
+                                              </p>
+                                            </div>
+                                          </div>
+                                          <div className="flex items-center gap-2">
+                                            <Button
+                                              variant="outline"
+                                              size="sm"
+                                              onClick={(e) => {
+                                                e.stopPropagation();
+                                                if (productMockups[product.id]) {
+                                                  const url = URL.createObjectURL(productMockups[product.id]!);
+                                                  window.open(url, '_blank');
+                                                }
+                                              }}
+                                            >
+                                              View
+                                            </Button>
+                                            <Button
+                                              variant="outline"
+                                              size="sm"
+                                              onClick={(e) => {
+                                                e.stopPropagation();
+                                                setProductMockups(prev => {
+                                                  const newMockups = { ...prev };
+                                                  delete newMockups[product.id];
+                                                  return newMockups;
+                                                });
+                                              }}
+                                            >
+                                              Remove
+                                            </Button>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    ) : (
+                                      <label 
+                                        className="w-full h-96 flex items-center justify-center cursor-pointer"
+                                        onClick={(e) => e.stopPropagation()}
+                                      >
+                                        <input
+                                          type="file"
+                                          accept=".pdf"
+                                          className="hidden"
+                                          onChange={(e) => {
+                                            const file = e.target.files?.[0];
+                                            if (file && file.type === 'application/pdf') {
+                                              setProductMockups(prev => ({ ...prev, [product.id]: file }));
+                                            }
+                                          }}
+                                        />
+                                        <div className="text-center">
+                                          <UploadIcon className="size-8 text-gray-400 mx-auto mb-2" />
+                                          <p className="text-sm text-gray-600">Upload Mockups PDF</p>
+                                          <p className="text-xs text-gray-500 mt-1">Click or drag to upload</p>
+                                        </div>
+                                      </label>
+                                    )}
+                                  </div>
+                                </div>
+                                
+                                {/* Notes Section - Full Width */}
+                                <div>
+                                  <label className="text-sm font-medium text-gray-900 mb-2 block">Notes</label>
+                                  <textarea
+                                    className="w-full border border-gray-300 rounded p-3 text-sm resize-none min-h-[100px]"
+                                    placeholder="Add notes..."
+                                    value={productNotes[product.id] || ''}
+                                    onChange={(e) => setProductNotes(prev => ({ ...prev, [product.id]: e.target.value }))}
+                                    onClick={(e) => e.stopPropagation()}
+                                  />
+                                  <div className="mt-3 flex items-center justify-between gap-6">
+                                    <div className="flex items-center gap-6">
+                                      <div className="flex items-center gap-2">
+                                        <span className="text-sm font-medium text-gray-700">Minimums:</span>
+                                        <Input
+                                          type="text"
+                                          value={productMinimums[product.id] ?? product.minimums}
+                                          onChange={(e) => {
+                                            e.stopPropagation();
+                                            setProductMinimums(prev => ({ ...prev, [product.id]: e.target.value }));
+                                          }}
+                                          onClick={(e) => e.stopPropagation()}
+                                          className="w-48"
+                                        />
+                                      </div>
+                                      <div className="flex items-center gap-2">
+                                        <span className="text-sm font-medium text-gray-700">Pricing:</span>
+                                        <Input
+                                          type="text"
+                                          value={productPricing[product.id] ?? product.pricing}
+                                          onChange={(e) => {
+                                            e.stopPropagation();
+                                            setProductPricing(prev => ({ ...prev, [product.id]: e.target.value }));
+                                          }}
+                                          onClick={(e) => e.stopPropagation()}
+                                          className="w-48"
+                                        />
+                                      </div>
+                                    </div>
+                                    <Button 
+                                      className="bg-blue-600 text-white hover:bg-blue-700"
+                                      onClick={(e) => {
+                                        e.stopPropagation();
+                                        handleSaveProductChanges(product.id);
+                                      }}
+                                    >
+                                      Save Changes
+                                    </Button>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          )}
+                        </React.Fragment>
+                      );
+                    })}
+                  </div>
+                </div>
+
+                {/* Artwork Section */}
+                <div className="px-6 py-6 border-t">
+                  <h3 className="text-lg font-semibold text-gray-900 mb-4">Artwork</h3>
+                  <div className="flex flex-wrap gap-4">
+                    {selectedSubmissionData.artworkImages.map((img, idx) => (
+                      <div key={idx} className="w-24 h-24 bg-gray-200 rounded overflow-hidden">
+                        <Image 
+                          src={img} 
+                          alt={`Artwork ${idx + 1}`} 
+                          width={96} 
+                          height={96} 
+                          className="w-full h-full object-cover" 
+                        />
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* History Section */}
+                <div className="px-6 py-6 border-t">
+                  <h3 className="text-lg font-semibold text-gray-900 mb-4">History</h3>
+                  <div className="space-y-4">
+                    {selectedSubmissionData.history.map((item) => (
+                      <div key={item.id} className="flex items-start gap-4 pb-4 border-b border-gray-200 last:border-b-0">
+                        <div className="flex-shrink-0 w-2 h-2 rounded-full bg-blue-500 mt-2"></div>
+                        <div className="flex-1">
+                          <div className="flex items-center gap-2 mb-1">
+                            <span className="text-sm font-medium text-gray-900">{item.action}</span>
+                            <span className="text-xs text-gray-500">
+                              {formatSubmissionDate(item.date)}
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            ) : (
               <div className="flex items-center justify-center h-full">
                 <p className="text-gray-500">Select a submission to view details</p>
               </div>

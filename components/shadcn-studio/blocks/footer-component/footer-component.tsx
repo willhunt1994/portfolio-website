@@ -9,7 +9,7 @@ export default function Footer() {
           <div className="mb-4 md:mb-0">
             <Link href="/" className="flex items-center">
               <Image
-                src="https://cdn.shopify.com/s/files/1/0609/4752/9901/files/Ethos_Logo_-_Black.png?v=1767327560"
+                src="https://cdn.shopify.com/s/files/1/0609/4752/9901/files/Ethos_Logo-05.jpg?v=1769654967"
                 alt="Ethos Logo"
                 width={120}
                 height={40}

@@ -1,5 +1,3 @@
-import Header from '@/components/shadcn-studio/blocks/hero-section-29/header';
-import type { Navigation } from '@/components/shadcn-studio/blocks/hero-navigation-02';
 import RichText from '@/components/shadcn-studio/blocks/rich-text-component/rich-text-component';
 import CollaborationTimeline from '@/components/shadcn-studio/blocks/collaboration-timeline/collaboration-timeline';
 import WorkLinksSection from '@/components/shadcn-studio/blocks/work-links-section/work-links-section';
@@ -13,6 +11,10 @@ const navigationData: Navigation[] = [
   {
     title: 'Our Work',
     href: '/our-work'
+  },
+  {
+    title: 'Catalog',
+    href: '/catalog'
   }
 ];
 
@@ -117,8 +119,6 @@ const workLinks = [
 export default function CorporateFranchiseTeams() {
   return (
     <div className='flex min-h-screen flex-col relative'>
-      <Header navigationData={navigationData} />
-      
       <main className='flex flex-1 flex-col pt-20'>
         {/* Breadcrumb */}
         <div className="px-6 pt-0 pb-4 bg-white dark:bg-black">

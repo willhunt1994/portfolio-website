@@ -26,14 +26,14 @@ export default function Header({ navigationData }: HeaderProps) {
   };
 
   return (
-    <header className="fixed top-0 w-full z-50 bg-transparent">
+    <header className="fixed top-0 w-full z-50 bg-white dark:bg-black border-b border-zinc-200 dark:border-zinc-800">
       <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
           <div className="flex-shrink-0">
             <Link href="/" className="flex items-center">
               <Image
-                src="https://cdn.shopify.com/s/files/1/0609/4752/9901/files/Ethos_Logo_-_Black.png?v=1767327560"
+                src="https://cdn.shopify.com/s/files/1/0609/4752/9901/files/Ethos_Logo-05.jpg?v=1769654967"
                 alt="Ethos Logo"
                 width={120}
                 height={40}
@@ -45,7 +45,7 @@ export default function Header({ navigationData }: HeaderProps) {
 
           {/* Desktop Navigation - Centered */}
           <div className="hidden md:flex md:items-center md:absolute md:left-1/2 md:transform md:-translate-x-1/2">
-            <div className="flex items-center space-x-1 bg-white/90 dark:bg-black/90 backdrop-blur-sm rounded-full px-2 py-1 border border-zinc-200 dark:border-zinc-800 shadow-sm">
+            <div className="flex items-center space-x-1">
               {navigationData.map((item, index) => (
                 <div
                   key={item.title}
@@ -55,7 +55,7 @@ export default function Header({ navigationData }: HeaderProps) {
                 >
                   {item.items ? (
                     <>
-                      <button className="text-zinc-600 dark:text-zinc-400 hover:text-black dark:hover:text-white px-4 py-2 text-sm font-medium transition-colors rounded-full hover:bg-zinc-100 dark:hover:bg-zinc-900">
+                      <button className="text-zinc-600 dark:text-zinc-400 hover:text-black dark:hover:text-white px-4 py-2 text-sm font-medium transition-colors hover:bg-zinc-100 dark:hover:bg-zinc-900">
                         {item.title}
                       </button>
                       {activeDropdown === item.title && (
@@ -112,7 +112,7 @@ export default function Header({ navigationData }: HeaderProps) {
                     <Link
                       href={item.href || '#'}
                       onClick={(e) => handleLinkClick(e, item.href || '#')}
-                      className={`text-sm font-medium transition-all duration-200 rounded-full px-4 py-2 ${
+                      className={`text-sm font-medium transition-all duration-200 px-4 py-2 ${
                         pathname === item.href
                           ? 'text-black dark:text-white underline'
                           : 'text-zinc-600 dark:text-zinc-400 hover:text-black dark:hover:text-white'

@@ -11,6 +11,7 @@ import {
   LoaderIcon,
   ChevronLeftIcon,
   ChevronRightIcon,
+  ChevronDownIcon,
   XIcon,
   PencilIcon,
   CheckIcon,
@@ -39,7 +40,7 @@ interface Order {
   vendor: 'ASC' | 'SSA' | 'SUPA' | 'INT ACT';
   fulfillmentStatus: 'Order Placed' | 'In Transit' | 'Received';
   jobId: string;
-  orderStatus: 'open' | 'closed';
+  orderStatus: 'Select an option' | 'In Production' | 'Ready to Ship' | 'Shipped' | 'Sold Out' | 'Gift Card' | 'With Wash Labeling' | 'Refunded' | 'Ready for Wash Labels' | 'Ready For Pickup' | 'Cancel' | 'open' | 'closed';
 }
 
 interface Product {
@@ -81,8 +82,8 @@ interface SizeDetail {
 interface Product {
   id: string;
   name: string;
-  sizes: SizeDetail[];
-  images: string[]; // Array of image URLs or identifiers
+  sizes?: SizeDetail[];
+  images?: string[]; // Array of image URLs or identifiers
 }
 
 interface TimelineAssignment {
@@ -157,6 +158,12 @@ const ReceivingPage = () => {
   const [splitOrderProducts, setSplitOrderProducts] = useState<Map<string, Product[]>>(new Map()); // Map of splitOrderId -> products
   const [splitOrderPOs, setSplitOrderPOs] = useState<Map<string, PurchaseOrder[]>>(new Map()); // Map of splitOrderId -> purchase orders
   const [splitQuantities, setSplitQuantities] = useState<Map<string, Map<string, number>>>(new Map()); // Map of productId -> Map of splitOrderId -> quantity
+  const [statusDropdownOpen, setStatusDropdownOpen] = useState(false);
+  const [productTableStatusDropdownOpen, setProductTableStatusDropdownOpen] = useState(false);
+  const statusDropdownRef = useRef<HTMLDivElement>(null);
+  const statusButtonRef = useRef<HTMLButtonElement>(null);
+  const productTableStatusDropdownRef = useRef<HTMLDivElement>(null);
+  const productTableStatusButtonRef = useRef<HTMLButtonElement>(null);
   const [showSplitModal, setShowSplitModal] = useState(false);
   const [splitModalProducts, setSplitModalProducts] = useState<Product[]>([]);
   const [mainOrderProductQuantities, setMainOrderProductQuantities] = useState<Map<string, number>>(new Map()); // Map of productId -> remaining quantity in main order
@@ -1471,7 +1478,7 @@ const ReceivingPage = () => {
           vendor: generateVendor(),
           fulfillmentStatus: generateFulfillmentStatus(uniqueId),
           jobId: generateJobId(uniqueId),
-          orderStatus: Math.random() > 0.5 ? 'open' : 'closed' as 'open' | 'closed'
+          orderStatus: Math.random() > 0.5 ? 'open' : 'closed' as Order['orderStatus']
         });
       }
       setOrders(initialOrders);
@@ -1509,6 +1516,9 @@ const ReceivingPage = () => {
     {
       id: 'product-1',
       name: 'Product 1',
+      sku: '',
+      quantity: 0,
+      shelfLocation: '',
       images: ['product-1-image-1', 'product-1-image-2'],
       sizes: [
         {
@@ -1534,6 +1544,9 @@ const ReceivingPage = () => {
     {
       id: 'product-2',
       name: 'Product 2',
+      sku: '',
+      quantity: 0,
+      shelfLocation: '',
       images: ['product-2-image-1', 'product-2-image-2'],
       sizes: [
         {
@@ -2277,6 +2290,52 @@ const ReceivingPage = () => {
     };
   }, [dropdownOpen]);
 
+  // Close status dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      const target = event.target as Node;
+      if (
+        statusDropdownOpen &&
+        statusDropdownRef.current &&
+        !statusDropdownRef.current.contains(target) &&
+        statusButtonRef.current &&
+        !statusButtonRef.current.contains(target)
+      ) {
+        setStatusDropdownOpen(false);
+      }
+      if (
+        productTableStatusDropdownOpen &&
+        productTableStatusDropdownRef.current &&
+        !productTableStatusDropdownRef.current.contains(target) &&
+        productTableStatusButtonRef.current &&
+        !productTableStatusButtonRef.current.contains(target)
+      ) {
+        setProductTableStatusDropdownOpen(false);
+      }
+    };
+
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        if (statusDropdownOpen) {
+          setStatusDropdownOpen(false);
+        }
+        if (productTableStatusDropdownOpen) {
+          setProductTableStatusDropdownOpen(false);
+        }
+      }
+    };
+
+    if (statusDropdownOpen || productTableStatusDropdownOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+      document.addEventListener('keydown', handleEscape);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener('keydown', handleEscape);
+    };
+  }, [statusDropdownOpen, productTableStatusDropdownOpen]);
+
   const loadMoreOrders = useCallback(() => {
     if (isLoading || !hasMore) return;
     
@@ -2301,7 +2360,7 @@ const ReceivingPage = () => {
             vendor: generateVendor(),
             fulfillmentStatus: generateFulfillmentStatus(uniqueId),
             jobId: generateJobId(uniqueId),
-            orderStatus: Math.random() > 0.5 ? 'open' : 'closed' as 'open' | 'closed'
+            orderStatus: Math.random() > 0.5 ? 'open' : 'closed' as Order['orderStatus']
           });
         }
         return [...prev, ...newOrders];
@@ -2338,7 +2397,7 @@ const ReceivingPage = () => {
             <div className="px-4 pt-4">
               <div className="flex items-center justify-between mb-4">
                 <Image
-                  src="https://cdn.shopify.com/s/files/1/0609/4752/9901/files/Ethos_Logo_-_Black.png?v=1767327560"
+                  src="https://cdn.shopify.com/s/files/1/0609/4752/9901/files/Ethos_Logo-05.jpg?v=1769654967"
                   alt="Ethos"
                   width={100}
                   height={40}
@@ -2673,17 +2732,21 @@ const ReceivingPage = () => {
                 return orderBase === mainOrderBase && o.id.startsWith('split-');
               });
 
-              // Calculate main order status based on split orders (for display)
-              let displayMainOrderStatus = selectedOrderData.orderStatus;
+              // Calculate main order status based on split orders
+              // If ALL splits are "Shipped" or "Ready For Pickup", close the main order
+              // Otherwise, keep it open
               if (isMainOrder && splitOrdersForMainOrder.length > 0) {
-                const hasOpenSplit = splitOrdersForMainOrder.some(split => split.orderStatus === 'open');
-                displayMainOrderStatus = hasOpenSplit ? 'open' : 'closed';
+                const allSplitsShippedOrReady = splitOrdersForMainOrder.every(split => 
+                  split.orderStatus === 'Shipped' || split.orderStatus === 'Ready For Pickup'
+                );
                 
-                // Update the order status in state if it's different
-                if (selectedOrderData.orderStatus !== displayMainOrderStatus) {
+                const newMainOrderStatus = allSplitsShippedOrReady ? 'closed' : 'open';
+                
+                // Update the main order status if it's different
+                if (selectedOrderData.orderStatus !== newMainOrderStatus) {
                   setOrders(prev => prev.map(o => 
                     o.id === selectedOrderData.id 
-                      ? { ...o, orderStatus: displayMainOrderStatus as 'open' | 'closed' }
+                      ? { ...o, orderStatus: newMainOrderStatus as Order['orderStatus'] }
                       : o
                   ));
                 }
@@ -2864,7 +2927,7 @@ const ReceivingPage = () => {
                   vendor: mergedVendor,
                   fulfillmentStatus: selectedOrderData.fulfillmentStatus,
                   jobId: generateJobId(`split-${baseOrderNumber}-${nextSplitNumber}`),
-                  orderStatus: 'open' as 'open' | 'closed'
+                  orderStatus: 'In Production' as Order['orderStatus'] // Merged split gets its own status
                 };
 
                 // Remove old split orders and add merged one
@@ -2986,7 +3049,7 @@ const ReceivingPage = () => {
                     vendor: productGroup[0]?.supplier || selectedOrderData.vendor,
                     fulfillmentStatus: selectedOrderData.fulfillmentStatus,
                     jobId: generateJobId(`split-${baseOrderNumber}-${currentSplitNumber}`),
-                    orderStatus: 'open' as 'open' | 'closed'
+                    orderStatus: 'In Production' as Order['orderStatus'] // Each split gets its own status, default to 'In Production'
                   };
                   
                   // Associate products with this split order
@@ -3089,26 +3152,54 @@ const ReceivingPage = () => {
                           }`}
                         >
                           <span>Main Order</span>
-                          <span 
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              const mainOrder = orders.find(o => o.id === mainOrderId);
-                              if (mainOrder) {
-                                const newStatus = mainOrder.orderStatus === 'open' ? 'closed' : 'open';
-                                setOrders(prev => prev.map(o => 
-                                  o.id === mainOrderId 
-                                    ? { ...o, orderStatus: newStatus as 'open' | 'closed' }
-                                    : o
-                                ));
+                          {(() => {
+                            const mainOrder = orders.find(o => o.id === mainOrderId);
+                            if (!mainOrder) return null;
+                            const orderStatus = mainOrder.orderStatus;
+                            const getStatusColor = (status: string) => {
+                              switch (status) {
+                                case 'Select an option':
+                                  return 'bg-gray-50 text-gray-600 border-gray-200';
+                                case 'In Production':
+                                  return 'bg-blue-50 text-blue-600 border-blue-200';
+                                case 'Ready to Ship':
+                                  return 'bg-yellow-50 text-yellow-600 border-yellow-200';
+                                case 'Shipped':
+                                  return 'bg-green-50 text-green-600 border-green-200';
+                                case 'Sold Out':
+                                  return 'bg-red-50 text-red-600 border-red-200';
+                                case 'Gift Card':
+                                  return 'bg-purple-50 text-purple-600 border-purple-200';
+                                case 'With Wash Labeling':
+                                  return 'bg-indigo-50 text-indigo-600 border-indigo-200';
+                                case 'Refunded':
+                                  return 'bg-pink-50 text-pink-600 border-pink-200';
+                                case 'Ready for Wash Labels':
+                                  return 'bg-cyan-50 text-cyan-600 border-cyan-200';
+                                case 'Ready For Pickup':
+                                  return 'bg-orange-50 text-orange-600 border-orange-200';
+                                case 'Cancel':
+                                  return 'bg-gray-100 text-gray-700 border-gray-300';
+                                case 'open':
+                                  return 'bg-green-50 text-green-600 border-green-200';
+                                case 'closed':
+                                  return 'bg-gray-100 text-gray-700 border-gray-300';
+                                default:
+                                  return 'bg-gray-50 text-gray-600 border-gray-200';
                               }
-                            }}
-                            className={`px-2 py-0.5 rounded-full text-xs font-medium whitespace-nowrap border cursor-pointer hover:opacity-80 transition-opacity ${
-                              displayMainOrderStatus === 'open' ? 'bg-green-50 text-green-600 border-green-100' :
-                              'bg-gray-200 text-gray-600 border-gray-300'
-                            }`}
-                          >
-                            {displayMainOrderStatus === 'open' ? 'Open' : 'Closed'}
-                          </span>
+                            };
+                            let displayStatus: string = orderStatus;
+                            if (orderStatus === 'open') {
+                              displayStatus = 'Open';
+                            } else if (orderStatus === 'closed') {
+                              displayStatus = 'Closed';
+                            }
+                            return (
+                              <span className={`px-2 py-0.5 rounded-full text-xs font-medium whitespace-nowrap border ${getStatusColor(orderStatus)}`}>
+                                {displayStatus}
+                              </span>
+                            );
+                          })()}
                         </button>
                         {splitOrdersForMainOrder.map((splitOrder) => {
                           const splitProducts = splitOrderProducts.get(splitOrder.id) || [];
@@ -3137,23 +3228,52 @@ const ReceivingPage = () => {
                               <span className="px-2 py-0.5 rounded-full text-xs font-medium bg-red-50 text-red-600 border border-red-100 whitespace-nowrap">
                                 {splitOrder.shelfLocation}
                               </span>
-                              <span 
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  const newStatus = splitOrder.orderStatus === 'open' ? 'closed' : 'open';
-                                  setOrders(prev => prev.map(o => 
-                                    o.id === splitOrder.id 
-                                      ? { ...o, orderStatus: newStatus as 'open' | 'closed' }
-                                      : o
-                                  ));
-                                }}
-                                className={`px-2 py-0.5 rounded-full text-xs font-medium whitespace-nowrap border cursor-pointer hover:opacity-80 transition-opacity ${
-                                  splitOrder.orderStatus === 'open' ? 'bg-green-50 text-green-600 border-green-100' :
-                                  'bg-gray-200 text-gray-600 border-gray-300'
-                                }`}
-                              >
-                                {splitOrder.orderStatus === 'open' ? 'Open' : 'Closed'}
-                              </span>
+                              {(() => {
+                                const orderStatus = splitOrder.orderStatus;
+                                const getStatusColor = (status: string) => {
+                                  switch (status) {
+                                    case 'Select an option':
+                                      return 'bg-gray-50 text-gray-600 border-gray-200';
+                                    case 'In Production':
+                                      return 'bg-blue-50 text-blue-600 border-blue-200';
+                                    case 'Ready to Ship':
+                                      return 'bg-yellow-50 text-yellow-600 border-yellow-200';
+                                    case 'Shipped':
+                                      return 'bg-green-50 text-green-600 border-green-200';
+                                    case 'Sold Out':
+                                      return 'bg-red-50 text-red-600 border-red-200';
+                                    case 'Gift Card':
+                                      return 'bg-purple-50 text-purple-600 border-purple-200';
+                                    case 'With Wash Labeling':
+                                      return 'bg-indigo-50 text-indigo-600 border-indigo-200';
+                                    case 'Refunded':
+                                      return 'bg-pink-50 text-pink-600 border-pink-200';
+                                    case 'Ready for Wash Labels':
+                                      return 'bg-cyan-50 text-cyan-600 border-cyan-200';
+                                    case 'Ready For Pickup':
+                                      return 'bg-orange-50 text-orange-600 border-orange-200';
+                                    case 'Cancel':
+                                      return 'bg-gray-100 text-gray-700 border-gray-300';
+                                    case 'open':
+                                      return 'bg-green-50 text-green-600 border-green-200';
+                                    case 'closed':
+                                      return 'bg-gray-100 text-gray-700 border-gray-300';
+                                    default:
+                                      return 'bg-gray-50 text-gray-600 border-gray-200';
+                                  }
+                                };
+                                let displayStatus: string = orderStatus;
+                                if (orderStatus === 'open') {
+                                  displayStatus = 'Open';
+                                } else if (orderStatus === 'closed') {
+                                  displayStatus = 'Closed';
+                                }
+                                return (
+                                  <span className={`px-2 py-0.5 rounded-full text-xs font-medium whitespace-nowrap border ${getStatusColor(orderStatus)}`}>
+                                    {displayStatus}
+                                  </span>
+                                );
+                              })()}
                             </button>
                           );
                         })}
@@ -3207,33 +3327,184 @@ const ReceivingPage = () => {
                       >
                         Print Packing Slip
                       </button>
-                      {selectedOrderData.orderStatus === 'open' ? (
-                        <button
-                          onClick={() => {
-                            setOrders(prev => prev.map(o => 
-                              o.id === selectedOrderData.id 
-                                ? { ...o, orderStatus: 'closed' as 'open' | 'closed' }
-                                : o
-                            ));
-                          }}
-                          className="px-4 py-2 text-sm bg-gray-600 text-white rounded-lg font-medium hover:bg-gray-700 transition-colors"
-                        >
-                          Mark as Closed
-                        </button>
-                      ) : (
-                        <button
-                          onClick={() => {
-                            setOrders(prev => prev.map(o => 
-                              o.id === selectedOrderData.id 
-                                ? { ...o, orderStatus: 'open' as 'open' | 'closed' }
-                                : o
-                            ));
-                          }}
-                          className="px-4 py-2 text-sm bg-green-600 text-white rounded-lg font-medium hover:bg-green-700 transition-colors"
-                        >
-                          Mark as Open
-                        </button>
-                      )}
+                      {/* Status Tag with Dropdown */}
+                      <div className="relative" ref={statusDropdownRef}>
+                        {(() => {
+                          const orderStatus = selectedOrderData.orderStatus;
+                          const getStatusColor = (status: string) => {
+                            switch (status) {
+                              case 'Select an option':
+                                return 'bg-gray-50 text-gray-600 border-gray-200';
+                              case 'In Production':
+                                return 'bg-blue-50 text-blue-600 border-blue-200';
+                              case 'Ready to Ship':
+                                return 'bg-yellow-50 text-yellow-600 border-yellow-200';
+                              case 'Shipped':
+                                return 'bg-green-50 text-green-600 border-green-200';
+                              case 'Sold Out':
+                                return 'bg-red-50 text-red-600 border-red-200';
+                              case 'Gift Card':
+                                return 'bg-purple-50 text-purple-600 border-purple-200';
+                              case 'With Wash Labeling':
+                                return 'bg-indigo-50 text-indigo-600 border-indigo-200';
+                              case 'Refunded':
+                                return 'bg-pink-50 text-pink-600 border-pink-200';
+                              case 'Ready for Wash Labels':
+                                return 'bg-cyan-50 text-cyan-600 border-cyan-200';
+                              case 'Ready For Pickup':
+                                return 'bg-orange-50 text-orange-600 border-orange-200';
+                              case 'Cancel':
+                                return 'bg-gray-100 text-gray-700 border-gray-300';
+                              case 'open':
+                                return 'bg-green-50 text-green-600 border-green-200';
+                              case 'closed':
+                                return 'bg-gray-100 text-gray-700 border-gray-300';
+                              default:
+                                return 'bg-gray-50 text-gray-600 border-gray-200';
+                            }
+                          };
+                          // Handle legacy 'open' and 'closed' statuses - convert to display format
+                          let displayStatus: string = orderStatus;
+                          if (orderStatus === 'open') {
+                            displayStatus = 'Open';
+                          } else if (orderStatus === 'closed') {
+                            displayStatus = 'Closed';
+                          }
+                          return (
+                            <button
+                              ref={statusButtonRef}
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setStatusDropdownOpen(!statusDropdownOpen);
+                                setProductTableStatusDropdownOpen(false); // Close product table dropdown if open
+                              }}
+                              className={`px-3 py-1.5 rounded-full text-sm font-medium border whitespace-nowrap cursor-pointer hover:opacity-80 transition-opacity flex items-center gap-2 ${getStatusColor(orderStatus)}`}
+                            >
+                              <span>{displayStatus}</span>
+                              <ChevronDownIcon className="size-3" />
+                            </button>
+                          );
+                        })()}
+                        {statusDropdownOpen && (
+                          <div className="absolute right-0 top-full mt-1 z-50 w-64 overflow-hidden rounded-md border bg-white shadow-lg">
+                            <div className="py-1">
+                              {[
+                                'In Production',
+                                'Ready to Ship',
+                                'Shipped',
+                                'Sold Out',
+                                'Gift Card',
+                                'With Wash Labeling',
+                                'Refunded',
+                                'Ready for Wash Labels',
+                                'Ready For Pickup'
+                              ].map((status) => {
+                                const getStatusColor = (s: string) => {
+                                  switch (s) {
+                                    case 'Select an option':
+                                      return 'bg-gray-50 text-gray-600 border-gray-200';
+                                    case 'In Production':
+                                      return 'bg-blue-50 text-blue-600 border-blue-200';
+                                    case 'Ready to Ship':
+                                      return 'bg-yellow-50 text-yellow-600 border-yellow-200';
+                                    case 'Shipped':
+                                      return 'bg-green-50 text-green-600 border-green-200';
+                                    case 'Sold Out':
+                                      return 'bg-red-50 text-red-600 border-red-200';
+                                    case 'Gift Card':
+                                      return 'bg-purple-50 text-purple-600 border-purple-200';
+                                    case 'With Wash Labeling':
+                                      return 'bg-indigo-50 text-indigo-600 border-indigo-200';
+                                    case 'Refunded':
+                                      return 'bg-pink-50 text-pink-600 border-pink-200';
+                                    case 'Ready for Wash Labels':
+                                      return 'bg-cyan-50 text-cyan-600 border-cyan-200';
+                                    case 'Ready For Pickup':
+                                      return 'bg-orange-50 text-orange-600 border-orange-200';
+                                    case 'Cancel':
+                                      return 'bg-gray-100 text-gray-700 border-gray-300';
+                                    case 'open':
+                                      return 'bg-green-50 text-green-600 border-green-200';
+                                    case 'closed':
+                                      return 'bg-gray-100 text-gray-700 border-gray-300';
+                                    default:
+                                      return 'bg-gray-50 text-gray-600 border-gray-200';
+                                  }
+                                };
+                                return (
+                                  <button
+                                    key={status}
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      // Update the status for the currently selected order (works for both main and split orders)
+                                      // Each split order maintains its own independent status
+                                      setOrders(prev => {
+                                        const currentOrder = prev.find(o => o.id === selectedOrderData.id);
+                                        if (!currentOrder) return prev;
+                                        
+                                        const updated = prev.map(o => 
+                                          o.id === selectedOrderData.id 
+                                            ? { ...o, orderStatus: status as Order['orderStatus'] }
+                                            : o
+                                        );
+                                        
+                                        // If updating a split order, check if we need to update main order status
+                                        const isCurrentSplitOrder = currentOrder.id.startsWith('split-');
+                                        if (isCurrentSplitOrder) {
+                                          const mainOrderBase = currentOrder.name.replace(/^#/, '').split('-')[0];
+                                          const mainOrder = updated.find(o => {
+                                            const orderBase = o.name.replace(/^#/, '').split('-')[0];
+                                            return orderBase === mainOrderBase && !o.id.startsWith('split-') && 
+                                              (o.name.replace(/^#/, '').split('-').length === 2 || !o.name.includes('-'));
+                                          });
+                                          
+                                          if (mainOrder) {
+                                            const splitOrdersForMain = updated.filter(o => {
+                                              const orderBase = o.name.replace(/^#/, '').split('-')[0];
+                                              return orderBase === mainOrderBase && o.id.startsWith('split-');
+                                            });
+                                            
+                                            // If ALL splits are "Shipped" or "Ready For Pickup", close the main order
+                                            if (splitOrdersForMain.length > 0) {
+                                              const allSplitsShippedOrReady = splitOrdersForMain.every(split => 
+                                                split.orderStatus === 'Shipped' || split.orderStatus === 'Ready For Pickup'
+                                              );
+                                              
+                                              const newMainOrderStatus = allSplitsShippedOrReady ? 'closed' : 'open';
+                                              
+                                              if (mainOrder.orderStatus !== newMainOrderStatus) {
+                                                return updated.map(o => 
+                                                  o.id === mainOrder.id 
+                                                    ? { ...o, orderStatus: newMainOrderStatus as Order['orderStatus'] }
+                                                    : o
+                                                );
+                                              }
+                                            }
+                                          }
+                                        }
+                                        
+                                        return updated;
+                                      });
+                                      setStatusDropdownOpen(false);
+                                      setProductTableStatusDropdownOpen(false); // Also close product table dropdown
+                                    }}
+                                    className={`w-full text-left px-4 py-2 text-sm hover:bg-gray-100 transition-colors flex items-center gap-2 ${
+                                      selectedOrderData.orderStatus === status ? 'bg-blue-50' : ''
+                                    }`}
+                                  >
+                                    <span className={`px-2 py-0.5 rounded-full text-xs font-medium border ${getStatusColor(status)}`}>
+                                      {status}
+                                    </span>
+                                    {selectedOrderData.orderStatus === status && (
+                                      <CheckIcon className="size-4 ml-auto text-blue-600" />
+                                    )}
+                                  </button>
+                                );
+                              })}
+                            </div>
+                          </div>
+                        )}
+                      </div>
                       <span className="px-2 py-2 rounded-full text-xs font-medium bg-red-50 text-red-600 border border-red-100 whitespace-nowrap flex items-center">
                         {formatDeadline(selectedOrderData.deadline)}
                       </span>
@@ -3370,7 +3641,7 @@ const ReceivingPage = () => {
                           <th className="p-3 text-left text-sm font-semibold text-gray-700">Product Name</th>
                           <th className="p-3 text-left text-sm font-semibold text-gray-700">Shelf Location</th>
                           <th className="p-3 text-left text-sm font-semibold text-gray-700">SKU</th>
-                          <th className="p-3 text-left text-sm font-semibold text-gray-700">Supplier</th>
+                          <th className="p-3 text-left text-sm font-semibold text-gray-700">Status</th>
                           <th className="p-3 text-right text-sm font-semibold text-gray-700">Quantity</th>
                         </tr>
                       </thead>
@@ -3400,60 +3671,53 @@ const ReceivingPage = () => {
                               </td>
                               <td className="p-3 text-sm text-gray-600">{product.sku}</td>
                               <td className="p-3">
-                                <div className="flex flex-wrap gap-1">
-                                  {Array.from(suppliers).map((supplier) => {
-                                    const productWithPOs = product as Product & { supplierPOs?: Map<'ASC' | 'SSA' | 'SUPA' | 'INT ACT', Array<{ id: string; number: string }>> };
-                                    const posForSupplier = productWithPOs.supplierPOs?.get(supplier) || [];
-                                    return (
-                                      <div key={supplier} className="relative inline-block group">
-                                        <span 
-                                          className={`px-2 py-0.5 rounded-full text-xs font-medium whitespace-nowrap border cursor-pointer ${
-                                            supplier === 'ASC' ? 'bg-purple-50 text-purple-600 border-purple-100' :
-                                            supplier === 'SSA' ? 'bg-green-50 text-green-600 border-green-100' :
-                                            supplier === 'SUPA' ? 'bg-orange-50 text-orange-600 border-orange-100' :
-                                            'bg-pink-50 text-pink-600 border-pink-100' // INT ACT
-                                          }`}
-                                        >
-                                          {supplier}
-                                        </span>
-                                        {posForSupplier.length > 0 && (
-                                          <div className="absolute left-0 top-full -mt-1 pt-1 z-50 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-150">
-                                            {/* Bridge area to maintain hover when moving cursor from tag to tooltip */}
-                                            <div className="absolute left-0 top-0 w-full h-2 -mt-2"></div>
-                                            <div className="bg-white border border-gray-200 rounded-lg shadow-lg p-2 min-w-[200px]">
-                                              <div className="text-xs font-semibold text-gray-700 mb-2">Purchase Orders:</div>
-                                              <div className="space-y-1.5">
-                                                {posForSupplier.map((po) => (
-                                                  <a
-                                                    key={po.id}
-                                                    href="#"
-                                                    onClick={(e) => {
-                                                      e.preventDefault();
-                                                      e.stopPropagation();
-                                                      // Scroll to the purchase order card
-                                                      const poElement = document.getElementById(`po-card-${po.id}`);
-                                                      if (poElement) {
-                                                        poElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                                                        // Highlight the card briefly
-                                                        poElement.classList.add('ring-2', 'ring-blue-500');
-                                                        setTimeout(() => {
-                                                          poElement.classList.remove('ring-2', 'ring-blue-500');
-                                                        }, 2000);
-                                                      }
-                                                    }}
-                                                    className="block text-xs text-blue-600 hover:text-blue-800 hover:underline py-0.5"
-                                                  >
-                                                    {po.number}
-                                                  </a>
-                                                ))}
-                                              </div>
-                                            </div>
-                                          </div>
-                                        )}
-                                      </div>
-                                    );
-                                  })}
-                                </div>
+                                {(() => {
+                                  const orderStatus = selectedOrderData.orderStatus;
+                                  const getStatusColor = (status: string) => {
+                                    switch (status) {
+                                      case 'Select an option':
+                                        return 'bg-gray-50 text-gray-600 border-gray-200';
+                                      case 'In Production':
+                                        return 'bg-blue-50 text-blue-600 border-blue-200';
+                                      case 'Ready to Ship':
+                                        return 'bg-yellow-50 text-yellow-600 border-yellow-200';
+                                      case 'Shipped':
+                                        return 'bg-green-50 text-green-600 border-green-200';
+                                      case 'Sold Out':
+                                        return 'bg-red-50 text-red-600 border-red-200';
+                                      case 'Gift Card':
+                                        return 'bg-purple-50 text-purple-600 border-purple-200';
+                                      case 'With Wash Labeling':
+                                        return 'bg-indigo-50 text-indigo-600 border-indigo-200';
+                                      case 'Refunded':
+                                        return 'bg-pink-50 text-pink-600 border-pink-200';
+                                      case 'Ready for Wash Labels':
+                                        return 'bg-cyan-50 text-cyan-600 border-cyan-200';
+                                      case 'Ready For Pickup':
+                                        return 'bg-orange-50 text-orange-600 border-orange-200';
+                                      case 'Cancel':
+                                        return 'bg-gray-100 text-gray-700 border-gray-300';
+                                      case 'open':
+                                        return 'bg-green-50 text-green-600 border-green-200';
+                                      case 'closed':
+                                        return 'bg-gray-100 text-gray-700 border-gray-300';
+                                      default:
+                                        return 'bg-gray-50 text-gray-600 border-gray-200';
+                                    }
+                                  };
+                                  // Handle legacy 'open' and 'closed' statuses - convert to display format
+                                  let displayStatus: string = orderStatus;
+                                  if (orderStatus === 'open') {
+                                    displayStatus = 'Open';
+                                  } else if (orderStatus === 'closed') {
+                                    displayStatus = 'Closed';
+                                  }
+                                  return (
+                                    <span className={`px-2 py-0.5 rounded-full text-xs font-medium border whitespace-nowrap ${getStatusColor(orderStatus)}`}>
+                                      {displayStatus}
+                                    </span>
+                                  );
+                                })()}
                               </td>
                               <td className="p-3 text-sm text-gray-600 text-right">{product.quantity}</td>
                             </tr>
@@ -3463,7 +3727,7 @@ const ReceivingPage = () => {
                       <tfoot>
                         <tr className="bg-gray-50 font-semibold">
                           <td className="p-3"></td>
-                          <td colSpan={4} className="p-3 text-sm text-gray-900"></td>
+                          <td colSpan={3} className="p-3 text-sm text-gray-900"></td>
                           <td className="p-3 text-sm text-gray-900 text-right">
                             {products.reduce((sum, product) => sum + product.quantity, 0)}
                           </td>
@@ -3473,6 +3737,7 @@ const ReceivingPage = () => {
                   </div>
                   
                   {/* Purchase Orders Widget */}
+                  {!selectedOrder && (
                   <div ref={purchaseOrdersRef} className="mt-8 -mx-4 sm:-mx-6 pt-6 border-t" style={{ backgroundColor: '#f4f4f4' }}>
                     <div className="mb-4 px-4 sm:px-6 pb-6">
                       <div className="flex items-center justify-between mb-2">
@@ -3712,6 +3977,7 @@ const ReceivingPage = () => {
                       );
                     })()}
                   </div>
+                  )}
                 </div>
               );
             })() : (
@@ -3735,7 +4001,7 @@ const ReceivingPage = () => {
             if (selectedOrderForModal) {
               const allProductsComplete = products.every(product => {
                 const productPrintedLogos = printedLogos.get(product.id) || new Set<string>();
-                return product.sizes.every(sizeDetail => {
+                return (product.sizes ?? []).every(sizeDetail => {
                   const logoKeys = sizeDetail.logos.map(logo => `${sizeDetail.size}-${logo.logo}`);
                   return logoKeys.every(key => productPrintedLogos.has(key));
                 });
@@ -4006,7 +4272,7 @@ const ReceivingPage = () => {
                   if (selectedOrderForModal) {
                     const allProductsComplete = products.every(product => {
                       const productPrintedLogos = printedLogos.get(product.id) || new Set<string>();
-                      return product.sizes.every(sizeDetail => {
+                      return (product.sizes ?? []).every(sizeDetail => {
                         const logoKeys = sizeDetail.logos.map(logo => `${sizeDetail.size}-${logo.logo}`);
                         return logoKeys.every(key => productPrintedLogos.has(key));
                       });
@@ -4076,7 +4342,7 @@ const ReceivingPage = () => {
                           const currentProduct = products[currentProductIndex];
                           const productPrintedLogos = printedLogos.get(currentProduct.id) || new Set<string>();
                           
-                          return currentProduct.sizes.map((sizeDetail, sizeIndex) => {
+                          return (currentProduct.sizes ?? []).map((sizeDetail, sizeIndex) => {
                             const rowSpan = sizeDetail.logos.length;
                             const logoKeys = sizeDetail.logos.map(logo => `${sizeDetail.size}-${logo.logo}`);
                             const allLogosComplete = logoKeys.every(key => productPrintedLogos.has(key));
@@ -4171,11 +4437,11 @@ const ReceivingPage = () => {
                   {/* Carousel Container - fills available space */}
                   <div className="relative w-full h-full flex items-center justify-center">
                     {/* Previous Arrow */}
-                    {products[currentProductIndex] && products[currentProductIndex].images.length > 1 && (
+                    {products[currentProductIndex] && (products[currentProductIndex].images?.length ?? 0) > 1 && (
                       <button
                         onClick={() => {
                           const currentProduct = products[currentProductIndex];
-                          const prevIndex = currentImageIndex > 0 ? currentImageIndex - 1 : currentProduct.images.length - 1;
+                          const prevIndex = currentImageIndex > 0 ? currentImageIndex - 1 : (currentProduct.images ?? []).length - 1;
                           setCurrentImageIndex(prevIndex);
                         }}
                         className="absolute left-2 top-1/2 -translate-y-1/2 z-10 p-2 rounded-full bg-white shadow-lg hover:bg-gray-100 transition-colors border border-gray-200"
@@ -4196,7 +4462,7 @@ const ReceivingPage = () => {
                         aspectRatio: '4/5'
                       }}
                     >
-                      {products[currentProductIndex] && products[currentProductIndex].images.map((imageId, imageIndex) => (
+                      {products[currentProductIndex] && (products[currentProductIndex].images ?? []).map((imageId, imageIndex) => (
                         <div
                           key={`${products[currentProductIndex].id}-${imageId}`}
                           className={`absolute inset-0 transition-opacity duration-300 ${
@@ -4213,11 +4479,11 @@ const ReceivingPage = () => {
                     </div>
                     
                     {/* Next Arrow */}
-                    {products[currentProductIndex] && products[currentProductIndex].images.length > 1 && (
+                    {products[currentProductIndex] && (products[currentProductIndex].images?.length ?? 0) > 1 && (
                       <button
                         onClick={() => {
                           const currentProduct = products[currentProductIndex];
-                          const nextIndex = currentImageIndex < currentProduct.images.length - 1 ? currentImageIndex + 1 : 0;
+                          const nextIndex = currentImageIndex < (currentProduct.images ?? []).length - 1 ? currentImageIndex + 1 : 0;
                           setCurrentImageIndex(nextIndex);
                         }}
                         className="absolute right-2 top-1/2 -translate-y-1/2 z-10 p-2 rounded-full bg-white shadow-lg hover:bg-gray-100 transition-colors border border-gray-200"
@@ -4228,9 +4494,9 @@ const ReceivingPage = () => {
                     )}
                     
                     {/* Carousel Indicators - positioned at bottom */}
-                    {products[currentProductIndex] && products[currentProductIndex].images.length > 1 && (
+                    {products[currentProductIndex] && (products[currentProductIndex].images?.length ?? 0) > 1 && (
                       <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex justify-center gap-2">
-                        {products[currentProductIndex].images.map((_, imageIndex) => (
+                        {(products[currentProductIndex].images ?? []).map((_, imageIndex) => (
                           <button
                             key={imageIndex}
                             onClick={() => setCurrentImageIndex(imageIndex)}
@@ -4260,7 +4526,7 @@ const ReceivingPage = () => {
                     // Check all logos for current product
                     const currentProduct = products[currentProductIndex];
                     const allLogoKeys: string[] = [];
-                    currentProduct.sizes.forEach(sizeDetail => {
+                    (currentProduct.sizes ?? []).forEach(sizeDetail => {
                       sizeDetail.logos.forEach(logo => {
                         allLogoKeys.push(`${sizeDetail.size}-${logo.logo}`);
                       });
