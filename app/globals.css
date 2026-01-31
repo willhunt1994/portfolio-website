@@ -1,5 +1,11 @@
 @import "tailwindcss";
 
+/* Restrict content to project source only (paths relative to project root) */
+@source "components/**/*.{ts,tsx,js,jsx}";
+@source "app/**/*.{ts,tsx,js,jsx}";
+@source "assets/**/*.{ts,tsx,js,jsx}";
+@source "lib/**/*.{ts,tsx,js,jsx}";
+
 :root {
   --background: #ffffff;
   --foreground: #171717;
@@ -118,6 +124,35 @@ body {
   }
 }
 
+/* Seamless scrolling text (use with duplicated content; moves by half so it loops) */
+@keyframes marquee-seamless {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+/* Scrolling text with wavy vertical motion across the page */
+@keyframes marquee-wavy {
+  0% {
+    transform: translate(0, 0);
+  }
+  25% {
+    transform: translate(-12.5%, 8px);
+  }
+  50% {
+    transform: translate(-25%, 0);
+  }
+  75% {
+    transform: translate(-37.5%, -8px);
+  }
+  100% {
+    transform: translate(-50%, 0);
+  }
+}
+
 @keyframes marquee-vertical {
   from {
     transform: translateY(0);
@@ -134,6 +169,45 @@ body {
 .animate-marquee-vertical {
   animation: marquee-vertical var(--duration) linear infinite;
 }
+
+.animate-marquee-seamless {
+  animation: marquee-seamless var(--duration) linear infinite;
+}
+
+.animate-marquee-wavy {
+  animation: marquee-wavy var(--duration) ease-in-out infinite;
+}
+
+/* Spring flowers: animate in on scroll */
+@keyframes flower-enter {
+  from {
+    opacity: 0;
+    transform: scale(0.6);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.spring-flower {
+  opacity: 0;
+  transform: scale(0.6);
+}
+
+.spring-bar-in-view .spring-flower {
+  animation: flower-enter 0.6s ease-out forwards;
+}
+
+.spring-bar-in-view .spring-flower:nth-child(1) { animation-delay: 0.1s; }
+.spring-bar-in-view .spring-flower:nth-child(2) { animation-delay: 0.2s; }
+.spring-bar-in-view .spring-flower:nth-child(3) { animation-delay: 0.25s; }
+.spring-bar-in-view .spring-flower:nth-child(4) { animation-delay: 0.35s; }
+.spring-bar-in-view .spring-flower:nth-child(5) { animation-delay: 0.4s; }
+.spring-bar-in-view .spring-flower:nth-child(6) { animation-delay: 0.5s; }
+.spring-bar-in-view .spring-flower:nth-child(7) { animation-delay: 0.55s; }
+.spring-bar-in-view .spring-flower:nth-child(8) { animation-delay: 0.65s; }
+.spring-bar-in-view .spring-flower:nth-child(9) { animation-delay: 0.75s; }
 
 .liquid-effect {
   animation: liquid 4s ease-in-out infinite;

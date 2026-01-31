@@ -1,5 +1,6 @@
 'use client';
 
+import { useRef, useEffect, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
@@ -23,41 +24,45 @@ interface BlogProps {
 
 export default function Blog({ blogCards, itemsPerPage = 12, fullWidth = false }: BlogProps) {
   const searchParams = useSearchParams();
-  const currentPage = parseInt(searchParams.get('page') || '1', 10);
   const selectedTags = searchParams.get('tags')?.split(',').filter(Boolean) || [];
-  
-  // Filter cards based on selected tags
-  const filteredCards = selectedTags.length > 0
-    ? blogCards.filter(card => 
-        card.tags && card.tags.some(tag => selectedTags.includes(tag))
-      )
-    : blogCards;
-  
-  const totalPages = Math.ceil(filteredCards.length / itemsPerPage);
-  const startIndex = (currentPage - 1) * itemsPerPage;
-  const endIndex = startIndex + itemsPerPage;
-  const currentCards = filteredCards.slice(startIndex, endIndex);
 
-  // Helper function to build pagination URLs with tags preserved
-  const buildPaginationUrl = (page: number) => {
-    const params = new URLSearchParams();
-    if (selectedTags.length > 0) {
-      params.set('tags', selectedTags.join(','));
-    }
-    params.set('page', page.toString());
-    return `/our-work?${params.toString()}`;
-  };
+  const filteredCards =
+    selectedTags.length > 0
+      ? blogCards.filter((card) => card.tags && card.tags.some((tag) => selectedTags.includes(tag)))
+      : blogCards;
+
+  const [visibleCount, setVisibleCount] = useState(itemsPerPage);
+  const sentinelRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    setVisibleCount(itemsPerPage);
+  }, [selectedTags.join(','), itemsPerPage]);
+
+  useEffect(() => {
+    const sentinel = sentinelRef.current;
+    if (!sentinel || visibleCount >= filteredCards.length) return;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const [entry] = entries;
+        if (entry?.isIntersecting) {
+          setVisibleCount((n) => Math.min(n + itemsPerPage, filteredCards.length));
+        }
+      },
+      { rootMargin: '200px', threshold: 0 }
+    );
+    observer.observe(sentinel);
+    return () => observer.disconnect();
+  }, [filteredCards.length, itemsPerPage, visibleCount]);
+
+  const currentCards = filteredCards.slice(0, visibleCount);
+  const hasMore = visibleCount < filteredCards.length;
 
   return (
     <section className="pt-8 pb-20 px-[10px] bg-white dark:bg-black">
       <div className={cn('mx-auto', fullWidth ? 'w-full max-w-none px-4 sm:px-6 lg:px-8' : 'max-w-7xl')}>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 items-stretch">
           {currentCards.map((card, index) => (
-            <Link
-              key={startIndex + index}
-              href={card.blogLink}
-              className="group block h-full"
-            >
+            <Link key={`${card.blogLink}-${index}`} href={card.blogLink} className="group block h-full">
               <div className="relative overflow-hidden rounded-[2px] bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 transition-all hover:border-zinc-400 dark:hover:border-zinc-600 h-full flex flex-col">
                 <div className="aspect-[4/5] relative flex-shrink-0">
                   <Image
@@ -122,31 +127,16 @@ export default function Blog({ blogCards, itemsPerPage = 12, fullWidth = false }
             </p>
           </div>
         ) : (
-          totalPages > 1 && (
-            <div className="flex flex-col justify-center items-center gap-4 mt-12">
-              <span className="px-4 py-2 text-zinc-600 dark:text-zinc-400">
-                Page {currentPage} of {totalPages} {selectedTags.length > 0 && `(${filteredCards.length} results)`}
-              </span>
-              <div className="flex justify-center items-center gap-2">
-                {currentPage > 1 && (
-                  <Link
-                    href={buildPaginationUrl(currentPage - 1)}
-                    className="px-4 py-2 bg-black text-white rounded-md hover:bg-zinc-800 transition-colors"
-                  >
-                    Previous
-                  </Link>
-                )}
-                {currentPage < totalPages && (
-                  <Link
-                    href={buildPaginationUrl(currentPage + 1)}
-                    className="px-4 py-2 bg-black text-white rounded-md hover:bg-zinc-800 transition-colors"
-                  >
-                    Next
-                  </Link>
-                )}
+          <>
+            {hasMore && <div ref={sentinelRef} className="h-4 w-full" aria-hidden />}
+            {hasMore && (
+              <div className="flex justify-center py-8">
+                <span className="text-sm text-zinc-500 dark:text-zinc-400">
+                  Showing {currentCards.length} of {filteredCards.length}
+                </span>
               </div>
-            </div>
-          )
+            )}
+          </>
         )}
       </div>
     </section>

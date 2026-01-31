@@ -3,6 +3,8 @@ import CollaborationTimeline from '@/components/shadcn-studio/blocks/collaborati
 import WorkLinksSection from '@/components/shadcn-studio/blocks/work-links-section/work-links-section';
 import Link from 'next/link';
 
+type Navigation = { title: string; href: string };
+
 const navigationData: Navigation[] = [
   {
     title: 'What We Do',
@@ -41,7 +43,7 @@ const timelineEvents = [
       'Material and finish selection',
       'Sample product mockups'
     ],
-    image: 'https://cdn.shadcnstudio.com/ss-assets/blocks/marketing/blog/image-2.png',
+    image: '/helo-evolved-grip-sole.png',
     imageAlt: 'Creative Strategy & Concept Development'
   },
   {
@@ -53,7 +55,7 @@ const timelineEvents = [
       'Typography and branding integration',
       'Final design approval process'
     ],
-    image: 'https://cdn.shadcnstudio.com/ss-assets/blocks/marketing/blog/image-3.png',
+    image: '/woman-loungewear-outdoor.png',
     imageAlt: 'Design Refinement & Approval'
   },
   {
@@ -77,7 +79,7 @@ const timelineEvents = [
       'Shipping coordination',
       'Delivery tracking and confirmation'
     ],
-    image: 'https://cdn.shadcnstudio.com/ss-assets/blocks/marketing/blog/image-2.png',
+    image: '/helo-evolved-grip-sole.png',
     imageAlt: 'Fulfillment & Distribution'
   },
   {
@@ -89,7 +91,7 @@ const timelineEvents = [
       'Re-order facilitation',
       'Long-term partnership planning'
     ],
-    image: 'https://cdn.shadcnstudio.com/ss-assets/blocks/marketing/blog/image-3.png',
+    image: '/woman-loungewear-outdoor.png',
     imageAlt: 'Post-Launch Support & Analysis'
   }
 ];
@@ -100,19 +102,19 @@ const workLinks = [
     title: 'Spring 2026 Inspo',
     image: 'https://cdn.shadcnstudio.com/ss-assets/blocks/marketing/blog/image-1.png',
     imageAlt: 'Spring 2026 Inspo',
-    href: '/case-study/spring-2026-inspo'
+    href: '/merch-we-made/spring-2026-inspo'
   },
   {
-    title: 'Thane Development Plan 2026 & Master Plan',
-    image: 'https://cdn.shadcnstudio.com/ss-assets/blocks/marketing/blog/image-2.png',
-    imageAlt: 'Thane Development Plan',
-    href: '/case-study/thane-development-plan-2026-master-plan'
+    title: 'Helios',
+    image: '/helo-evolved-grip-sole.png',
+    imageAlt: 'Helios – luxury Pilates studio Little Italy San Diego',
+    href: '/case-study/helios'
   },
   {
     title: 'Case Study 4',
     image: 'https://cdn.shadcnstudio.com/ss-assets/blocks/marketing/blog/image-1.png',
     imageAlt: 'Case Study 4',
-    href: '/case-study/case-study-4'
+    href: '/merch-we-made/case-study-4'
   },
 ];
 

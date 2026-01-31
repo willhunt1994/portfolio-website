@@ -9,6 +9,8 @@ interface AnimatedBeamProps {
   containerRef: React.RefObject<HTMLElement | null>;
   fromRef: React.RefObject<HTMLElement | null>;
   toRef: React.RefObject<HTMLElement | null>;
+  /** Quadratic (one control) or cubic (two controls) for a smoother curve */
+  curveType?: 'quadratic' | 'cubic';
   curvature?: number;
   reverse?: boolean;
   pathColor?: string;
@@ -30,6 +32,7 @@ function AnimatedBeam(props: AnimatedBeamProps) {
     containerRef,
     fromRef,
     toRef,
+    curveType = 'quadratic',
     curvature = 0,
     reverse = false,
     duration = Math.random() * 3 + 4,
@@ -80,8 +83,22 @@ function AnimatedBeam(props: AnimatedBeamProps) {
         const endX = rectB.left - containerRect.left + rectB.width / 2 + endXOffset;
         const endY = rectB.top - containerRect.top + rectB.height / 2 + endYOffset;
 
-        const controlY = startY - curvature;
-        const d = `M ${startX},${startY} Q ${(startX + endX) / 2},${controlY} ${endX},${endY}`;
+        let d: string;
+        if (curveType === 'cubic' && curvature !== 0) {
+          const dx = endX - startX;
+          const dy = endY - startY;
+          const len = Math.sqrt(dx * dx + dy * dy) || 1;
+          const perpX = (-dy / len) * curvature;
+          const perpY = (dx / len) * curvature;
+          const c1x = startX + dx * 0.35 + perpX;
+          const c1y = startY + dy * 0.35 + perpY;
+          const c2x = endX - dx * 0.35 + perpX;
+          const c2y = endY - dy * 0.35 + perpY;
+          d = `M ${startX},${startY} C ${c1x},${c1y} ${c2x},${c2y} ${endX},${endY}`;
+        } else {
+          const controlY = startY - curvature;
+          d = `M ${startX},${startY} Q ${(startX + endX) / 2},${controlY} ${endX},${endY}`;
+        }
 
         setPathD(d);
       }
@@ -100,7 +117,7 @@ function AnimatedBeam(props: AnimatedBeamProps) {
     return () => {
       resizeObserver.disconnect();
     };
-  }, [containerRef, fromRef, toRef, curvature, startXOffset, startYOffset, endXOffset, endYOffset]);
+  }, [containerRef, fromRef, toRef, curveType, curvature, startXOffset, startYOffset, endXOffset, endYOffset]);
 
   return (
     <svg

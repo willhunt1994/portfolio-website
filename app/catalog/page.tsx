@@ -1,6 +1,7 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useSearchParams } from 'next/navigation';
 import { SearchIcon, FilterIcon, Grid3x3, List, Columns2, Columns3, Columns4, ChevronDown, Ruler, X } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
@@ -423,8 +424,15 @@ const catalogItems: CatalogItem[] = [
 ];
 
 export default function CatalogPage() {
-  const [searchQuery, setSearchQuery] = useState('');
+  const searchParams = useSearchParams();
+  const qFromUrl = searchParams.get('q') ?? '';
+  const [searchQuery, setSearchQuery] = useState(qFromUrl);
   const [selectedCategory, setSelectedCategory] = useState<string>('All');
+
+  // Sync search field when landing with ?q= (e.g. from "View Product" on merch-we-made)
+  useEffect(() => {
+    setSearchQuery(qFromUrl);
+  }, [qFromUrl]);
   const [viewMode] = useState<'grid'>('grid');
   const [showFilters, setShowFilters] = useState(false);
   const [gridColumns, setGridColumns] = useState<4 | 6 | 8>(6);

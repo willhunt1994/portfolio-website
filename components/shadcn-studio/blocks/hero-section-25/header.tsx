@@ -43,36 +43,44 @@ const Header = ({ navigationData, className }: HeaderProps) => {
         className
       )}
     >
-      <div className="mx-auto flex h-full w-full items-center justify-between gap-6 px-4 sm:px-6">
+      {/* Desktop layout */}
+      <div className="mx-auto hidden h-full w-full items-center justify-between gap-6 px-4 sm:px-6 md:flex">
         <Link href="/">
           <Logo className="gap-3" />
         </Link>
 
         <HeroNavigation01 navigationData={navigationData} navigationClassName="md:block" />
 
-        <div className="flex items-center gap-2 max-md:hidden">
+        <div className="flex items-center gap-2">
           <Button variant="outline" className="rounded-lg" asChild>
-            <a href="#">Login</a>
+            <a href="https://ethos-b2b.clickoapps.com/login">Login</a>
           </Button>
           <Button className="rounded-lg" asChild>
-            <a href="#">Get Started</a>
+            <a href="https://ethos-b2b.clickoapps.com/login">Get Started</a>
           </Button>
         </div>
+      </div>
 
-        <div className="flex gap-4 md:hidden">
-          <Button variant="outline" className="rounded-lg" asChild>
-            <a href="#">Login</a>
-          </Button>
-          <Button className="rounded-lg" asChild>
-            <a href="#">Get Started</a>
-          </Button>
-
-          <HeroNavigation01SmallScreen
-            navigationData={navigationData}
-            screenSize={767}
-            triggerClassName="md:hidden"
-          />
-        </div>
+      {/* Mobile layout: menu left, logo center */}
+      <div className="mx-auto flex h-full w-full items-center px-4 md:hidden">
+        <HeroNavigation01SmallScreen
+          navigationData={navigationData}
+          screenSize={767}
+          triggerClassName="md:hidden"
+          actions={
+            <div className="flex flex-col gap-2">
+              <Button variant="outline" className="rounded-lg w-full" asChild>
+                <a href="https://ethos-b2b.clickoapps.com/login">Login</a>
+              </Button>
+              <Button className="rounded-lg w-full" asChild>
+                <a href="https://ethos-b2b.clickoapps.com/login">Get Started</a>
+              </Button>
+            </div>
+          }
+        />
+        <Link href="/" className="absolute left-1/2 -translate-x-1/2">
+          <Logo className="gap-3" />
+        </Link>
       </div>
     </header>
   );

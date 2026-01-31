@@ -36,7 +36,7 @@ interface MotionPresetProps {
         scale?: number;
       }
     | boolean;
-  motionProps?: Omit<HTMLMotionProps<'div'>, 'children' | 'className' | 'ref' | 'transition'>;
+  motionProps?: Omit<HTMLMotionProps<'div'>, 'children' | 'className' | 'ref'>;
   ref?: React.Ref<HTMLDivElement>;
 }
 

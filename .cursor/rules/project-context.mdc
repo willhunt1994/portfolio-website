@@ -1,0 +1,10 @@
+---
+description: Portfolio website project root — all code changes go here
+alwaysApply: true
+---
+
+# Portfolio Website Project
+
+- **Project path**: `~/sites/portfolio-website` (or `/Users/williamhunt/sites/portfolio-website`)
+- All code changes, new files, and edits for this website must be made **inside this folder**.
+- Do not assume or use `~/sites/personal/` for this project; this repo is the single source of truth for the portfolio site.

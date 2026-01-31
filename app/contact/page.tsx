@@ -5,6 +5,8 @@ import { MessageSquareMoreIcon, MessagesSquareIcon, MapPinIcon, PhoneIcon } from
 import ContactUs from '@/components/shadcn-studio/blocks/contact-us-page-04/contact-us-page-04';
 import Link from 'next/link';
 
+type Navigation = { title: string; href: string };
+
 const navigationData: Navigation[] = [
   {
     title: 'What We Do',

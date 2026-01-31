@@ -9,12 +9,13 @@ export default function HeaderWrapper() {
   const isDashboard = pathname?.startsWith('/dashboard');
   const isOrders = pathname?.startsWith('/orders');
   const isMockupSubmissions = pathname?.startsWith('/mockup-submissions');
+  const isMockupsSubmissions2 = pathname?.startsWith('/mockups-submissions');
   const isLogin = pathname?.startsWith('/login');
   const isRegister = pathname?.startsWith('/register');
   const isForgotPassword = pathname?.startsWith('/forgot-password');
 
-  // Hide header on dashboard, orders, mockup-submissions, login, register, and forgot-password pages
-  if (isDashboard || isOrders || isMockupSubmissions || isLogin || isRegister || isForgotPassword) {
+  // Hide header on dashboard, orders, mockup-submissions, mockups-submissions-2, login, register, and forgot-password pages
+  if (isDashboard || isOrders || isMockupSubmissions || isMockupsSubmissions2 || isLogin || isRegister || isForgotPassword) {
     return null;
   }
 

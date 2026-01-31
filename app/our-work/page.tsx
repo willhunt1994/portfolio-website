@@ -1,7 +1,6 @@
 import Blog from '@/components/shadcn-studio/blocks/blog-component-01/blog-component-01';
 import TagFilter from '@/components/shadcn-studio/blocks/blog-component-01/tag-filter';
 import { getBlogCards } from '@/lib/blog-cards';
-import Link from 'next/link';
 import { Suspense } from 'react';
 
 const blogCards = getBlogCards();
@@ -31,43 +30,24 @@ export default function OurWork() {
           }}
         />
         
-        <div className="container mx-auto px-4 pt-24 pb-8 md:pt-28 md:pb-12">
-          <div className="mb-[0.0625rem]">
-            <div className="flex items-center justify-between mb-4">
-              <h1 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white">Our Work</h1>
-              <Link
-                href="/our-work"
-                className="text-sm font-medium text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors inline-flex items-center gap-1"
-              >
-                View All
-                <svg 
-                  width="12" 
-                  height="12" 
-                  viewBox="0 0 12 12" 
-                  fill="none" 
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="inline-block"
-                >
-                  <path 
-                    d="M1 6H11M11 6L6 1M11 6L6 11" 
-                    stroke="currentColor" 
-                    strokeWidth="1.5" 
-                    strokeLinecap="round" 
-                    strokeLinejoin="round"
-                  />
-                </svg>
-              </Link>
+        <div className="w-full px-4 sm:px-6 lg:px-8 pt-24 pb-8 md:pt-28 md:pb-12 border-b border-zinc-200 dark:border-zinc-800">
+          <div className="flex flex-wrap justify-between items-end gap-6">
+            <div className="mb-[0.0625rem]">
+              <div className="mb-4">
+                <h1 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white">Our Work</h1>
+              </div>
+              <p className="text-lg text-gray-600 dark:text-gray-400">Take a look through some of our work, and get inspired for your next project.</p>
             </div>
-            <p className="text-lg text-gray-600 dark:text-gray-400">Take a look through some of our work, and get inspired for your next project.</p>
+            <Suspense fallback={<div className="h-10 w-32 bg-zinc-100 dark:bg-zinc-800 animate-pulse rounded" />}>
+              <TagFilter allTags={allTags} blogCards={blogCards} />
+            </Suspense>
           </div>
         </div>
 
         <Suspense fallback={<div className="py-20 px-[10px] text-center">Loading...</div>}>
-          <TagFilter allTags={allTags} blogCards={blogCards} />
-          <Blog blogCards={blogCards} />
+          <Blog blogCards={blogCards} fullWidth />
         </Suspense>
       </main>
     </div>
   );
 }
-

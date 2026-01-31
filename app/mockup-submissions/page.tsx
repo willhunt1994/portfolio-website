@@ -29,7 +29,7 @@ interface Product {
   minimums: string;
   pricing: string;
   internalStatus: 'Pending' | 'Approved By Client - Prep For Upload' | 'Prepped - Create Draft Product' | 'Drafted - Add Customization' | 'Customization Added - Final Check' | 'Checked - Send To Client' | 'Sent To Client' | 'Removed';
-  externalStatus: 'Approved' | 'Revisions Requested' | 'Awaiting Customer Response' | 'Rejected';
+  externalStatus: 'Pending' | 'Approved' | 'Rejected';
   mockupImage?: string;
   notes?: string;
 }
@@ -169,9 +169,8 @@ const generateProduct = (index: number): Product => {
     'Removed'
   ];
   const externalStatuses: Product['externalStatus'][] = [
+    'Pending',
     'Approved',
-    'Revisions Requested',
-    'Awaiting Customer Response',
     'Rejected'
   ];
   
@@ -482,7 +481,7 @@ const MockupSubmissionsPage = () => {
     // Get filtered products (respecting status filters)
     const filteredProducts = selectedSubmissionData.products.filter((product) => {
       if (productStatusFilters.size === 0) return true;
-      return productStatusFilters.has(product.externalStatus);
+      return productStatusFilters.has(normalizeExternalStatus(product.externalStatus));
     });
     
     // Find the current product index in filtered list
@@ -531,11 +530,17 @@ const MockupSubmissionsPage = () => {
     }
   };
 
+  /** Map legacy statuses to the three we support so old/cached data shows correctly. */
+  const normalizeExternalStatus = (status: string): Product['externalStatus'] => {
+    if (status === 'Approved' || status === 'Rejected' || status === 'Pending') return status as Product['externalStatus'];
+    if (status === 'Awaiting Customer Response' || status === 'Revisions Requested') return 'Pending';
+    return 'Pending';
+  };
+
   const getStatusColor = (status: string): string => {
     if (status === 'Approved') return 'bg-green-100 text-green-700 border-green-200';
-    if (status === 'Revisions Requested') return 'bg-yellow-100 text-yellow-700 border-yellow-200';
-    if (status === 'Awaiting Customer Response') return 'bg-blue-100 text-blue-700 border-blue-200';
     if (status === 'Rejected') return 'bg-red-100 text-red-700 border-red-200';
+    if (status === 'Pending') return 'bg-amber-100 text-amber-700 border-amber-200';
     return 'bg-gray-100 text-gray-700 border-gray-200';
   };
 
@@ -577,7 +582,7 @@ const MockupSubmissionsPage = () => {
         // Get all selected product IDs in order
         const filteredProducts = submission.products.filter((product) => {
           if (productStatusFilters.size === 0) return true;
-          return productStatusFilters.has(product.externalStatus);
+          return productStatusFilters.has(normalizeExternalStatus(product.externalStatus));
         });
 
         const selectedProductIds = filteredProducts
@@ -992,7 +997,7 @@ const MockupSubmissionsPage = () => {
                             Status
                           </div>
                           <div className="flex flex-col gap-1 px-2 pb-2">
-                            {(['Approved', 'Revisions Requested', 'Awaiting Customer Response', 'Rejected'] as Product['externalStatus'][]).map((status) => {
+                            {(['Pending', 'Approved', 'Rejected'] as Product['externalStatus'][]).map((status) => {
                               const baseColor = getStatusColor(status);
                               return (
                                 <div
@@ -1029,7 +1034,7 @@ const MockupSubmissionsPage = () => {
                     {selectedSubmissionData.products
                       .filter((product) => {
                         if (productStatusFilters.size === 0) return true;
-                        return productStatusFilters.has(product.externalStatus);
+                        return productStatusFilters.has(normalizeExternalStatus(product.externalStatus));
                       })
                       .map((product, index) => {
                       const isExpanded = expandedProducts.has(product.id);
@@ -1071,8 +1076,8 @@ const MockupSubmissionsPage = () => {
                             
                             {/* Status Badge */}
                             <div className="flex-shrink-0">
-                              <span className={`px-2 py-1 rounded-full text-xs font-medium border ${getStatusColor(product.externalStatus)}`}>
-                                {product.externalStatus}
+                              <span className={`px-2 py-1 rounded-full text-xs font-medium border ${getStatusColor(normalizeExternalStatus(product.externalStatus))}`}>
+                                {normalizeExternalStatus(product.externalStatus)}
                               </span>
                             </div>
                           </div>

@@ -35,10 +35,11 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     );
 
     if (asChild && React.isValidElement(props.children)) {
-      return React.cloneElement(props.children as React.ReactElement<{ className?: string; ref?: React.Ref<unknown> }>, {
-        className: cn(computedClassName, (props.children as React.ReactElement).props.className),
+      const child = props.children as React.ReactElement<{ className?: string; ref?: React.Ref<unknown> }>;
+      return React.cloneElement(child, {
+        className: cn(computedClassName, child.props.className),
         ref,
-      });
+      } as Partial<{ className?: string; ref?: React.Ref<unknown> }>);
     }
 
     return (

@@ -17,6 +17,19 @@ interface GalleryImage {
   src: string;
   alt: string;
   className?: string;
+  /** Optional video (autoplay, loop). When set, rendered instead of image. */
+  video?: string;
+  /** Optional testimonial card (full-width). When set, rendered instead of image/video. */
+  testimonial?: {
+    author: string;
+    role?: string;
+    avatar?: string;
+    avatarAlt?: string;
+    quote: string;
+    body?: string;
+    image?: string;
+    imageAlt?: string;
+  };
   hotspots?: Hotspot[];
 }
 
@@ -34,21 +47,99 @@ export default function Gallery({ galleryImage }: GalleryProps) {
           {galleryImage.map((image, index) => {
             const isWide = image.className?.includes('col-span-2');
             const isFullWidth = image.className?.includes('col-span-4');
+            const isTestimonial = !!image.testimonial;
             const imageHotspots = image.hotspots || [];
-            
+            const spanClass = isTestimonial ? 'md:col-span-4' : (isFullWidth ? '' : isWide ? 'md:col-span-2' : '');
+
+            if (isTestimonial && image.testimonial) {
+              const { author, role, avatar, avatarAlt, quote, body, image: testimonialImage, imageAlt } = image.testimonial;
+              return (
+                <div
+                  key={index}
+                  className={`relative overflow-visible rounded-[2px] md:col-span-4 ${image.className || ''}`}
+                >
+                  <div className="relative w-full rounded-[2px] bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 overflow-hidden flex flex-col md:flex-row min-h-[280px]">
+                    {/* Left column: testimonial text */}
+                    <div className="flex-1 flex flex-col justify-center p-6 md:p-8 lg:p-10 text-left">
+                      {/* Circular profile picture above author */}
+                      <div className="mb-4 flex justify-start">
+                        <div className="relative w-14 h-14 rounded-full overflow-hidden bg-zinc-200 dark:bg-zinc-700 flex-shrink-0">
+                          {avatar ? (
+                            <Image
+                              src={avatar}
+                              alt={avatarAlt || author}
+                              fill
+                              className="object-cover"
+                              sizes="56px"
+                            />
+                          ) : (
+                            <div className="absolute inset-0 flex items-center justify-center text-zinc-400 dark:text-zinc-500" aria-hidden>
+                              <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                                <circle cx="12" cy="7" r="4" />
+                              </svg>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                      <p className="text-sm font-medium text-zinc-900 dark:text-white mb-3">
+                        {author}
+                        {role && <span className="text-zinc-600 dark:text-zinc-400 font-normal">, {role}</span>}
+                      </p>
+                      <blockquote className="text-xl md:text-2xl lg:text-3xl font-bold text-zinc-900 dark:text-white uppercase tracking-tight mb-4 md:mb-6">
+                        &ldquo;{quote}&rdquo;
+                      </blockquote>
+                      {body && (
+                        <div className="text-sm md:text-base text-zinc-700 dark:text-zinc-300 leading-relaxed space-y-3">
+                          {body.split(/\n\n+/).map((para, i) => (
+                            <p key={i}>{para}</p>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                    {/* Right column: optional image */}
+                    {testimonialImage && (
+                      <div className="relative w-full md:w-[45%] lg:w-[40%] aspect-[4/3] md:aspect-[3/4] flex-shrink-0">
+                        <Image
+                          src={testimonialImage}
+                          alt={imageAlt || author}
+                          fill
+                          className="object-cover"
+                          sizes="(max-width: 768px) 100vw, 45vw"
+                        />
+                      </div>
+                    )}
+                  </div>
+                </div>
+              );
+            }
+
             return (
               <div
                 key={index}
-                className={`relative overflow-visible rounded-[2px] ${isFullWidth ? 'aspect-[16/9]' : isWide ? 'aspect-[16/9]' : 'aspect-[2/3]'} ${image.className || ''}`}
+                className={`relative overflow-visible rounded-[2px] ${spanClass} ${isFullWidth ? 'aspect-[16/9]' : isWide ? 'aspect-[16/9]' : 'aspect-[2/3]'} ${image.className || ''}`}
               >
                 <div className="relative w-full h-full overflow-hidden rounded-[2px]">
-                  <Image
-                    src={image.src}
-                    alt={image.alt}
-                    fill
-                    className="object-cover"
-                    style={{ zIndex: 1 }}
-                  />
+                  {image.video ? (
+                    <video
+                      src={image.video}
+                      autoPlay
+                      loop
+                      muted
+                      playsInline
+                      className="absolute inset-0 w-full h-full object-cover"
+                      style={{ zIndex: 1 }}
+                      aria-label={image.alt}
+                    />
+                  ) : (
+                    <Image
+                      src={image.src}
+                      alt={image.alt}
+                      fill
+                      className="object-cover"
+                      style={{ zIndex: 1 }}
+                    />
+                  )}
                 </div>
                 
                 {/* Hotspots */}

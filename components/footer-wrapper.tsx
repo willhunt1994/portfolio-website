@@ -8,8 +8,9 @@ export default function FooterWrapper() {
   const isDashboard = pathname?.startsWith('/dashboard');
   const isOrders = pathname?.startsWith('/orders');
   const isMockupSubmissions = pathname?.startsWith('/mockup-submissions');
+  const isMockupsSubmissions2 = pathname?.startsWith('/mockups-submissions');
 
-  if (isDashboard || isOrders || isMockupSubmissions) {
+  if (isDashboard || isOrders || isMockupSubmissions || isMockupsSubmissions2) {
     return null;
   }
 

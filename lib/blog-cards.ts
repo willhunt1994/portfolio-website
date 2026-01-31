@@ -17,6 +17,29 @@ export const blogCardsData = [
     tags: ['Merch We Made']
   },
   {
+    img: '/our-work/Merch%20We%20Made/Be%20Right%20Back/BF5A8725.jpg',
+    alt: 'ETHOS CO. athleisure and custom goods at airport',
+    title: 'Be Right Back',
+    description:
+      'A travel moment with a calm athleisure lifestyle vibe.',
+    tags: ['Merch We Made']
+  },
+  {
+    img: '/our-work/Merch%20We%20Made/Varsity/395A8862.jpg',
+    alt: 'Varsity – cozy café moment',
+    title: 'Varsity',
+    description:
+      'A cozy café moment with varsity-inspired vibe.',
+    tags: ['Merch We Made']
+  },
+  {
+    img: '/our-work/Merch%20We%20Made/Cloud%20Collection/395A7001.jpg',
+    alt: 'Cloud Collection',
+    title: 'Cloud Collection',
+    description: 'Soft, elevated merch with a cloud-inspired vibe.',
+    tags: ['Merch We Made']
+  },
+  {
     img: 'https://drive.google.com/uc?export=view&id=1S5zI7MUI2HpabdoiMgMfgYdQnafSxb6B',
     alt: 'Spring 2026 Inspo',
     title: 'Spring 2026 Inspo',
@@ -25,188 +48,91 @@ export const blogCardsData = [
     tags: ['Inspo']
   },
   {
-    img: 'https://cdn.shadcnstudio.com/ss-assets/blocks/marketing/blog/image-2.png',
-    alt: 'Traditional house',
-    title: 'Thane Development Plan 2026 & Master Plan',
+    img: '/our-work/Inspo/July%204th/1fb0ae7172039a498d602593c6d4eb56.jpg',
+    alt: 'July 4th Inspo',
+    title: 'July 4th Inspo',
     description:
-      'Discover a unique nook in the heart of the city, offering convenience and access to attractions. Stylishly designed, it provides a comfortable retreat.',
-    tags: ['Case Study']
-  },
-  {
-    img: 'https://cdn.shadcnstudio.com/ss-assets/blocks/marketing/blog/image-3.png',
-    alt: 'Modern house with pool',
-    title: 'What is a Property Sale Agreement?',
-    description:
-      'Welcome to this charming independent house bedroom, featuring a spacious layout and cozy furnishings. Enjoy abundant natural light and peaceful.',
-    tags: ['Case Study']
-  },
-  {
-    img: 'https://cdn.shadcnstudio.com/ss-assets/blocks/marketing/blog/image-1.png',
-    alt: 'Modern house',
-    title: 'Case Study 4',
-    description:
-      'Experience the charm of this lovely and cozy apartment, featuring warm decor and inviting spaces, perfect for relaxation and comfort, ideal for your next getaway.',
-    tags: ['Case Study']
-  },
-  {
-    img: 'https://cdn.shadcnstudio.com/ss-assets/blocks/marketing/blog/image-2.png',
-    alt: 'Traditional house',
-    title: 'Case Study 5',
-    description:
-      'Discover a unique nook in the heart of the city, offering convenience and access to attractions. Stylishly designed, it provides a comfortable retreat.',
-    tags: ['Case Study', 'Merch We Made']
-  },
-  {
-    img: 'https://cdn.shadcnstudio.com/ss-assets/blocks/marketing/blog/image-3.png',
-    alt: 'Modern house with pool',
-    title: 'Case Study 6',
-    description:
-      'Welcome to this charming independent house bedroom, featuring a spacious layout and cozy furnishings. Enjoy abundant natural light and peaceful.',
+      'Patriotic inspo for the Fourth of July.',
     tags: ['Inspo']
   },
   {
-    img: 'https://cdn.shadcnstudio.com/ss-assets/blocks/marketing/blog/image-1.png',
-    alt: 'Modern house',
-    title: 'Case Study 7',
-    description:
-      'Experience the charm of this lovely and cozy apartment, featuring warm decor and inviting spaces, perfect for relaxation and comfort, ideal for your next getaway.',
-    tags: ['Merch We Made']
-  },
-  {
-    img: 'https://cdn.shadcnstudio.com/ss-assets/blocks/marketing/blog/image-2.png',
-    alt: 'Traditional house',
-    title: 'Case Study 8',
-    description:
-      'Discover a unique nook in the heart of the city, offering convenience and access to attractions. Stylishly designed, it provides a comfortable retreat.',
-    tags: ['Case Study']
-  },
-  {
-    img: 'https://cdn.shadcnstudio.com/ss-assets/blocks/marketing/blog/image-3.png',
-    alt: 'Modern house with pool',
-    title: 'Case Study 9',
-    description:
-      'Welcome to this charming independent house bedroom, featuring a spacious layout and cozy furnishings. Enjoy abundant natural light and peaceful.',
+    img: '/our-work/Inspo/Baseball%20Season/0a362b0578c28c11969a04e0bde9a733.jpg',
+    alt: 'Baseball Season Inspo',
+    title: 'Baseball Season Inspo',
+    description: 'Dugout and diamond inspo for baseball season.',
     tags: ['Inspo']
   },
   {
-    img: 'https://cdn.shadcnstudio.com/ss-assets/blocks/marketing/blog/image-1.png',
-    alt: 'Modern house',
-    title: 'Case Study 10',
-    description:
-      'Experience the charm of this lovely and cozy apartment, featuring warm decor and inviting spaces, perfect for relaxation and comfort, ideal for your next getaway.',
-    tags: ['Merch We Made']
-  },
-  {
-    img: 'https://cdn.shadcnstudio.com/ss-assets/blocks/marketing/blog/image-2.png',
-    alt: 'Traditional house',
-    title: 'Case Study 11',
-    description:
-      'Discover a unique nook in the heart of the city, offering convenience and access to attractions. Stylishly designed, it provides a comfortable retreat.',
-    tags: ['Case Study']
-  },
-  {
-    img: 'https://cdn.shadcnstudio.com/ss-assets/blocks/marketing/blog/image-3.png',
-    alt: 'Modern house with pool',
-    title: 'Case Study 12',
-    description:
-      'Welcome to this charming independent house bedroom, featuring a spacious layout and cozy furnishings. Enjoy abundant natural light and peaceful.',
-    tags: ['Case Study', 'Inspo']
-  },
-  {
-    img: 'https://cdn.shadcnstudio.com/ss-assets/blocks/marketing/blog/image-1.png',
-    alt: 'Modern house',
-    title: 'Case Study 13',
-    description:
-      'Experience the charm of this lovely and cozy apartment, featuring warm decor and inviting spaces, perfect for relaxation and comfort, ideal for your next getaway.',
+    img: '/our-work/Inspo/Collegiate/012e18c07b2fc744f8db292a78f9f012.jpg',
+    alt: 'Collegiate Inspo',
+    title: 'Collegiate Inspo',
+    description: 'Campus and game day inspo with collegiate spirit.',
     tags: ['Inspo']
   },
   {
-    img: 'https://cdn.shadcnstudio.com/ss-assets/blocks/marketing/blog/image-2.png',
-    alt: 'Traditional house',
-    title: 'Case Study 14',
-    description:
-      'Discover a unique nook in the heart of the city, offering convenience and access to attractions. Stylishly designed, it provides a comfortable retreat.',
-    tags: ['Merch We Made']
-  },
-  {
-    img: 'https://cdn.shadcnstudio.com/ss-assets/blocks/marketing/blog/image-3.png',
-    alt: 'Modern house with pool',
-    title: 'Case Study 15',
-    description:
-      'Welcome to this charming independent house bedroom, featuring a spacious layout and cozy furnishings. Enjoy abundant natural light and peaceful.',
-    tags: ['Case Study']
-  },
-  {
-    img: 'https://cdn.shadcnstudio.com/ss-assets/blocks/marketing/blog/image-1.png',
-    alt: 'Modern house',
-    title: 'Case Study 16',
-    description:
-      'Experience the charm of this lovely and cozy apartment, featuring warm decor and inviting spaces, perfect for relaxation and comfort, ideal for your next getaway.',
-    tags: ['Case Study', 'Merch We Made']
-  },
-  {
-    img: 'https://cdn.shadcnstudio.com/ss-assets/blocks/marketing/blog/image-2.png',
-    alt: 'Traditional house',
-    title: 'Case Study 17',
-    description:
-      'Discover a unique nook in the heart of the city, offering convenience and access to attractions. Stylishly designed, it provides a comfortable retreat.',
+    img: '/our-work/Inspo/Fall%202026/048a8d9ef5de13fb5d26b26de567cb64.jpg',
+    alt: 'Fall 2026 Inspo',
+    title: 'Fall 2026 Inspo',
+    description: 'Cozy autumn inspo for the Fall 2026 season.',
     tags: ['Inspo']
   },
   {
-    img: 'https://cdn.shadcnstudio.com/ss-assets/blocks/marketing/blog/image-3.png',
-    alt: 'Modern house with pool',
-    title: 'Case Study 18',
-    description:
-      'Welcome to this charming independent house bedroom, featuring a spacious layout and cozy furnishings. Enjoy abundant natural light and peaceful.',
-    tags: ['Merch We Made']
+    img: '/our-work/Inspo/Racing%20Team/0292e81fee8b21438a1e2aba6d170abc.jpg',
+    alt: 'Racing Team Inspo',
+    title: 'Racing Team Inspo',
+    description: 'Speed and team spirit inspo for racing.',
+    tags: ['Inspo']
   },
   {
-    img: 'https://cdn.shadcnstudio.com/ss-assets/blocks/marketing/blog/image-1.png',
-    alt: 'Modern house',
-    title: 'Case Study 19',
-    description:
-      'Experience the charm of this lovely and cozy apartment, featuring warm decor and inviting spaces, perfect for relaxation and comfort, ideal for your next getaway.',
-    tags: ['Case Study', 'Inspo']
+    img: '/our-work/Inspo/Run%20Club/00fd0fb56d7bde09fd305a9b482bbb29.jpg',
+    alt: 'Run Club Inspo',
+    title: 'Run Club Inspo',
+    description: 'Running and community inspo for run clubs.',
+    tags: ['Inspo']
   },
   {
-    img: 'https://cdn.shadcnstudio.com/ss-assets/blocks/marketing/blog/image-2.png',
-    alt: 'Traditional house',
-    title: 'Case Study 20',
-    description:
-      'Discover a unique nook in the heart of the city, offering convenience and access to attractions. Stylishly designed, it provides a comfortable retreat.',
-    tags: ['Inspo', 'Merch We Made']
+    img: '/our-work/Inspo/Summer%202026/00d31b4fb084fc384a721855086dd366.jpg',
+    alt: 'Summer 2026 Inspo',
+    title: 'Summer 2026 Inspo',
+    description: 'Bright summer inspo for the Summer 2026 season.',
+    tags: ['Inspo']
   },
   {
-    img: 'https://cdn.shadcnstudio.com/ss-assets/blocks/marketing/blog/image-3.png',
-    alt: 'Modern house with pool',
-    title: 'Case Study 21',
+    img: '/white-socks-stripes.png',
+    alt: 'White crew socks with teal and grey stripes',
+    title: 'Solos Pilates',
     description:
-      'Welcome to this charming independent house bedroom, featuring a spacious layout and cozy furnishings. Enjoy abundant natural light and peaceful.',
+      'A high end boutique pilates studio with 4 locations in Socal.',
     tags: ['Case Study']
   },
   {
-    img: 'https://cdn.shadcnstudio.com/ss-assets/blocks/marketing/blog/image-1.png',
-    alt: 'Modern house',
-    title: 'Case Study 22',
+    img: '/our-work/Case%20Study/Helios/8D2A9710.jpg',
+    alt: 'Helios – luxury Pilates studio Little Italy San Diego',
+    title: 'Helios',
     description:
-      'Experience the charm of this lovely and cozy apartment, featuring warm decor and inviting spaces, perfect for relaxation and comfort, ideal for your next getaway.',
-    tags: ['Merch We Made']
+      'A luxury Pilates studio in the heart of Little Italy, San Diego.',
+    tags: ['Case Study']
   },
   {
-    img: 'https://cdn.shadcnstudio.com/ss-assets/blocks/marketing/blog/image-2.png',
-    alt: 'Traditional house',
-    title: 'Case Study 23',
-    description:
-      'Discover a unique nook in the heart of the city, offering convenience and access to attractions. Stylishly designed, it provides a comfortable retreat.',
-    tags: ['Case Study', 'Inspo']
+    img: '/our-work/Case%20Study/Cymbiotika/395A8520.jpg',
+    alt: 'Cymbiotika',
+    title: 'Cymbiotika',
+    description: 'Premium supplements and wellness brand – custom merch that fits the brand.',
+    tags: ['Case Study']
   },
   {
-    img: 'https://cdn.shadcnstudio.com/ss-assets/blocks/marketing/blog/image-3.png',
-    alt: 'Modern house with pool',
-    title: 'Case Study 24',
-    description:
-      'Welcome to this charming independent house bedroom, featuring a spacious layout and cozy furnishings. Enjoy abundant natural light and peaceful.',
-    tags: ['Case Study', 'Merch We Made']
+    img: '/our-work/Case%20Study/Katie%20Austin%20Workout%20Tour/395A6334.jpg',
+    alt: 'Katie Austin Workout Tour',
+    title: 'Katie Austin Workout Tour',
+    description: 'Tour merch and apparel for the Katie Austin Workout Tour.',
+    tags: ['Case Study']
+  },
+  {
+    img: '/our-work/Case%20Study/The%20Glow%20Morning/FB2A0865.jpg',
+    alt: 'The Glow Morning',
+    title: 'The Glow Morning',
+    description: 'Morning wellness and lifestyle brand – merch that brings the glow.',
+    tags: ['Case Study']
   }
 ];
 
@@ -222,6 +148,14 @@ export type BlogCard = {
 export function getBlogCards(): BlogCard[] {
   return blogCardsData.map(card => ({
     ...card,
-    blogLink: `/case-study/${generateSlug(card.title)}`
+    blogLink: card.tags?.includes('Case Study')
+      ? `/case-study/${generateSlug(card.title)}`
+      : `/merch-we-made/${generateSlug(card.title)}`,
   }));
+}
+
+/** Get a single card by slug (e.g. "script", "case-study-6") for use in detail pages. */
+export function getBlogCardBySlug(slug: string): { title: string; description: string; img: string } | null {
+  const card = blogCardsData.find(c => generateSlug(c.title) === slug);
+  return card ? { title: card.title, description: card.description, img: card.img } : null;
 }

@@ -191,11 +191,13 @@ const HeroNavigation01SmallScreen = ({
   triggerClassName,
   logo,
   screenSize = 1023,
+  actions,
 }: {
   navigationData: Navigation[];
   triggerClassName?: string;
   screenSize?: number;
   logo?: React.ReactNode;
+  actions?: ReactNode;
 }) => {
   const [open, setOpen] = useState(false);
   const isMobile = useMedia(`(max-width: ${screenSize}px)`, false);
@@ -214,7 +216,7 @@ const HeroNavigation01SmallScreen = ({
     <Sheet open={open} onOpenChange={setOpen}>
       <SheetTrigger asChild>
         <Button
-          variant="outline"
+          variant="ghost"
           size="icon"
           className={cn('inline-flex lg:hidden', triggerClassName)}
         >
@@ -222,7 +224,7 @@ const HeroNavigation01SmallScreen = ({
           <span className="sr-only">Menu</span>
         </Button>
       </SheetTrigger>
-      <SheetContent side="left" className="w-[18.75rem] gap-0 p-0">
+      <SheetContent id="nav-mobile-sheet" side="left" className="w-[18.75rem] gap-0 p-0">
         <SheetHeader className="p-4">
           <SheetTitle className="sr-only" />
           <SheetDescription className="sr-only" />
@@ -287,6 +289,11 @@ const HeroNavigation01SmallScreen = ({
             );
           })}
         </div>
+        {actions && (
+          <div className="border-t p-4 mt-auto">
+            {actions}
+          </div>
+        )}
       </SheetContent>
     </Sheet>
   );

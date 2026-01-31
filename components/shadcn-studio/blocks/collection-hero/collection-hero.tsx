@@ -5,6 +5,8 @@ import Image from 'next/image';
 interface CollectionHeroProps {
   backgroundImage: string;
   backgroundImageAlt: string;
+  /** Optional hero video (autoplay, loop). When set, used instead of backgroundImage. */
+  backgroundVideo?: string;
   heading: string;
   subtext: string;
   viewButtonText?: string;
@@ -14,6 +16,7 @@ interface CollectionHeroProps {
 export default function CollectionHero({
   backgroundImage,
   backgroundImageAlt,
+  backgroundVideo,
   heading,
   subtext,
   viewButtonText = 'VIEW GALLERY',
@@ -29,14 +32,29 @@ export default function CollectionHero({
   return (
     <section className="relative w-full h-screen min-h-[600px] overflow-hidden pt-16">
       <div className="absolute inset-0">
-        <Image
-          src={backgroundImage}
-          alt={backgroundImageAlt}
-          fill
-          className="object-cover"
-          style={{ objectPosition: 'center 70%' }}
-          priority
-        />
+        {backgroundVideo ? (
+          <video
+            src={backgroundVideo}
+            autoPlay
+            loop
+            muted
+            playsInline
+            className="absolute inset-0 w-full h-full object-cover"
+            style={{ objectPosition: 'center 70%' }}
+            aria-label={backgroundImageAlt}
+          />
+        ) : (
+          <Image
+            src={backgroundImage}
+            alt={backgroundImageAlt}
+            fill
+            className="object-cover"
+            style={{ objectPosition: 'center 70%' }}
+            priority
+            quality={95}
+            sizes="100vw"
+          />
+        )}
         {/* Gradient overlay for text readability */}
         <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
       </div>

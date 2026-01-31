@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react';
 import Image from 'next/image';
+import Link from 'next/link';
 
 interface Product {
   image: string;
@@ -14,11 +15,14 @@ interface Product {
 interface ProductShowcaseProps {
   products?: Product[];
   title?: string;
+  /** Optional background color (e.g. '#fcfced' for Spring 2026 page only). */
+  backgroundColor?: string;
 }
 
 export default function ProductShowcase({ 
   products = [],
-  title = 'Products We Used'
+  title = 'Products We Used',
+  backgroundColor,
 }: ProductShowcaseProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isVisible, setIsVisible] = useState(false);
@@ -77,7 +81,7 @@ export default function ProductShowcase({
       ref={sectionRef}
       className={`py-8 px-6 ${isVisible ? 'animate-fade-in-up' : 'opacity-0'}`}
       style={{ 
-        backgroundColor: '#f4f4f4',
+        backgroundColor: backgroundColor ?? '#f4f4f4',
         animation: isVisible ? 'fade-in-up 0.8s ease-out forwards' : 'none'
       }}
     >
@@ -174,26 +178,17 @@ export default function ProductShowcase({
                         {product.description}
                       </p>
                     )}
-                    {product.link ? (
-                      <a
-                        href={product.link}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="inline-block mt-auto text-xs text-black dark:text-white opacity-70 hover:opacity-100 transition-all group/view-link relative"
-                      >
-                        <span className="relative">
-                          View Product
-                          <span className="absolute bottom-0 left-0 w-0 h-px bg-current transition-all duration-300 group-hover/view-link:w-full"></span>
-                        </span>
-                      </a>
-                    ) : (
-                      <span className="inline-block mt-auto text-xs text-black dark:text-white opacity-70 relative group/view-link">
-                        <span className="relative">
-                          View Product
-                          <span className="absolute bottom-0 left-0 w-0 h-px bg-current transition-all duration-300 group-hover/view-link:w-full"></span>
-                        </span>
+                    <Link
+                      href={`/catalog?q=${encodeURIComponent([product.name, product.description].filter(Boolean).join(' '))}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-block mt-auto text-xs text-black dark:text-white opacity-70 hover:opacity-100 transition-all group/view-link relative"
+                    >
+                      <span className="relative">
+                        View Product
+                        <span className="absolute bottom-0 left-0 w-0 h-px bg-current transition-all duration-300 group-hover/view-link:w-full"></span>
                       </span>
-                    )}
+                    </Link>
                   </div>
                 </div>
               ))}

@@ -2,6 +2,7 @@ import { MotionPreset } from '@/components/ui/motion-preset';
 import ImportExport from '@/components/shadcn-studio/blocks/bento-grid-20/import-export';
 import RealTimeCustomizationCard from '@/components/shadcn-studio/blocks/bento-grid-20/real-time-customization-card';
 import TypographyFineTuning from '@/components/shadcn-studio/blocks/bento-grid-20/typography-fine-tuning';
+import Link from 'next/link';
 
 const themes = [
   {
@@ -59,10 +60,27 @@ const BentoGrid20 = () => {
           slide={{ direction: 'down', offset: 75 }}
           delay={0.15}
           transition={{ duration: 0.45 }}
-          className="bg-card flex flex-col gap-6 overflow-hidden rounded-xl py-6 sm:row-span-2"
+          className="relative flex flex-col gap-6 overflow-hidden rounded-xl py-6 sm:row-span-2 bg-cover bg-center"
+          motionProps={{
+            style: {
+              backgroundImage: "url('/custom-socks-card-bg.png')",
+            },
+          }}
         >
-          <div className="flex flex-1 flex-col items-center justify-center px-6 py-6">
-            <p className="text-xl font-medium text-foreground">custom socks</p>
+          <div className="relative flex flex-col">
+            <div className="space-y-3.5 px-6">
+              <h3 className="text-xl font-semibold text-foreground">Custom Socks</h3>
+              <Link
+                href="/catalog"
+                className="group relative inline-block text-base text-muted-foreground hover:text-foreground transition-colors"
+              >
+                View More
+                <span
+                  className="absolute bottom-0 left-0 h-px w-0 bg-current transition-[width] duration-300 ease-out group-hover:w-full"
+                  aria-hidden
+                />
+              </Link>
+            </div>
           </div>
         </MotionPreset>
 
