@@ -43,24 +43,25 @@ const Gallery = ({
   }, [api])
 
   return (
-    <section className='py-4'>
-      <div className='mx-auto w-full px-4 sm:px-4 lg:px-6'>
-        <div className='mx-auto'>
+    <section className='py-4 overflow-hidden'>
+      <div className='mx-auto w-full overflow-hidden px-4 sm:px-4 lg:px-6'>
+        <div className='mx-auto overflow-hidden'>
           <Carousel
             setApi={setApi}
             plugins={[plugin.current]}
             opts={{
               align: 'center',
-              loop: true
+              loop: true,
+              containScroll: 'trimSnaps',
             }}
-            className='relative flex items-center justify-center gap-6'
+            className='relative flex items-center justify-center gap-6 overflow-hidden'
           >
             <CarouselContent className='items-center'>
               {items.map((item, index) => (
                   <CarouselItem
                     key={index}
                     className={cn(
-                      'flex justify-center transition-transform duration-500 ease-out',
+                      'flex justify-center shrink-0',
                       'sm:basis-[40%] lg:basis-[24%]'
                     )}
                   >

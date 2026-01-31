@@ -82,7 +82,7 @@ const ImportExport = () => {
           className="bg-background flex w-full max-w-[8.375rem] items-center justify-center gap-1.25 rounded-lg border px-2 py-1.5"
         >
           <FileCodeIcon className="size-5 shrink-0" />
-          <span className="font-medium">Corporate Buying</span>
+          <span className="font-medium">In Person Inventory</span>
         </div>
       </div>
 

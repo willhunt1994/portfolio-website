@@ -11,12 +11,11 @@ export default function WhatWeDo() {
           <p className="text-lg text-gray-600 mb-12">In short, we create custom goods to elevate retail spaces</p>
         </div>
 
-        {/* Full-width Pinterest-style grid: 2 cols sm, 3 cols lg, 4 cols xl */}
+        {/* Grid: 1 col mobile, 2 sm, 3 cols on desktop (lg+) */}
         <div className="w-full px-4 pb-12 md:px-6 lg:px-8">
-          {/* Each row sums to 2 (sm), 3 (lg), 4 (xl) so every row is full */}
-          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 lg:gap-8">
+          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 lg:gap-8">
             {/* Steps 1–3: flow with pulse connectors */}
-            <div className="col-span-full sm:col-span-2 lg:col-span-3 xl:col-span-4 flex flex-col sm:flex-row items-stretch gap-0 min-h-0">
+            <div className="col-span-full sm:col-span-2 lg:col-span-3 flex flex-col sm:flex-row items-stretch gap-0 min-h-0">
               <PulseBorderCard className="min-h-[280px] flex-1 sm:flex-[2]">
                 <span className="text-sm font-medium uppercase tracking-wider text-gray-400">Step 1</span>
                 <p className="mt-2 text-base text-gray-900 font-medium">You have an idea about your custom merch</p>
@@ -34,7 +33,7 @@ export default function WhatWeDo() {
             </div>
 
             {/* Step 4: full-width */}
-            <PulseBorderCard className="col-span-full sm:col-span-2 lg:col-span-3 xl:col-span-4 min-h-[320px]">
+            <PulseBorderCard className="col-span-full sm:col-span-2 lg:col-span-3 min-h-[320px]">
               <span className="text-sm font-medium uppercase tracking-wider text-gray-400">Step 4</span>
               <p className="mt-2 text-base text-gray-900 font-medium md:text-lg">Delivered custom</p>
             </PulseBorderCard>
@@ -56,10 +55,10 @@ export default function WhatWeDo() {
               </p>
             </div>
 
-            {/* Large 2x2 Socks card with video background */}
-            <Link href="/what-we-do/socks" className="col-span-full sm:col-span-2 lg:col-span-2 xl:col-span-2">
+            {/* Featured Socks card – 4:5 ratio, 1 col on desktop */}
+            <Link href="/what-we-do/socks" className="col-span-full sm:col-span-2 lg:col-span-1">
               <PulseBorderCard 
-                className="min-h-[500px] lg:min-h-[600px] cursor-pointer"
+                className="aspect-[4/5] min-h-0 w-full cursor-pointer"
                 videoSrc="/what-we-do/socks/Dec-2-2025-1764736121_1695151.MOV"
               >
                 <span className="text-sm font-medium uppercase tracking-wider text-white">Featured</span>
@@ -67,59 +66,43 @@ export default function WhatWeDo() {
               </PulseBorderCard>
             </Link>
 
-            {/* Remaining cards: #9, #11–#19 (10 items) */}
+            {/* Remaining garment cards: 4:5 ratio, 1 col each on desktop */}
             {(() => {
               const numbers = [9, 11, 12, 13, 14, 15, 16, 17, 18, 19];
               const boxes = [
-                { colSpanClass: 'col-span-full sm:col-span-1 lg:col-span-1 xl:col-span-1', minHeight: 'min-h-[400px]', title: 'Apparel' },
-                { colSpanClass: 'col-span-full sm:col-span-2 lg:col-span-2 xl:col-span-2', minHeight: 'min-h-[260px]', title: 'Embroidery', imageSrc: '/what-we-do/embroidery/Hat%20FlatlaysArtboard%203.JPG', link: '/what-we-do/embroidery' },
-                { colSpanClass: 'col-span-full sm:col-span-2 lg:col-span-1 xl:col-span-2', minHeight: 'min-h-[320px]', title: 'Towels' },
-                { colSpanClass: 'col-span-full sm:col-span-2 lg:col-span-3 xl:col-span-3', minHeight: 'min-h-[280px]', title: 'Bottles', link: '/what-we-do/bottles' },
-                { colSpanClass: 'col-span-full sm:col-span-2 lg:col-span-1 xl:col-span-1', minHeight: 'min-h-[360px]', title: 'Yoga mats' },
-                { colSpanClass: 'col-span-full sm:col-span-1 lg:col-span-1 xl:col-span-1', minHeight: 'min-h-[290px]', title: 'Hair clips / headbands' },
-                { colSpanClass: 'col-span-full sm:col-span-1 lg:col-span-1 xl:col-span-1', minHeight: 'min-h-[330px]', title: 'Stickers' },
-                { colSpanClass: 'col-span-full sm:col-span-1 lg:col-span-1 xl:col-span-1', minHeight: 'min-h-[300px]', title: 'Puff Print', link: '/what-we-do/puff-print' },
-                { colSpanClass: 'col-span-full sm:col-span-1 lg:col-span-1 xl:col-span-1', minHeight: 'min-h-[350px]', title: 'Display fixtures' },
-                { colSpanClass: 'col-span-full sm:col-span-1 lg:col-span-1 xl:col-span-1', minHeight: 'min-h-[380px]', title: 'Mugs' },
+                { title: 'Apparel' },
+                { title: 'Embroidery', imageSrc: '/what-we-do/embroidery/Hat%20FlatlaysArtboard%203.JPG', link: '/what-we-do/embroidery' },
+                { title: 'Towels' },
+                { title: 'Bottles', link: '/what-we-do/bottles' },
+                { title: 'Yoga mats' },
+                { title: 'Hair clips / headbands' },
+                { title: 'Stickers' },
+                { title: 'Puff Print', link: '/what-we-do/puff-print' },
+                { title: 'Display fixtures' },
+                { title: 'Mugs' },
               ];
-              return (
-                <>
-                  {/* #9, #11–#14 (first 5 in main grid) */}
-                  {boxes.slice(0, 5).map((box, i) => {
-                    const card = (
-                      <PulseBorderCard 
-                        key={i} 
-                        className={`${box.colSpanClass} ${box.minHeight} ${box.link ? 'cursor-pointer' : ''}`}
-                        imageSrc={box.imageSrc}
-                      >
-                        <span className={`text-sm font-medium uppercase tracking-wider ${box.imageSrc ? 'text-white' : 'text-gray-400'}`}>What we do #{numbers[i]}</span>
-                        <p className={`mt-2 text-base font-medium ${box.imageSrc ? 'text-white' : 'text-gray-900'}`}>{'title' in box ? box.title : 'Add your content here.'}</p>
-                      </PulseBorderCard>
-                    );
-                    return box.link ? (
-                      <Link key={i} href={box.link} className={box.colSpanClass}>
-                        {card}
-                      </Link>
-                    ) : card;
-                  })}
-                  {/* Row of 5: #15–#19 */}
-                  <div className="col-span-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6 lg:gap-8">
-                    {boxes.slice(5, 10).map((box, j) => {
-                      const card = (
-                        <PulseBorderCard key={5 + j} className={`${box.minHeight} ${box.link ? 'cursor-pointer' : ''}`}>
-                          <span className="text-sm font-medium uppercase tracking-wider text-gray-400">What we do #{numbers[5 + j]}</span>
-                          <p className="mt-2 text-base text-gray-900 font-medium">{'title' in box ? box.title : 'Add your content here.'}</p>
-                        </PulseBorderCard>
-                      );
-                      return box.link ? (
-                        <Link key={5 + j} href={box.link}>
-                          {card}
-                        </Link>
-                      ) : card;
-                    })}
+              const cardClass = 'aspect-[4/5] min-h-0 w-full';
+              return boxes.map((box, i) => {
+                const card = (
+                  <PulseBorderCard
+                    key={i}
+                    className={`${cardClass} ${box.link ? 'cursor-pointer' : ''}`}
+                    imageSrc={box.imageSrc}
+                  >
+                    <span className={`text-sm font-medium uppercase tracking-wider ${box.imageSrc ? 'text-white' : 'text-gray-400'}`}>What we do #{numbers[i]}</span>
+                    <p className={`mt-2 text-base font-medium ${box.imageSrc ? 'text-white' : 'text-gray-900'}`}>{box.title}</p>
+                  </PulseBorderCard>
+                );
+                return box.link ? (
+                  <Link key={i} href={box.link} className="col-span-full sm:col-span-2 lg:col-span-1">
+                    {card}
+                  </Link>
+                ) : (
+                  <div key={i} className="col-span-full sm:col-span-2 lg:col-span-1">
+                    {card}
                   </div>
-                </>
-              );
+                );
+              });
             })()}
           </div>
 

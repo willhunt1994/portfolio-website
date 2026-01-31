@@ -4,32 +4,20 @@ import RealTimeCustomizationCard from '@/components/shadcn-studio/blocks/bento-g
 import TypographyFineTuning from '@/components/shadcn-studio/blocks/bento-grid-20/typography-fine-tuning';
 import Link from 'next/link';
 
-const themes = [
-  {
-    name: 'Fitstop',
-    img: 'https://cdn.shadcnstudio.com/ss-assets/blocks/bento-grid/image-105.png',
-    bgImg:
-      'https://cdn.shadcnstudio.com/ss-assets/landing-page/theme-generator/basic-features-real-time-default-light.png',
-  },
-  {
-    name: 'Barre3',
-    img: 'https://cdn.shadcnstudio.com/ss-assets/blocks/bento-grid/image-108.png',
-    bgImg:
-      'https://cdn.shadcnstudio.com/ss-assets/landing-page/theme-generator/basic-features-real-time-clean-slate-light.png',
-  },
-  {
-    name: 'Bodyrok',
-    img: 'https://cdn.shadcnstudio.com/ss-assets/blocks/bento-grid/image-107.png',
-    bgImg:
-      'https://cdn.shadcnstudio.com/ss-assets/landing-page/theme-generator/basic-features-real-time-ghibli-studio-light.png',
-  },
-  {
-    name: 'Bodybar',
-    img: 'https://cdn.shadcnstudio.com/ss-assets/blocks/bento-grid/image-106.png',
-    bgImg:
-      'https://cdn.shadcnstudio.com/ss-assets/landing-page/theme-generator/basic-features-real-time-marvel-light.png',
-  },
+const customDashboardLogosBase = '/home-page/custom-dashboard';
+const customDashboardLogos = [
+  'Artboard 1-8.png',
+  'Artboard 2-8.png',
+  'Artboard 3-8.png',
+  'Artboard 4-8.png',
+  'Artboard 5-8.png',
 ];
+
+const themes = customDashboardLogos.map((file, i) => ({
+  name: `Partner ${i + 1}`,
+  img: `${customDashboardLogosBase}/${file}`,
+  bgImg: `${customDashboardLogosBase}/${customDashboardLogos[0]}`,
+}));
 
 const BentoGrid20 = () => {
   return (
@@ -44,9 +32,9 @@ const BentoGrid20 = () => {
           className="bg-card group flex max-xl:order-1 flex-col gap-6 overflow-hidden rounded-xl py-6"
         >
           <div className="space-y-3.5 px-6">
-            <h3 className="text-xl font-semibold">Build & Design With Us</h3>
+            <h3 className="text-[21px] font-semibold">We Help You Create Designs</h3>
             <p className="text-muted-foreground">
-              Work with our team to create corporate approved products that live as items for your franchisees to purchase.
+              Our team helps create new graphics with you to build your perfect product. It all begins with an idea...
             </p>
           </div>
           <TypographyFineTuning />
@@ -69,9 +57,9 @@ const BentoGrid20 = () => {
         >
           <div className="relative flex flex-col">
             <div className="space-y-3.5 px-6">
-              <h3 className="text-xl font-semibold text-foreground">Custom Socks</h3>
+              <h3 className="text-[21px] font-semibold text-foreground">Custom Socks</h3>
               <Link
-                href="/catalog"
+                href="/what-we-do/socks"
                 className="group relative inline-block text-base text-muted-foreground hover:text-foreground transition-colors"
               >
                 View More
@@ -93,7 +81,7 @@ const BentoGrid20 = () => {
           className="bg-card flex flex-col gap-6 overflow-hidden rounded-xl py-6 sm:col-span-2"
         >
           <div className="space-y-3.5 px-6">
-            <h3 className="text-xl font-semibold">B2B & DTC Capabilities</h3>
+            <h3 className="text-[21px] font-semibold">B2B & DTC Capabilities</h3>
             <p className="text-muted-foreground">
               Serve franchisees and wholesale partners (B2B) and sell direct to consumers (DTC) from one platform.
             </p>

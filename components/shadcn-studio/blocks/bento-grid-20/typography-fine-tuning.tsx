@@ -6,10 +6,10 @@ import { Carousel, CarouselContent, CarouselItem } from '@/components/ui/carouse
 import { cn } from '@/lib/utils';
 
 const data = [
-  { text: 'Limited Edition', textClassName: 'text-3xl font-semibold' },
-  { text: 'Milestone', textClassName: 'text-2xl font-medium' },
+  { text: 'Limited Edition Retail', textClassName: 'text-3xl font-semibold' },
+  { text: 'Milestone Rewards', textClassName: 'text-2xl font-medium' },
   { text: 'Core Collection', textClassName: 'text-3xl font-semibold' },
-  { text: 'Instructor', textClassName: 'text-2xl font-medium' },
+  { text: 'Instructor or Team Garments', textClassName: 'text-2xl font-medium' },
   { text: 'Location Specific', textClassName: 'text-3xl font-semibold' },
   { text: 'Challenge Winners', textClassName: 'text-2xl font-medium' },
   { text: 'Sock Pre Orders', textClassName: 'text-3xl font-semibold' },
