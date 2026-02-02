@@ -151,7 +151,7 @@ export function CaseStudyPageClient({ slug }: CaseStudyPageClientProps) {
                 {content.productsBreakAfterIndex != null && content.products && content.products.length > 0 ? (
                   <>
                     <Gallery galleryImage={content.galleryImages.slice(content.shootStoryAfterIndex!, content.productsBreakAfterIndex)} />
-                    <ProductShowcase products={content.products} title="Products We Used" />
+                    <ProductShowcase products={content.products} title={content.productsSectionTitle ?? 'Products We Used'} />
                     <Gallery galleryImage={content.galleryImages.slice(content.productsBreakAfterIndex)} />
                   </>
                 ) : (
@@ -164,7 +164,7 @@ export function CaseStudyPageClient({ slug }: CaseStudyPageClientProps) {
               <>
                 <Gallery galleryImage={content.galleryImages.slice(0, content.productsBreakAfterIndex)} />
                 <div className="py-8" />
-                <ProductShowcase products={content.products} title="Products We Used" />
+                <ProductShowcase products={content.products} title={content.productsSectionTitle ?? 'Products We Used'} />
                 <div className="py-8" />
                 <Gallery galleryImage={content.galleryImages.slice(content.productsBreakAfterIndex)} />
               </>
@@ -184,7 +184,7 @@ export function CaseStudyPageClient({ slug }: CaseStudyPageClientProps) {
           content.products.length > 0 && (
             <ProductShowcase
               products={content.products}
-              title="Products We Used"
+              title={content.productsSectionTitle ?? 'Products We Used'}
             />
           )}
 

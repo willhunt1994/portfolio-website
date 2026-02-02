@@ -172,11 +172,13 @@ const cymbiotikaContent: MerchWeMadePageContent = {
 
 // Katie Austin Workout Tour – images from public/our-work/Case Study/Katie Austin Workout Tour/
 const katieAustinBase = '/our-work/Case%20Study/Katie%20Austin%20Workout%20Tour';
-const katieAustinFilenames = [
-  '395A6334.jpg', '395A6350.jpg', '395A6359.jpg', '395A6361.jpg', '395A6367.jpg', '395A6576.jpg',
+// Order: first 4 in top gallery row, then products, then bottom row (6 + 395A6367, 395A6576 moved to end)
+const katieAustinFilenamesOrdered = [
+  '395A6334.jpg', '395A6350.jpg', '395A6359.jpg', '395A6361.jpg',
   '395A6666.jpg', '395A6788.jpg', '395A6901.jpg', '395A7440.jpg', '395A7540.jpg', '395A7544.jpg',
+  '395A6367.jpg', '395A6576.jpg',
 ];
-const katieAustinGalleryImages: MerchWeMadeGalleryImage[] = katieAustinFilenames.map((name, i) => ({
+const katieAustinGalleryImages: MerchWeMadeGalleryImage[] = katieAustinFilenamesOrdered.map((name, i) => ({
   src: `${katieAustinBase}/${name}`,
   alt: `Katie Austin Workout Tour ${i + 1}`,
 }));
@@ -184,15 +186,24 @@ const katieAustinContent: MerchWeMadePageContent = {
   heroBackgroundImage: `${katieAustinBase}/395A6334.jpg`,
   heroBackgroundImageAlt: 'Katie Austin Workout Tour',
   heroHeading: 'KATIE AUSTIN WORKOUT TOUR',
-  heroSubtext: 'Tour merch and apparel for the Katie Austin Workout Tour.',
+  heroSubtext: 'We printed custom tees for the Katie Austin Workout Tour.',
   galleryImages: katieAustinGalleryImages,
-  productsBreakAfterIndex: 6,
+  productsBreakAfterIndex: 4,
+  productsSectionTitle: 'The Tee We Used',
   products: [
-    { image: `${katieAustinBase}/395A6350.jpg`, imageAlt: 'Katie Austin product', name: 'Product', description: 'Edit in case-study-content.ts' },
-    { image: `${katieAustinBase}/395A6359.jpg`, imageAlt: 'Katie Austin product', name: 'Product', description: 'Edit in case-study-content.ts' },
-    { image: `${katieAustinBase}/395A6361.jpg`, imageAlt: 'Katie Austin product', name: 'Product', description: 'Edit in case-study-content.ts' },
+    {
+      image: `${katieAustinBase}/395A0327.webp`,
+      imageAlt: 'The Mens Tee - White',
+      images: [
+        { src: `${katieAustinBase}/395A0327.webp`, alt: 'The Mens Tee - White (front)' },
+        { src: `${katieAustinBase}/395A0328.webp`, alt: 'The Mens Tee - White (back)' },
+      ],
+      name: 'The Mens Tee',
+      color: 'White',
+      description: 'The tee we printed for the Katie Austin Workout Tour.',
+    },
   ],
-  fullWidthImage: `${katieAustinBase}/395A7544.jpg`,
+  fullWidthImage: `${katieAustinBase}/bottom%20banner%20-%20ka.jpg`,
   fullWidthImageAlt: 'Katie Austin Workout Tour',
   ctaTitle: 'Ready to create something?',
   ctaButtonText: 'Get Started',

@@ -61,7 +61,11 @@ export type MerchWeMadeGalleryImage = {
 export type MerchWeMadeProduct = {
   image: string;
   imageAlt: string;
+  /** Optional multiple images per product (e.g. front/back). When length > 1, shown as carousel. */
+  images?: Array<{ src: string; alt: string }>;
   name: string;
+  /** Optional color/variant label (e.g. "White", "Beige"). Shown on single-product layout. */
+  color?: string;
   description: string;
 };
 
@@ -80,6 +84,8 @@ export type MerchWeMadePageContent = {
   minimalLayout?: boolean;
   galleryImages: MerchWeMadeGalleryImage[];
   products?: MerchWeMadeProduct[];
+  /** Optional title for the products section (default: "Products We Used"). E.g. "The Tee We Used" for Katie Austin. */
+  productsSectionTitle?: string;
   /** When set, "Products We Used" is rendered between gallery rows (after this many items). E.g. 8 = after row 2 in a 4-col grid. */
   productsBreakAfterIndex?: number;
   /** When set, an image + text section ("shoot story") is rendered between gallery rows (after this many items). E.g. 4 = after row 1 in a 4-col grid. */
@@ -334,15 +340,8 @@ const cloudCollectionContent: MerchWeMadePageContent = {
   heroBackgroundImageAlt: 'Cloud Collection',
   heroHeading: 'CLOUD COLLECTION',
   heroSubtext: 'Soft, elevated merch with a cloud-inspired vibe.',
-  galleryImages: cloudCollectionGalleryImages,
-  shootStoryAfterIndex: 4,
-  shootStory: {
-    image: `${cloudCollectionBase}/395A7148.jpg`,
-    imageAlt: 'Cloud Collection shoot',
-    heading: 'The Shoot',
-    body: 'The Cloud Collection brings together relaxed silhouettes and soft textures for a modern, effortless look. Edit this in lib/merch-we-made-content.ts under cloudCollectionContent.shootStory.',
-  },
-  productsBreakAfterIndex: 8,
+  galleryImages: cloudCollectionGalleryImages.slice(0, 6),
+  productsBreakAfterIndex: 4,
   products: [
     { image: 'https://drive.google.com/uc?export=view&id=13s38B_ewu9fEG_AMnOIq_cvMrkaMMHtP', imageAlt: 'The Womens Crewneck - Bone', name: 'The Womens Crewneck', description: 'Bone' },
     { image: 'https://drive.google.com/uc?export=view&id=1FkR1Q_qfTJ0uytNfckT2NAAR56jDi5QA', imageAlt: 'The Womens Sweat Shorts - Bone', name: 'The Womens Sweat Shorts', description: 'Bone' },

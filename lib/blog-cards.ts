@@ -33,14 +33,14 @@ export const blogCardsData = [
     tags: ['Merch We Made']
   },
   {
-    img: '/our-work/Merch%20We%20Made/Cloud%20Collection/395A7001.jpg',
+    img: '/our-work/Merch%20We%20Made/Cloud%20Collection/395A7237.jpg',
     alt: 'Cloud Collection',
     title: 'Cloud Collection',
     description: 'Soft, elevated merch with a cloud-inspired vibe.',
     tags: ['Merch We Made']
   },
   {
-    img: 'https://drive.google.com/uc?export=view&id=1S5zI7MUI2HpabdoiMgMfgYdQnafSxb6B',
+    img: '/our-work/Inspo/Spring%202026/49bf9e7519b02f61354bf20b3ede068c.jpg',
     alt: 'Spring 2026 Inspo',
     title: 'Spring 2026 Inspo',
     description:
@@ -56,42 +56,42 @@ export const blogCardsData = [
     tags: ['Inspo']
   },
   {
-    img: '/our-work/Inspo/Baseball%20Season/0a362b0578c28c11969a04e0bde9a733.jpg',
+    img: '/our-work/Inspo/Baseball%20Season/bdb189383f465122b99d4672ebf45cd1.jpg',
     alt: 'Baseball Season Inspo',
     title: 'Baseball Season Inspo',
     description: 'Dugout and diamond inspo for baseball season.',
     tags: ['Inspo']
   },
   {
-    img: '/our-work/Inspo/Collegiate/012e18c07b2fc744f8db292a78f9f012.jpg',
+    img: '/our-work/Inspo/Collegiate/51ce511d38a0252ff1d2ec20cf0ad56d.jpg',
     alt: 'Collegiate Inspo',
     title: 'Collegiate Inspo',
     description: 'Campus and game day inspo with collegiate spirit.',
     tags: ['Inspo']
   },
   {
-    img: '/our-work/Inspo/Fall%202026/048a8d9ef5de13fb5d26b26de567cb64.jpg',
+    img: '/our-work/Inspo/Fall%202026/de35fba1e137d2357fc5e91d6126d6c5.jpg',
     alt: 'Fall 2026 Inspo',
     title: 'Fall 2026 Inspo',
     description: 'Cozy autumn inspo for the Fall 2026 season.',
     tags: ['Inspo']
   },
   {
-    img: '/our-work/Inspo/Racing%20Team/0292e81fee8b21438a1e2aba6d170abc.jpg',
+    img: '/our-work/Inspo/Racing%20Team/f342e1deb4028c2538506bb2e67ac88b.jpg',
     alt: 'Racing Team Inspo',
     title: 'Racing Team Inspo',
     description: 'Speed and team spirit inspo for racing.',
     tags: ['Inspo']
   },
   {
-    img: '/our-work/Inspo/Run%20Club/00fd0fb56d7bde09fd305a9b482bbb29.jpg',
+    img: '/our-work/Inspo/Run%20Club/1c3febfd3a855911f38c44d248995756.jpg',
     alt: 'Run Club Inspo',
     title: 'Run Club Inspo',
     description: 'Running and community inspo for run clubs.',
     tags: ['Inspo']
   },
   {
-    img: '/our-work/Inspo/Summer%202026/00d31b4fb084fc384a721855086dd366.jpg',
+    img: '/our-work/Inspo/Summer%202026/bd3652d9d1e952cef80152b6897b46ce.jpg',
     alt: 'Summer 2026 Inspo',
     title: 'Summer 2026 Inspo',
     description: 'Bright summer inspo for the Summer 2026 season.',

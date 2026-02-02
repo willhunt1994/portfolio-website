@@ -10,12 +10,45 @@ export type WhatWeDoGalleryImage = {
   video?: string;
 };
 
+/** Optional column for above-gallery section (corporate-teams only). */
+export type WhatWeDoAboveGalleryColumn = {
+  heading: string;
+  /** Optional tagline/subheading below the heading. */
+  subheading?: string;
+  description: string;
+  image: string;
+  imageAlt: string;
+  /** Optional video (autoplay, loop). When set, shown instead of image. */
+  video?: string;
+};
+
+/** Hotspot for full-width gallery image (x/y in %, tooltip on hover). */
+export type WhatWeDoGalleryHotspot = {
+  x: number;
+  y: number;
+  title: string;
+  description: string;
+  image?: string;
+  imageAlt?: string;
+  link?: string;
+};
+
 export type WhatWeDoPageContent = {
   heroBackgroundImage: string;
   heroBackgroundImageAlt: string;
   heroVideo?: string;
   heroHeading: string;
   heroSubtext: string;
+  /** Optional title for the above-gallery section. */
+  aboveGalleryTitle?: string;
+  /** Optional multi-column section above the gallery (e.g. corporate-teams). */
+  aboveGalleryColumns?: WhatWeDoAboveGalleryColumn[];
+  /** Optional full-width gallery image with hotspots (replaces grid gallery when set, e.g. corporate-teams). */
+  galleryFullWidthWithHotspots?: {
+    image: string;
+    imageAlt: string;
+    hotspots: WhatWeDoGalleryHotspot[];
+  };
   layout?: 'grid' | 'masonry';
   galleryImages: WhatWeDoGalleryImage[];
   fullWidthImage: string;
@@ -24,6 +57,11 @@ export type WhatWeDoPageContent = {
   ctaTitle: string;
   ctaButtonText: string;
   ctaButtonHref: string;
+  /** Optional bottom section: 4:5 image left, inquiry form right (e.g. corporate-teams). */
+  bottomSection?: {
+    image: string;
+    imageAlt: string;
+  };
 };
 
 // Bottles – content from public/what-we-do/bottles/
@@ -167,9 +205,73 @@ const socksContent: WhatWeDoPageContent = {
   ctaButtonHref: 'https://ethos-b2b.clickoapps.com/login',
 };
 
+// Corporate Teams – dedicated What We Do page
+const corporateTeamsHeroImage = 'https://cdn.shopify.com/s/files/1/0609/4752/9901/files/BF5A9955.jpg?v=1767384638';
+const corporateTeamsContent: WhatWeDoPageContent = {
+  heroBackgroundImage: corporateTeamsHeroImage,
+  heroBackgroundImageAlt: 'Corporate Teams',
+  heroHeading: 'CORPORATE TEAMS',
+  heroSubtext: 'We partner with corporate teams to standardize approved retail offerings to employees or franchisees.',
+  aboveGalleryTitle: 'What we can do for your corporate team',
+  aboveGalleryColumns: [
+    {
+      heading: 'Corporate Approved Retail',
+      description: "Work with our design team to build collections you'd like franchisees to purchase. Final say is up to you.",
+      video: '/what-we-do/corporate/corporate%20approved%20retail.mov',
+      image: corporateTeamsHeroImage,
+      imageAlt: 'Corporate Approved Retail',
+    },
+    {
+      heading: 'Work with our design team',
+      description: 'Work one to one with our design team to help create custom graphics and build collections',
+      image: corporateTeamsHeroImage,
+      imageAlt: 'Scalable fulfillment',
+    },
+    {
+      heading: 'Recoup rebates',
+      description: 'Corporate teams earn a kickback on each piece sold. All with no inventory pre purchased.',
+      image: corporateTeamsHeroImage,
+      imageAlt: 'Recoup rebates',
+    },
+    {
+      heading: 'Reporting Accessible',
+      description: 'Track exactly what franchisees are purchasing from your own custom dashboard.',
+      image: corporateTeamsHeroImage,
+      imageAlt: 'Reporting Accessible',
+    },
+    {
+      heading: 'Pre orders',
+      description: 'Offer a pre order style launch to franchisees. Works GREAT with custom socks.',
+      image: corporateTeamsHeroImage,
+      imageAlt: 'Pre orders',
+    },
+  ],
+  galleryFullWidthWithHotspots: {
+    image: corporateTeamsHeroImage,
+    imageAlt: 'Corporate Teams',
+    hotspots: [
+      { x: 30, y: 40, title: 'Standardized catalog', description: 'One approved product and design set for all locations.' },
+      { x: 60, y: 55, title: 'Scalable fulfillment', description: 'We scale with your program from a few locations to hundreds.' },
+      { x: 75, y: 35, title: 'One point of contact', description: 'Single team for ordering, approvals, and delivery.' },
+    ],
+  },
+  layout: 'grid',
+  galleryImages: [],
+  fullWidthImage: corporateTeamsHeroImage,
+  fullWidthImageAlt: 'Corporate Teams',
+  ctaTitle: 'Ready to work with us?',
+  ctaButtonText: 'Get Started',
+  ctaButtonHref: '/corporate-franchise-teams',
+  bottomSection: {
+    image: corporateTeamsHeroImage,
+    imageAlt: 'Corporate Teams',
+  },
+};
+
 // Map slugs to content
 export const whatWeDoContentBySlug: Record<string, WhatWeDoPageContent> = {
   'bottles': bottlesContent,
+  'corporate-teams': corporateTeamsContent,
   'embroidery': embroideryContent,
   'puff-print': puffPrintContent,
   'socks': socksContent,
