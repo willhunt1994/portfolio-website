@@ -91,7 +91,7 @@ export function PulseBorderCard({
             style={{ backgroundImage: `url(${imageSrc})` }}
           />
         )}
-        <div className={cn('relative z-10', (videoSrc || imageSrc) && 'text-white drop-shadow-lg')}>
+        <div className={cn('relative z-10', (videoSrc || imageSrc) && 'text-black')}>
           {children}
         </div>
       </div>
