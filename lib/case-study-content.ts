@@ -232,6 +232,139 @@ const glowMorningContent: MerchWeMadePageContent = {
   ctaButtonHref: 'https://ethos-b2b.clickoapps.com/login',
 };
 
+// Activate House – images + videos from public/our-work/Case Study/Activate House/
+const activateHouseBase = '/our-work/Case%20Study/Activate%20House';
+const activateHouseImageFilenames = [
+  'IMG_3749.JPG', 'IMG_3758.JPG', 'IMG_3780.JPG', 'IMG_3784.JPG', 'IMG_3798.JPG', 'IMG_3799.JPG', 'IMG_3801.JPG', 'IMG_3808.JPG',
+];
+const activateHouseVideoFilenames = ['IMG_3718.MOV', 'IMG_3733.MOV', 'IMG_3766.MOV', 'IMG_3811.MOV'];
+const activateHouseGalleryOrder: Array<{ type: 'image'; i: number } | { type: 'video'; i: number }> = [
+  { type: 'image', i: 0 },
+  { type: 'video', i: 0 },
+  { type: 'image', i: 1 },
+  { type: 'image', i: 2 },
+  { type: 'video', i: 1 },
+  { type: 'image', i: 3 },
+  { type: 'image', i: 4 },
+  { type: 'video', i: 2 },
+  { type: 'image', i: 5 },
+  { type: 'image', i: 6 },
+  { type: 'video', i: 3 },
+  { type: 'image', i: 7 },
+];
+const activateHouseGalleryImages: MerchWeMadeGalleryImage[] = activateHouseGalleryOrder.map((item, idx) => {
+  if (item.type === 'image') {
+    const name = activateHouseImageFilenames[item.i];
+    return { src: `${activateHouseBase}/${name}`, alt: `Activate House ${idx + 1}` };
+  }
+  const name = activateHouseVideoFilenames[item.i];
+  return {
+    src: `${activateHouseBase}/${activateHouseImageFilenames[0]}`,
+    alt: `Activate House video ${idx + 1}`,
+    video: `${activateHouseBase}/${name}`,
+  };
+});
+const activateHouseContent: MerchWeMadePageContent = {
+  heroBackgroundImage: `${activateHouseBase}/IMG_3749.JPG`,
+  heroBackgroundImageAlt: 'Activate House',
+  heroHeading: 'ACTIVATE HOUSE',
+  heroSubtext: 'Custom merch to elevate the brand experience for Activate House in San Diego.',
+  galleryImages: activateHouseGalleryImages,
+  fullWidthImage: `${activateHouseBase}/IMG_3749.JPG`,
+  fullWidthImageAlt: 'Activate House',
+  fullWidthVideo: `${activateHouseBase}/IMG_3791.MOV`,
+  ctaTitle: 'Ready to create something?',
+  ctaButtonText: 'Get Started',
+  ctaButtonHref: 'https://ethos-b2b.clickoapps.com/login',
+};
+
+// Pilates Leucadia – images from public/our-work/Case Study/Pilates Leucadia/
+const pilatesLeucadiaBase = '/our-work/Case%20Study/Pilates%20Leucadia';
+const pilatesLeucadiaFilenames = [
+  'DSC04159_copy.webp', 'DSC04165_copy.webp', 'DSC04186_copy.webp',
+  'DSC04191_copy.webp',
+];
+const pilatesLeucadiaImageItems: MerchWeMadeGalleryImage[] = pilatesLeucadiaFilenames.map((name, i) => ({
+  src: `${pilatesLeucadiaBase}/${name}`,
+  alt: `Pilates Leucadia ${i + 1}`,
+}));
+const pilatesLeucadiaTestimonialItem: MerchWeMadeGalleryImage = {
+  src: '',
+  alt: '',
+  className: 'md:col-span-4',
+  testimonial: {
+    author: 'Samantha Holmen',
+    role: 'CEO / Janitor',
+    avatar: `${pilatesLeucadiaBase}/Screenshot%202026-02-02%20at%2007.46.40.png`,
+    avatarAlt: 'Samantha Holmen',
+    quote: 'I highly recommend working with Ethos',
+    body: 'Collaborating with Ethos has been a delightfully seamless experience (pun intended).\n\nTheir exceptional communication skills and sense of urgency have made our partnership not only productive but also enjoyable.\n\nI highly recommend working with Ethos for their outstanding professionalism and efficiency.',
+    image: `${pilatesLeucadiaBase}/IMG_7314.jpeg`,
+    imageAlt: 'Pilates Leucadia',
+    buttonText: 'Check Out More From Pilates Leucadia Here',
+    buttonHref: 'https://pilatesleucadia.com/',
+  },
+};
+const pilatesLeucadiaGalleryImages: MerchWeMadeGalleryImage[] = [
+  pilatesLeucadiaTestimonialItem,
+  ...pilatesLeucadiaImageItems,
+];
+const pilatesLeucadiaContent: MerchWeMadePageContent = {
+  heroBackgroundImage: `${pilatesLeucadiaBase}/DSC04203_copy.webp`,
+  heroBackgroundImageAlt: 'Pilates Leucadia',
+  heroHeading: 'PILATES LEUCADIA',
+  heroSubtext: 'Boutique pilates studio in Leucadia – custom apparel and merchandise.',
+  galleryImages: pilatesLeucadiaGalleryImages,
+  fullWidthImage: `${pilatesLeucadiaBase}/DSC04193_copy.webp`,
+  fullWidthImageAlt: 'Pilates Leucadia',
+  ctaTitle: 'Ready to create something?',
+  ctaButtonText: 'Get Started',
+  ctaButtonHref: 'https://ethos-b2b.clickoapps.com/login',
+};
+
+// Bodyrok – images from public/our-work/Case Study/Bodyrok/
+const bodyrokBase = '/our-work/Case%20Study/Bodyrok';
+const bodyrokFilenames = [
+  'DSC04223_copy.webp', 'DSC04228_copy.webp', 'DSC04231_copy.webp', 'DSC04237_copy.webp',
+];
+const bodyrokImageItems: MerchWeMadeGalleryImage[] = bodyrokFilenames.map((name, i) => ({
+  src: `${bodyrokBase}/${name}`,
+  alt: `Bodyrok ${i + 1}`,
+}));
+const bodyrokTestimonialItem: MerchWeMadeGalleryImage = {
+  src: '',
+  alt: '',
+  className: 'md:col-span-4',
+  testimonial: {
+    author: 'Stephany Erlbeck',
+    role: 'Owner, Bodyrok San Diego',
+    avatar: `${bodyrokBase}/Screenshot%202026-02-02%20at%2007.58.03.png`,
+    avatarAlt: 'Stephany Erlbeck',
+    quote: "The customer service and attention to design details are the best I've seen!",
+    body: "We used to carry several Athleisure wear lines but after partnering with Ethos, we quickly realized that our clients & instructors couldn't get enough of our collab.\n\nWe now only carry BODYROK branded Ethos merchandise and the quality, fit, and price is SO good.\n\nThe customer service and attention to design details are the best I've seen!",
+    image: `${bodyrokBase}/DSC04240_copy.webp`,
+    imageAlt: 'Bodyrok',
+  },
+};
+const bodyrokGalleryImages: MerchWeMadeGalleryImage[] = [
+  bodyrokTestimonialItem,
+  ...bodyrokImageItems,
+];
+const bodyrokContent: MerchWeMadePageContent = {
+  heroBackgroundImage: `${bodyrokBase}/DSC04247_copy.webp`,
+  heroBackgroundImageAlt: 'Bodyrok',
+  heroHeading: 'BODYROK',
+  heroSubtext: 'We supply Bodyrok, at a corporate level, with merch and grip socks for 50+ locations across the US.',
+  galleryImages: bodyrokGalleryImages,
+  fullWidthImage: `${bodyrokBase}/DSC04245_copy.webp`,
+  fullWidthImageAlt: 'Bodyrok',
+  fullWidthCtaAlign: 'left',
+  fullWidthCtaInvertColors: true,
+  ctaTitle: 'Ready to create something?',
+  ctaButtonText: 'Get Started',
+  ctaButtonHref: 'https://ethos-b2b.clickoapps.com/login',
+};
+
 /** Content keyed by slug. Add entries here for each Case Study page. */
 export const caseStudyContentBySlug: Record<string, MerchWeMadePageContent> = {
   script: scriptContent,
@@ -239,6 +372,9 @@ export const caseStudyContentBySlug: Record<string, MerchWeMadePageContent> = {
   cymbiotika: cymbiotikaContent,
   'katie-austin-workout-tour': katieAustinContent,
   'the-glow-morning': glowMorningContent,
+  'activate-house': activateHouseContent,
+  'pilates-leucadia': pilatesLeucadiaContent,
+  bodyrok: bodyrokContent,
 };
 
 const defaultCta = {

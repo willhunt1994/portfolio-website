@@ -98,8 +98,8 @@ export const blogCardsData = [
     tags: ['Inspo']
   },
   {
-    img: '/white-socks-stripes.png',
-    alt: 'White crew socks with teal and grey stripes',
+    img: '/our-work/Case%20Study/Solos%20Pilates/8D2A9578.png',
+    alt: 'Solos Pilates',
     title: 'Solos Pilates',
     description:
       'A high end boutique pilates studio with 4 locations in Socal.',
@@ -132,6 +132,27 @@ export const blogCardsData = [
     alt: 'The Glow Morning',
     title: 'The Glow Morning',
     description: 'Morning wellness and lifestyle brand – merch that brings the glow.',
+    tags: ['Case Study']
+  },
+  {
+    img: '/our-work/Case%20Study/Activate%20House/IMG_3749.JPG',
+    alt: 'Activate House',
+    title: 'Activate House',
+    description: 'Custom merch and brand experience for Activate House.',
+    tags: ['Case Study']
+  },
+  {
+    img: '/our-work/Case%20Study/Pilates%20Leucadia/DSC04186_copy.webp',
+    alt: 'Pilates Leucadia',
+    title: 'Pilates Leucadia',
+    description: 'Boutique pilates studio in Leucadia – custom apparel and merchandise.',
+    tags: ['Case Study']
+  },
+  {
+    img: '/our-work/Case%20Study/Bodyrok/DSC04223_copy.webp',
+    alt: 'Bodyrok',
+    title: 'Bodyrok',
+    description: 'Custom merch and brand experience for Bodyrok.',
     tags: ['Case Study']
   }
 ];

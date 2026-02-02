@@ -43,6 +43,9 @@ export type MerchWeMadeGalleryImage = {
     body?: string;
     image?: string;
     imageAlt?: string;
+    /** Optional button below the body (e.g. "Check out more from Pilates Leucadia here") */
+    buttonText?: string;
+    buttonHref?: string;
   };
   hotspots?: Array<{
     x: number;
@@ -91,6 +94,10 @@ export type MerchWeMadePageContent = {
   fullWidthImageAlt: string;
   /** Optional video for bottom section (autoplay, loop). When set, used instead of fullWidthImage. */
   fullWidthVideo?: string;
+  /** Full-width CTA overlay: align left (default right). */
+  fullWidthCtaAlign?: 'left' | 'right';
+  /** Full-width CTA overlay: use dark text/button (inverted from default white). */
+  fullWidthCtaInvertColors?: boolean;
   ctaTitle: string;
   ctaButtonText: string;
   ctaButtonHref: string;

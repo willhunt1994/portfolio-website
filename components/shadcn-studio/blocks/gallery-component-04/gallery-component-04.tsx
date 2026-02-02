@@ -52,7 +52,7 @@ export default function Gallery({ galleryImage }: GalleryProps) {
             const spanClass = isTestimonial ? 'md:col-span-4' : (isFullWidth ? '' : isWide ? 'md:col-span-2' : '');
 
             if (isTestimonial && image.testimonial) {
-              const { author, role, avatar, avatarAlt, quote, body, image: testimonialImage, imageAlt } = image.testimonial;
+              const { author, role, avatar, avatarAlt, quote, body, image: testimonialImage, imageAlt, buttonText, buttonHref } = image.testimonial;
               return (
                 <div
                   key={index}
@@ -95,6 +95,16 @@ export default function Gallery({ galleryImage }: GalleryProps) {
                             <p key={i}>{para}</p>
                           ))}
                         </div>
+                      )}
+                      {buttonText && buttonHref && (
+                        <a
+                          href={buttonHref}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="mt-6 inline-flex w-fit items-center justify-center rounded-md bg-zinc-900 dark:bg-white px-4 py-2.5 text-sm font-medium text-white dark:text-zinc-900 hover:bg-zinc-800 dark:hover:bg-zinc-100 transition-colors"
+                        >
+                          {buttonText}
+                        </a>
                       )}
                     </div>
                     {/* Right column: optional image */}

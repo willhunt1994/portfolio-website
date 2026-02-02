@@ -211,13 +211,25 @@ export function CaseStudyPageClient({ slug }: CaseStudyPageClientProps) {
                 sizes="100vw"
               />
             )}
-            <div className="absolute top-0 right-0 p-6 md:p-10 flex flex-col gap-3 items-end">
-              <h4 className="text-xl md:text-2xl font-semibold text-white uppercase">
+            <div
+              className={`absolute top-0 p-6 md:p-10 flex flex-col gap-3 ${
+                content.fullWidthCtaAlign === 'left' ? 'left-0 items-start' : 'right-0 items-end'
+              }`}
+            >
+              <h4
+                className={`text-xl md:text-2xl font-semibold uppercase ${
+                  content.fullWidthCtaInvertColors ? 'text-gray-900' : 'text-white'
+                }`}
+              >
                 {content.ctaTitle}
               </h4>
               <Link
                 href={content.ctaButtonHref}
-                className="inline-flex w-fit items-center justify-center rounded-md bg-white px-5 py-2.5 text-sm font-medium text-gray-900 hover:bg-gray-100 transition-colors"
+                className={`inline-flex w-fit items-center justify-center rounded-md px-5 py-2.5 text-sm font-medium transition-colors ${
+                  content.fullWidthCtaInvertColors
+                    ? 'bg-gray-900 text-white hover:bg-gray-800'
+                    : 'bg-white text-gray-900 hover:bg-gray-100'
+                }`}
               >
                 {content.ctaButtonText}
               </Link>
