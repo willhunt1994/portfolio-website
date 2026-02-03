@@ -57,10 +57,12 @@ export type WhatWeDoPageContent = {
   ctaTitle: string;
   ctaButtonText: string;
   ctaButtonHref: string;
-  /** Optional bottom section: 4:5 image left, inquiry form right (e.g. corporate-teams). */
+  /** Optional bottom section: 4:5 image/video left, inquiry form right (e.g. corporate-teams). */
   bottomSection?: {
     image: string;
     imageAlt: string;
+    /** Optional video (autoplay, loop). When set, shown instead of image. */
+    video?: string;
   };
 };
 
@@ -195,6 +197,56 @@ const socksContent: WhatWeDoPageContent = {
   heroVideo: `${socksBase}/Dec-2-2025-1764736121_1695151.MOV`,
   heroHeading: 'CUSTOM SOCKS',
   heroSubtext: 'Personalized socks with your unique designs and branding.',
+  aboveGalleryColumns: [
+    {
+      heading: 'ANY STYLE POSSIBLE',
+      description: 'Options available in any length including scalloped / frill / scrunch finishes. Logos can be knit-in style, embroidery or even with custom sewn label details.',
+      image: `${socksBase}/BF5A0040.webp`,
+      imageAlt: 'Any style possible - custom grip socks',
+    },
+    {
+      heading: '300+ COLORS TO CHOOSE FROM',
+      description: 'Choose from over 300 thread colors to match your brand / team colors. We can even tie dye or apply any pattern to your custom socks.',
+      image: `${socksBase}/BF5A0281.webp`,
+      imageAlt: '300+ colors - custom grip socks',
+    },
+    {
+      heading: 'CUSTOM GRIP',
+      description: "Add custom grip or leave it without. We'll knit-in any grip with your logo and can even replace the default patterns with logos from your brand.",
+      image: `${socksBase}/BF5A9260.webp`,
+      imageAlt: 'Custom grip - custom grip socks',
+    },
+    {
+      heading: 'FULL CUSTOM PACKAGING',
+      description: 'Available in sleeve, plastic hook or loop style finishes. We always leave a little room for the pricing and barcode to be applied in studio.',
+      image: `${socksBase}/BF5A9334.webp`,
+      imageAlt: 'Full custom packaging - custom grip socks',
+    },
+    {
+      heading: 'NO ETHOS BRANDING',
+      description: "We have no incentive to sell you on our own brand of socks as we don't have one. No 'Ethos X your brand' on your socks at all. It's your branding and your branding only.",
+      image: `${socksBase}/BF5A9394.webp`,
+      imageAlt: 'No Ethos branding - your brand only',
+    },
+    {
+      heading: 'LOW MINIMUMS',
+      description: "Our minimums for socks start at 100pcs per design. Much lower minimums than you'll be quoted if you try to source them yourself.",
+      image: `${socksBase}/BF5A9453.webp`,
+      imageAlt: 'Low minimums - custom socks',
+    },
+    {
+      heading: 'FRANCHISEE OR CORPORATE TEAM?',
+      description: 'We can help lower minimums even less than 100pcs with our pre order system for franchise structured businesses.',
+      image: `${socksBase}/BF5A9463.webp`,
+      imageAlt: 'Franchisee or corporate team - pre order system',
+    },
+    {
+      heading: 'READY TO GET STARTED?',
+      description: 'Submit a new design or Book A Call to chat about designs.',
+      image: `${socksBase}/BF5A9507.webp`,
+      imageAlt: 'Ready to get started - custom grip socks',
+    },
+  ],
   layout: 'masonry',
   galleryImages: socksGalleryImages,
   fullWidthImage: `${socksBase}/Dec-2-2025-1764736121_1695151.MOV`,
@@ -224,8 +276,9 @@ const corporateTeamsContent: WhatWeDoPageContent = {
     {
       heading: 'Work with our design team',
       description: 'Work one to one with our design team to help create custom graphics and build collections',
+      video: '/what-we-do/corporate/eea57beb94104f4daf5e6475ddec6411.SD-480p-1.2Mbps-31322197.mp4',
       image: corporateTeamsHeroImage,
-      imageAlt: 'Scalable fulfillment',
+      imageAlt: 'Work with our design team',
     },
     {
       heading: 'Recoup rebates',
@@ -242,7 +295,7 @@ const corporateTeamsContent: WhatWeDoPageContent = {
     {
       heading: 'Pre orders',
       description: 'Offer a pre order style launch to franchisees. Works GREAT with custom socks.',
-      image: corporateTeamsHeroImage,
+      image: '/our-work/Case%20Study/Bodyrok/DSC04240_copy.webp',
       imageAlt: 'Pre orders',
     },
   ],
@@ -265,6 +318,7 @@ const corporateTeamsContent: WhatWeDoPageContent = {
   bottomSection: {
     image: corporateTeamsHeroImage,
     imageAlt: 'Corporate Teams',
+    video: '/what-we-do/embroidery/IMG_0304%202.MOV',
   },
 };
 

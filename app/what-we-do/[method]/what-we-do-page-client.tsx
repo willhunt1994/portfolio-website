@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import Image from 'next/image';
 import Gallery from '@/components/shadcn-studio/blocks/gallery-component-04/gallery-component-04';
 import { Input } from '@/components/ui/input';
@@ -9,7 +9,59 @@ import { Label } from '@/components/ui/label';
 import PinterestGallery from '@/components/shadcn-studio/blocks/pinterest-gallery/pinterest-gallery';
 import CollectionHero from '@/components/shadcn-studio/blocks/collection-hero/collection-hero';
 import { getWhatWeDoContent } from '@/lib/what-we-do-content';
-import type { WhatWeDoGalleryHotspot } from '@/lib/what-we-do-content';
+import type { WhatWeDoGalleryHotspot, WhatWeDoAboveGalleryColumn } from '@/lib/what-we-do-content';
+
+function ColumnMedia({ col }: { col: WhatWeDoAboveGalleryColumn }) {
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const [videoFailed, setVideoFailed] = useState(false);
+
+  useEffect(() => {
+    if (col.video && videoRef.current && !videoFailed) {
+      videoRef.current.play().catch(() => setVideoFailed(true));
+    }
+  }, [col.video, videoFailed]);
+
+  return (
+    <div className="flex flex-col min-w-0">
+      <div className="relative aspect-[4/5] w-full rounded-[2px] overflow-hidden bg-gray-100 dark:bg-gray-900 mb-4">
+        {col.video && !videoFailed ? (
+          <video
+            ref={videoRef}
+            src={col.video}
+            autoPlay
+            loop
+            muted
+            playsInline
+            preload="auto"
+            poster={col.image}
+            className="absolute inset-0 w-full h-full object-cover"
+            aria-label={col.imageAlt}
+            onError={() => setVideoFailed(true)}
+          />
+        ) : (
+          <Image
+            src={col.image}
+            alt={col.imageAlt}
+            fill
+            className="object-cover"
+            sizes="(max-width: 768px) 100vw, 33vw"
+          />
+        )}
+      </div>
+      <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-1">
+        {col.heading}
+      </h3>
+      {col.subheading && (
+        <p className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+          {col.subheading}
+        </p>
+      )}
+      <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
+        {col.description}
+      </p>
+    </div>
+  );
+}
 
 interface WhatWeDoPageClientProps {
   slug: string;
@@ -97,7 +149,7 @@ export function WhatWeDoPageClient({ slug }: WhatWeDoPageClientProps) {
 
         {/* Optional multi-column section above gallery (e.g. corporate-teams) – full width, 3px side padding */}
         {content.aboveGalleryColumns && content.aboveGalleryColumns.length > 0 && (
-          <section id="what-we-can-do" className="scroll-mt-16 py-12 md:py-16 px-3 bg-white dark:bg-black w-full">
+          <section id="what-we-can-do" className="scroll-mt-16 pt-4 md:pt-6 pb-12 md:pb-16 px-3 bg-white dark:bg-black w-full">
             <div className="w-full">
               {content.aboveGalleryTitle && (
                 <h2 className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white mb-8 md:mb-10 text-center">
@@ -106,40 +158,7 @@ export function WhatWeDoPageClient({ slug }: WhatWeDoPageClientProps) {
               )}
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3 md:gap-4 lg:gap-5">
                 {content.aboveGalleryColumns.map((col, i) => (
-                  <div key={i} className="flex flex-col min-w-0">
-                    <div className="relative aspect-[4/5] w-full rounded-[2px] overflow-hidden bg-gray-100 dark:bg-gray-900 mb-4">
-                      {col.video ? (
-                        <video
-                          src={col.video}
-                          autoPlay
-                          loop
-                          muted
-                          playsInline
-                          className="absolute inset-0 w-full h-full object-cover"
-                          aria-label={col.imageAlt}
-                        />
-                      ) : (
-                        <Image
-                          src={col.image}
-                          alt={col.imageAlt}
-                          fill
-                          className="object-cover"
-                          sizes="(max-width: 768px) 100vw, 33vw"
-                        />
-                      )}
-                    </div>
-                    <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-1">
-                      {col.heading}
-                    </h3>
-                    {col.subheading && (
-                      <p className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                        {col.subheading}
-                      </p>
-                    )}
-                    <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
-                      {col.description}
-                    </p>
-                  </div>
+                  <ColumnMedia key={i} col={col} />
                 ))}
               </div>
             </div>
@@ -243,13 +262,25 @@ export function WhatWeDoPageClient({ slug }: WhatWeDoPageClientProps) {
           <section className="w-full pl-0 pr-4 py-12 md:py-16 md:pr-6 lg:pr-8 bg-white dark:bg-black border-t border-zinc-200 dark:border-zinc-800">
             <div className="w-full grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 items-stretch">
               <div className="relative w-full aspect-[4/5] max-h-[560px] md:max-h-none overflow-hidden rounded-none md:rounded-r-[2px] bg-zinc-100 dark:bg-zinc-900">
-                <Image
-                  src={content.bottomSection.image}
-                  alt={content.bottomSection.imageAlt}
-                  fill
-                  className="object-cover"
-                  sizes="(max-width: 768px) 100vw, 50vw"
-                />
+                {content.bottomSection.video ? (
+                  <video
+                    src={content.bottomSection.video}
+                    autoPlay
+                    loop
+                    muted
+                    playsInline
+                    className="absolute inset-0 w-full h-full object-cover"
+                    aria-label={content.bottomSection.imageAlt}
+                  />
+                ) : (
+                  <Image
+                    src={content.bottomSection.image}
+                    alt={content.bottomSection.imageAlt}
+                    fill
+                    className="object-cover"
+                    sizes="(max-width: 768px) 100vw, 50vw"
+                  />
+                )}
               </div>
               <div className="flex flex-col justify-center pl-4 md:pl-10 md:max-w-xl">
                 <h2 className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white mb-2">Get in touch</h2>

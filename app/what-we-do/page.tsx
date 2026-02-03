@@ -61,7 +61,7 @@ export default function WhatWeDo() {
               <Link href="/what-we-do/socks" className="min-w-0">
                 <PulseBorderCard
                   className="aspect-[4/5] min-h-0 w-full cursor-pointer"
-                  videoSrc="/what-we-do/socks/Dec-2-2025-1764736121_1695151.MOV"
+                  imageSrc="/what-we-do/socks/BF5A0040.webp"
                 >
                   <p className="text-base font-medium text-black">Socks</p>
                 </PulseBorderCard>
@@ -97,10 +97,62 @@ export default function WhatWeDo() {
               </div>
             </div>
 
+            {/* What we can customize + 5-column grid – duplicate */}
+            <div className="col-span-full -mx-4 md:-mx-6 lg:-mx-8 px-4 md:px-6 lg:px-8 pt-8 pb-6 bg-[#fcfcfc]">
+              <div className="pt-0 pb-4">
+                <h2 className="text-xl font-semibold text-gray-900 md:text-2xl">Ways we can customize</h2>
+                <p className="mt-2 text-gray-600">
+                  <Link
+                    href="/catalog"
+                    className="relative inline-block text-primary group"
+                  >
+                    Check out the full catalog here
+                    <span
+                      className="absolute left-0 bottom-0 h-px w-full bg-current scale-x-0 origin-left transition-transform duration-300 group-hover:scale-x-100"
+                      aria-hidden
+                    />
+                  </Link>
+                </p>
+              </div>
+
+              <div className="grid w-full grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-1.5 lg:gap-2">
+              <Link href="/what-we-do/socks" className="min-w-0 w-full">
+                <PulseBorderCard
+                  className="aspect-[4/5] min-h-0 w-full cursor-pointer"
+                  imageSrc="/what-we-do/Stages/DSC04186_copy.webp"
+                >
+                  <p className="text-base font-medium text-black">Printing</p>
+                </PulseBorderCard>
+              </Link>
+              <Link href="/what-we-do/embroidery" className="min-w-0 w-full">
+                <PulseBorderCard
+                  className="aspect-[4/5] min-h-0 w-full cursor-pointer"
+                  videoSrc="/what-we-do/embroidery/IMG_1329.MOV"
+                >
+                  <p className="text-base font-medium text-black">Embroidery</p>
+                </PulseBorderCard>
+              </Link>
+              <PulseBorderCard
+                className="aspect-[4/5] min-h-0 w-full"
+                imageSrc="/what-we-do/patches/3A3A9892%20copy.jpg"
+              >
+                <p className="text-base font-medium text-black">Patches</p>
+              </PulseBorderCard>
+              <Link href="/what-we-do/puff-print" className="min-w-0 w-full">
+                <PulseBorderCard
+                  className="aspect-[4/5] min-h-0 w-full cursor-pointer"
+                  imageSrc="/what-we-do/puff%20print/IMG_0300%202.JPG"
+                >
+                  <p className="text-base font-medium text-black">Puff Print</p>
+                </PulseBorderCard>
+              </Link>
+              </div>
+            </div>
+
             {/* Corporate Teams – image extends to viewport left edge, text right */}
             <div className="col-span-full pt-8 flex flex-col md:flex-row md:items-stretch min-h-[320px] -mx-4 md:-mx-6 lg:-mx-8">
-              <div className="w-full md:w-1/2 pl-0 pr-1 md:pr-2 flex-shrink-0 md:pl-0">
-                <div className="relative aspect-[4/3] md:aspect-[5/4] w-full rounded-none md:rounded-r-[2px] overflow-hidden bg-gray-100">
+              <div className="w-full md:w-1/2 pl-0 pr-1 md:pr-2 flex-shrink-0 md:pl-0 md:min-h-0 flex flex-col">
+                <div className="relative aspect-[4/3] md:aspect-auto md:h-full md:min-h-full w-full rounded-none md:rounded-r-[2px] overflow-hidden bg-gray-100">
                   <Image
                     src="https://cdn.shopify.com/s/files/1/0609/4752/9901/files/BF5A9955.jpg?v=1767384638"
                     alt="Corporate and franchise teams"
