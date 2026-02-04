@@ -401,7 +401,7 @@ const defaultCta = {
  */
 export function getCaseStudyContent(
   slug: string,
-  fallback: { title: string; description: string; img: string } | null
+  fallback: { title: string; description: string; img: string; alt?: string } | null
 ): MerchWeMadePageContent {
   // Use merch-we-made content for solos-pilates so /case-study/solos-pilates matches /merch-we-made/solos-pilates
   if (slug === 'solos-pilates') {
@@ -409,7 +409,12 @@ export function getCaseStudyContent(
   }
 
   const custom = caseStudyContentBySlug[slug];
-  if (custom) return custom;
+  if (custom) {
+    if (fallback?.img) {
+      return { ...custom, heroBackgroundImage: fallback.img, heroBackgroundImageAlt: fallback.alt ?? fallback.title };
+    }
+    return custom;
+  }
 
   const title = fallback?.title ?? slug;
   const description = fallback?.description ?? '';

@@ -1,0 +1,75 @@
+/* Intro.js coach tip: better container wrap + close (X) instead of Skip */
+
+/* Tooltip container – improved wrap and spacing */
+.introjs-tooltip {
+  min-width: 280px;
+  max-width: 360px;
+  padding: 0;
+  border-radius: 10px;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.12), 0 0 1px rgba(0, 0, 0, 0.08);
+  border: 1px solid var(--border, #e4e4e7);
+  overflow: hidden;
+}
+
+.introjs-tooltiptext {
+  padding: 16px 20px 20px;
+  line-height: 1.5;
+  word-wrap: break-word;
+}
+
+.introjs-tooltip-title {
+  margin-bottom: 4px;
+}
+
+.introjs-tooltip-header {
+  padding: 16px 48px 8px 20px;
+  padding-right: 48px; /* room for close button */
+  min-height: auto;
+}
+
+/* Skip button → close cross (X) */
+.introjs-skipbutton {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: 32px;
+  height: 32px;
+  line-height: 1;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #71717a;
+  font-size: 0;
+  font-weight: 400;
+  text-decoration: none;
+  border-radius: 6px;
+  transition: color 0.15s, background-color 0.15s;
+}
+
+/* Hide "Skip" text and show X icon */
+.introjs-skipbutton::before {
+  content: "×";
+  font-size: 24px;
+  line-height: 1;
+  font-weight: 300;
+}
+
+.introjs-skipbutton:hover,
+.introjs-skipbutton:focus {
+  color: #171717;
+  background-color: #f4f4f5;
+  outline: none;
+  text-decoration: none;
+}
+
+/* Button bar spacing */
+.introjs-tooltipbuttons {
+  padding: 12px 20px 16px;
+  border-top: 1px solid var(--border, #e0e0e0);
+}
+
+.introjs-bullets {
+  padding-top: 8px;
+  padding-bottom: 8px;
+}

@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import Link from 'next/link';
 
 import { Button } from '@/components/ui/button';
+import { startIntroTour } from '@/lib/intro-tour';
 import {
   HeroNavigation01,
   HeroNavigation01SmallScreen,
@@ -52,6 +53,21 @@ const Header = ({ navigationData, className }: HeaderProps) => {
         <HeroNavigation01 navigationData={navigationData} navigationClassName="md:block" />
 
         <div className="flex items-center gap-2">
+          <Button
+            type="button"
+            variant="ghost"
+            size="icon"
+            className="rounded-lg h-9 w-9 text-gray-600 hover:text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-800"
+            onClick={() => startIntroTour()}
+            aria-label="How to use this site"
+            title="How to use this site"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+              <circle cx="12" cy="12" r="10" />
+              <path d="M12 16v-4" />
+              <path d="M12 8h.01" />
+            </svg>
+          </Button>
           <Button variant="outline" className="rounded-lg" asChild>
             <a href="https://ethos-b2b.clickoapps.com/login">Login</a>
           </Button>
@@ -69,6 +85,20 @@ const Header = ({ navigationData, className }: HeaderProps) => {
           triggerClassName="md:hidden"
           actions={
             <div className="flex flex-col gap-2">
+              <Button
+                type="button"
+                variant="ghost"
+                className="rounded-lg w-full justify-start gap-2"
+                onClick={() => startIntroTour()}
+                aria-label="How to use this site"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+                  <circle cx="12" cy="12" r="10" />
+                  <path d="M12 16v-4" />
+                  <path d="M12 8h.01" />
+                </svg>
+                How to use this site
+              </Button>
               <Button variant="outline" className="rounded-lg w-full" asChild>
                 <a href="https://ethos-b2b.clickoapps.com/login">Login</a>
               </Button>

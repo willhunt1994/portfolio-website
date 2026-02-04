@@ -717,7 +717,7 @@ const defaultCta = {
  */
 export function getMerchWeMadeContent(
   slug: string,
-  fallback: { title: string; description: string; img: string } | null
+  fallback: { title: string; description: string; img: string; alt?: string } | null
 ): MerchWeMadePageContent {
   const custom = merchWeMadeContentBySlug[slug];
   if (custom) {
@@ -785,7 +785,15 @@ export function getMerchWeMadeContent(
         galleryWithTestimonial = [...galleryWithTestimonial];
         galleryWithTestimonial[row3Image2Index] = { ...row3Image2, hotspots: embroideryHotspot };
       }
-      return { ...custom, galleryImages: galleryWithTestimonial };
+      const base = { ...custom, galleryImages: galleryWithTestimonial };
+      if (fallback?.img) {
+        base.heroBackgroundImage = fallback.img;
+        base.heroBackgroundImageAlt = fallback.alt ?? fallback.title;
+      }
+      return base;
+    }
+    if (fallback?.img) {
+      return { ...custom, heroBackgroundImage: fallback.img, heroBackgroundImageAlt: fallback.alt ?? fallback.title };
     }
     return custom;
   }

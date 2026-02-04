@@ -176,7 +176,7 @@ export function getBlogCards(): BlogCard[] {
 }
 
 /** Get a single card by slug (e.g. "script", "case-study-6") for use in detail pages. */
-export function getBlogCardBySlug(slug: string): { title: string; description: string; img: string } | null {
+export function getBlogCardBySlug(slug: string): { title: string; description: string; img: string; alt: string } | null {
   const card = blogCardsData.find(c => generateSlug(c.title) === slug);
-  return card ? { title: card.title, description: card.description, img: card.img } : null;
+  return card ? { title: card.title, description: card.description, img: card.img, alt: card.alt } : null;
 }

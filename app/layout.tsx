@@ -1,9 +1,11 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import "intro.js/minified/introjs.min.css";
+import "./intro-tour-overrides.css";
 import HeaderWrapper from '@/components/header-wrapper';
 import FooterWrapper from '@/components/footer-wrapper';
-import BackToTop from '@/components/back-to-top';
+import FloatingActions from '@/components/floating-actions';
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -33,7 +35,7 @@ export default function RootLayout({
         <HeaderWrapper />
         {children}
         <FooterWrapper />
-        <BackToTop />
+        <FloatingActions />
       </body>
     </html>
   );
