@@ -2,17 +2,15 @@
 
 import { useRef } from 'react';
 
-import { ArrowRightIcon } from 'lucide-react';
-
 import Image from 'next/image';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
 import { AnimatedBeam } from '@/components/ui/animated-beam';
 
 const ETHOS_LOGO_URL =
   'https://cdn.shopify.com/s/files/1/0609/4752/9901/files/Ethos_Logo-05.jpg?v=1769654967';
 
-const HeroSection = () => {
+type HeroSectionVariant = 'full' | 'textOnly' | 'diagramOnly';
+
+const HeroSection = ({ variant = 'full' }: { variant?: HeroSectionVariant }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const iconRef1 = useRef<HTMLDivElement>(null);
   const iconRef2 = useRef<HTMLDivElement>(null);
@@ -30,38 +28,15 @@ const HeroSection = () => {
   const spanRef7 = useRef<HTMLSpanElement>(null);
   const spanRef8 = useRef<HTMLSpanElement>(null);
 
-  return (
-    <section className="flex-1 overflow-hidden py-8 sm:py-16 lg:py-24">
-      <div className="mx-auto flex w-full flex-col items-center gap-8 px-4 sm:gap-16 sm:px-6">
-        <div className="flex flex-col items-center gap-4 text-center">
-          <Badge variant="outline" className="text-sm font-normal">
-            What We Do
-          </Badge>
-
-          <h1 className="text-2xl font-semibold sm:text-3xl lg:text-5xl lg:font-bold">
-            We Make Custom Goods
-          </h1>
-
+  const textBlock = (
+    <div className="flex flex-col items-center gap-4 text-center">
           <p className="max-w-4xl text-xl text-muted-foreground">
             In short, we create custom goods to elevate retail spaces.
           </p>
-
-          <div className="flex flex-wrap items-center gap-4">
-            <Button
-              size="lg"
-              className="group relative w-fit overflow-hidden rounded-lg text-base before:absolute before:inset-0 before:rounded-[inherit] before:bg-[length:250%_250%,100%_100%] before:bg-[position:200%_0,0_0] before:bg-no-repeat before:transition-[background-position_0s_ease] before:duration-1000 hover:before:bg-[position:-100%_0,0_0] has-[>svg]:px-6 before:bg-[linear-gradient(45deg,transparent_25%,rgba(255,255,255,0.5)_50%,transparent_75%,transparent_100%)] dark:before:bg-[linear-gradient(45deg,transparent_25%,rgba(0,0,0,0.2)_50%,transparent_75%,transparent_100%)]"
-              asChild
-            >
-              <a href="#">
-                Get Started <ArrowRightIcon className="transition-transform duration-200 group-hover:translate-x-0.5" />
-              </a>
-            </Button>
-            <Button size="lg" variant="outline" asChild className="rounded-lg text-base">
-              <a href="/catalog">Catalog</a>
-            </Button>
-          </div>
         </div>
+  );
 
+  const diagramBlock = (
         <div ref={containerRef} className="relative flex w-full flex-col items-center">
           <div className="flex w-full max-w-4xl items-center justify-between max-md:hidden">
             <div className="flex items-center gap-[7.5rem]">
@@ -280,6 +255,23 @@ const HeroSection = () => {
             className="-z-10 md:hidden"
           />
         </div>
+  );
+
+  if (variant === 'textOnly') return textBlock;
+  if (variant === 'diagramOnly') {
+    return (
+      <section className="flex-1 overflow-hidden py-8 sm:py-16 lg:py-24">
+        <div className="mx-auto flex w-full flex-col items-center gap-8 px-4 sm:gap-16 sm:px-6">
+          {diagramBlock}
+        </div>
+      </section>
+    );
+  }
+  return (
+    <section className="flex-1 overflow-hidden py-8 sm:py-16 lg:py-24">
+      <div className="mx-auto flex w-full flex-col items-center gap-8 px-4 sm:gap-16 sm:px-6">
+        {textBlock}
+        {diagramBlock}
       </div>
     </section>
   );

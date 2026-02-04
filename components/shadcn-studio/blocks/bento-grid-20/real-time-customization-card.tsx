@@ -3,13 +3,16 @@
 import { useState } from 'react';
 import { Marquee } from '@/components/ui/marquee';
 import { MotionPreset } from '@/components/ui/motion-preset';
+import { cn } from '@/lib/utils';
 
 type ThemeItem = { name: string; img: string; bgImg: string };
 
 const RealTimeCustomizationCard = ({
   themes,
+  className,
 }: {
   themes: ThemeItem[];
+  className?: string;
 }) => {
   const [selectedTheme, setSelectedTheme] = useState(themes[0]);
 
@@ -19,7 +22,7 @@ const RealTimeCustomizationCard = ({
       blur
       slide={{ direction: 'down', offset: 75 }}
       transition={{ duration: 0.45 }}
-      className="bg-card relative flex min-h-[26rem] flex-col gap-6 overflow-hidden rounded-xl pt-6"
+      className={cn('bg-card relative flex min-h-[26rem] flex-col gap-6 overflow-hidden rounded-[2px] pt-6', className)}
     >
       <div className="space-y-3.5 px-6">
         <h3 className="text-[21px] font-semibold">Custom Dashboard</h3>
