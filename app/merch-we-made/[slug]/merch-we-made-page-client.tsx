@@ -63,6 +63,29 @@ export function MerchWeMadePageClient({ slug }: MerchWeMadePageClientProps) {
           />
         )}
 
+        {/* Snake-like wavy scrolling text bar (Spring 2026 Inspo page only – Pulse-style) */}
+        {slug === 'spring-2026-inspo' && (
+          <div
+            className="relative w-full overflow-hidden py-5"
+            style={{ ['--duration' as string]: '45s', backgroundColor: '#dbf4d4' }}
+          >
+            <div className="flex w-max animate-marquee-wavy gap-10 whitespace-nowrap">
+              {[...Array(2)].map((_, copy) => (
+                <span key={copy} className="inline-flex shrink-0 items-center gap-10">
+                  {Array.from({ length: 10 }).map((_, i) => (
+                    <span
+                      key={`${copy}-${i}`}
+                      className="text-xl md:text-2xl lg:text-3xl font-bold tracking-widest uppercase text-zinc-700"
+                    >
+                      Spring 2026 Inspo <span className="opacity-50">*</span>
+                    </span>
+                  ))}
+                </span>
+              ))}
+            </div>
+          </div>
+        )}
+
         {/* Gallery: masonry or grid; optional shoot story (image+text) and/or "Products We Used" between rows */}
         <div id="gallery-start" className="scroll-mt-16">
           {content.galleryImages.length > 0 ? (

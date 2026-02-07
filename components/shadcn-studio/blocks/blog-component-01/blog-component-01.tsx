@@ -71,9 +71,26 @@ export default function Blog({ blogCards, itemsPerPage = 12, fullWidth = false }
                     fill
                     className="object-cover transition-transform duration-300 group-hover:scale-105"
                   />
+                  {/* Pulse-style scrolling strip overlay (Spring 2026 Inspo only) – same image height as other cards */}
+                  {card.title === 'Spring 2026 Inspo' && (
+                    <div
+                      className="absolute left-0 right-0 top-0 z-10 w-full overflow-hidden"
+                      style={{ ['--duration' as string]: '20s', backgroundColor: '#dbf4d4' }}
+                    >
+                      <div className="flex w-max animate-marquee-seamless gap-8 py-2.5 whitespace-nowrap text-sm font-semibold tracking-wider uppercase text-zinc-600 dark:text-zinc-400">
+                        {[...Array(2)].map((_, copy) => (
+                          <span key={copy} className="inline-flex shrink-0 items-center gap-8">
+                            {Array.from({ length: 8 }).map((_, i) => (
+                              <span key={`${copy}-${i}`}>Spring 2026 Inspo <span className="opacity-60">*</span></span>
+                            ))}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  )}
                   {/* Tags overlay on top right of image */}
                   {card.tags && card.tags.length > 0 && (
-                    <div className="absolute top-3 right-3 flex flex-wrap gap-2 justify-end">
+                    <div className="absolute top-3 right-3 z-10 flex flex-wrap gap-2 justify-end">
                       {card.tags.map((tag, tagIndex) => (
                         <span
                           key={tagIndex}
